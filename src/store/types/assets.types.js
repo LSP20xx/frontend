@@ -1,0 +1,5 @@
+export const assetsTypes = {
+  SELECT_ASSET: "SELECT_ASSET",
+  UPDATE_ASSETS_PRICES: "UPDATE_ASSETS_PRICES" /*
+    FILTER_PLACES: 'FILTER_PLACES',*/,
+};
