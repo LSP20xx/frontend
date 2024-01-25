@@ -5,7 +5,6 @@ const { SELECT_ASSET, UPDATE_ASSETS_PRICES } = assetsTypes;
 const initialState = {
   assets: ASSETS,
   selectedAsset: null,
-  currencies: {},
 };
 
 const assetsReducer = (state = initialState, action) => {
@@ -26,12 +25,14 @@ const assetsReducer = (state = initialState, action) => {
                 filteredPlaces: state.data.filter(place => place.categories.some(category => category === action.categoryName)),
             }*/
     case UPDATE_ASSETS_PRICES:
-      const updatedAssets = state.assets.map((asset) => {
+      const updatedAssets = state.assets?.map((asset) => {
         if (action.payload.symbol === `${asset.symbol}/USD`) {
           return {
             ...asset,
             fiatValue: action.payload.fiatValue,
-            change24h: action.payload.change24h,
+            highest24h: action.payload.highest24h,
+            lowest24h: action.payload.lowest24h,
+            opening24h: action.payload.opening24h,
           };
         }
         return asset;

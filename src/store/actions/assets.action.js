@@ -9,10 +9,12 @@ export const selectAsset = (id) => {
   };
 };
 
-export const updateAssetsPrices = (currencyData) => ({
-  type: UPDATE_ASSETS_PRICES,
-  payload: currencyData,
-});
+export const updateAssetsPrices = (currencyData) => {
+  return {
+    type: UPDATE_ASSETS_PRICES,
+    payload: currencyData,
+  };
+};
 /*
 export const filterPlaces = (category) => ({
     type: FILTER_PLACES,

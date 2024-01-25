@@ -134,7 +134,7 @@ const TabsNavigator = () => {
               xml={getHomeIconSvg(color)}
               width={45}
               height={35}
-              stroke={COLORS.primary}
+              stroke={COLORS.primaryLight}
               strokeWidth={6}
               fill={COLORS.white}
             />
@@ -151,28 +151,9 @@ const TabsNavigator = () => {
               xml={getMarketsIconSvg(color)}
               width={45}
               height={45}
-              stroke={COLORS.primary}
+              stroke={COLORS.primaryLight}
               strokeWidth={6}
               fill={COLORS.white}
-            />
-          ),
-          tabBarButton: (props) => <View {...props} enabled={true} />,
-        }}
-      />
-
-      <BottomTab.Screen
-        name="CardTab"
-        component={CardNavigator}
-        options={{
-          tabBarLabel: "Wallet",
-          tabBarIcon: ({ focused, color, size }) => (
-            <SvgXml
-              xml={getWalletIconSvg(color)}
-              width={40}
-              height={40}
-              stroke={COLORS.white}
-              strokeWidth={4}
-              fill={COLORS.primary}
             />
           ),
           tabBarButton: (props) => <View {...props} enabled={true} />,
@@ -183,18 +164,36 @@ const TabsNavigator = () => {
         name="ProfileTab"
         component={ProfileNavigator}
         options={{
+          tabBarLabel: "Wallet",
+          tabBarIcon: ({ focused, color, size }) => (
+            <SvgXml
+              xml={getWalletIconSvg(color)}
+              width={40}
+              height={40}
+              stroke={COLORS.white}
+              strokeWidth={4}
+              fill={COLORS.primaryLight}
+            />
+          ),
+          tabBarButton: (props) => <View {...props} enabled={true} />,
+        }}
+      />
+
+      <BottomTab.Screen
+        name="CardTab"
+        component={CardNavigator}
+        options={{
           tabBarLabel: "Tarjeta",
           tabBarIcon: ({ focused, color }) => (
             <SvgXml
               xml={getCardIconSvg(color)}
               width={45}
               height={45}
-              stroke={COLORS.primary}
+              stroke={COLORS.primaryLight}
               strokeWidth={6}
               fill={COLORS.white}
             />
           ),
-          tabBarButton: (props) => <View {...props} enabled={false} />,
         }}
       />
     </BottomTab.Navigator>

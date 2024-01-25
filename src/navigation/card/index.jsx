@@ -1,10 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
-import Place from "../../screens/place";
-import Places from "../../screens/asset";
-
 import { COLORS } from "../../constants";
-import { Favorites } from "../../screens";
+import Card from "../../screens/card";
 
 const Stack = createNativeStackNavigator();
 
@@ -13,13 +9,12 @@ const CardNavigator = () => {
     <Stack.Navigator
       initialRouteName="Tarjeta"
       screenOptions={{
-        headerStyle: {
-          backgroundColor: COLORS.primaryLight,
-        },
-        headerTintColor: COLORS.white,
+        headerShown: false,
+        headerTintColor: COLORS.primaryLight,
+        animation: "slide_from_right",
       }}
     >
-      <Stack.Screen name="Tarjeta" component={Favorites} />
+      <Stack.Screen name="Tarjeta" component={Card} />
     </Stack.Navigator>
   );
 };

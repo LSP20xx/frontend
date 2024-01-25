@@ -19,9 +19,6 @@ const WalletNavigator = () => {
     <Stack.Navigator
       initialRouteName="Wallet"
       screenOptions={{
-        headerStyle: {
-          backgroundColor: COLORS.black,
-        },
         headerShown: false,
         headerTintColor: COLORS.primaryLight,
         animation: "slide_from_right",
