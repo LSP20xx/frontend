@@ -18,6 +18,7 @@ import { UPDATE_FORM, onInputChange } from "../../utils/forms";
 const initialState = {
   email: { value: "", error: "", touched: false, hasError: true },
   password: { value: "", error: "", touched: false, hasError: true },
+  phoneNumber: { value: "", error: "", touched: false, hasError: true },
   isFormValid: false,
 };
 
@@ -60,10 +61,12 @@ const Auth = () => {
       isLogin
         ? signIn({
             email: formState.email.value,
+            phoneNumber: formState.phoneNumber.value,
             password: formState.password.value,
           })
         : signUp({
             email: formState.email.value,
+            phoneNumber: formState.phoneNumber.value,
             password: formState.password.value,
           })
     );
@@ -89,7 +92,7 @@ const Auth = () => {
             onHandlerInputChange({ value: text, name: "email" })
           }
           value={formState.email.value}
-          label="Correo"
+          label="Correo/número de teléfono"
           error={formState.email.error}
           touched={formState.email.touched}
           hasError={formState.email.hasError}

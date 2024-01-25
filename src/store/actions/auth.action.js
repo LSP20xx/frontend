@@ -1,4 +1,4 @@
-import { FIREBASE_AUTH_SIGN_IN_URL, FIREBASE_AUTH_SIGN_UP_URL } from "../../constants";
+import { AUTH_SIGN_IN_URL, AUTH_SIGN_UP_URL } from "../../constants";
 import { authTypes } from "../types";
 
 const {
@@ -11,11 +11,11 @@ const {
   CLEAR_ERROR,
 } = authTypes;
 
-export const signUp = ({ email, password }) => {
+export const signUp = ({ email, phoneNumber, password }) => {
   return async (dispatch) => {
     try {
       dispatch({ type: SIGN_UP_REQUEST });
-      const response = await fetch(FIREBASE_AUTH_SIGN_UP_URL, {
+      const response = await fetch(AUTH_SIGN_UP_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -23,7 +23,6 @@ export const signUp = ({ email, password }) => {
         body: JSON.stringify({
           email,
           password,
-          returnSecureToken: true,
         }),
       });
 
@@ -34,9 +33,9 @@ export const signUp = ({ email, password }) => {
       const data = await response.json();
       dispatch({
         type: SIGN_UP_SUCCESS,
-        token: data.idToken,
-        userId: data.localId,
+        userId: data.userId,
         email: data.email,
+        phoneNumber: data.phoneNumber,
       });
     } catch (error) {
       dispatch({
@@ -47,11 +46,11 @@ export const signUp = ({ email, password }) => {
   };
 };
 
-export const signIn = ({ email, password }) => {
+export const signIn = ({ email, phoneNumber, password }) => {
   return async (dispatch) => {
     try {
       dispatch({ type: SIGN_IN_REQUEST });
-      const response = await fetch(FIREBASE_AUTH_SIGN_IN_URL, {
+      const response = await fetch(AUTH_SIGN_IN_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
