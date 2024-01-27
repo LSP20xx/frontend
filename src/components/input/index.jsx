@@ -19,24 +19,29 @@ const Input = ({
   hasError,
   error,
   touched,
+  inputType,
+  leftIcon,
   ...props
 }) => {
   return (
     <View style={styles.container}>
       <Label {...props}>
-        <TextInput
-          {...props}
-          editable={editable}
-          value={value}
-          style={{ ...styles.input, ...style }}
-          onChangeText={onChangeText}
-          onFocus={onFocus}
-          onBlur={onBlur}
-          maxLength={maxLength}
-          placeholder={placeholder}
-          placeholderTextColor={placeholderTextColor}
-          keyboardType={keyboardType}
-        />
+        <View style={styles.inputWithIcon}>
+          {leftIcon}
+          <TextInput
+            {...props}
+            editable={editable}
+            value={value}
+            style={{ ...styles.input, ...style }}
+            onChangeText={onChangeText}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            maxLength={maxLength}
+            placeholder={placeholder}
+            placeholderTextColor={placeholderTextColor}
+            keyboardType={keyboardType}
+          />
+        </View>
       </Label>
       {hasError && touched ? (
         <View style={styles.errorContainer}>

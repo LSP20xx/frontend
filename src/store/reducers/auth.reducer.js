@@ -20,6 +20,9 @@ const initialState = {
 };
 
 const authReducer = (state = initialState, action) => {
+  if (action.type === SIGN_UP_SUCCESS) {
+    console.log("llega al reducer", action.userId);
+  }
   switch (action.type) {
     case SIGN_UP_REQUEST:
       return {

@@ -22,6 +22,7 @@ const Assets = ({ navigation }) => {
   const { assets, selectedAsset, currencies } = useSelector(
     (state) => state.assets
   );
+  const { userId } = useSelector((state) => state.auth);
   // const { userId, email } = useSelector((state) => state.auth);
   // const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -83,6 +84,10 @@ const Assets = ({ navigation }) => {
   // );
 
   const socketUrl = "http://192.168.0.92:8000";
+
+  useEffect(() => {
+    console.log("userId", userId);
+  }, [userId]);
 
   useEffect(() => {
     const socket = io(socketUrl);

@@ -1,5 +1,6 @@
 const formatEmail =
   /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const formatPhoneNumber = /^[0-9]{7,20}$/;
 const minPasswordLength = 7;
 export const UPDATE_FORM = "UPDATE_FORM";
 
@@ -12,10 +13,14 @@ const validateInput = ({ name, value }) => {
     case "email":
       if (formatValue === "") {
         hasError = true;
-        error = "Email is required";
-      } else if (!formatEmail.test(formatValue)) {
+        error = "Email or phone number is required";
+        console.log("llega al email", hasError, error);
+      } else if (
+        !formatEmail.test(formatValue) &&
+        !formatPhoneNumber.test(formatValue)
+      ) {
         hasError = true;
-        error = "Email is invalid";
+        error = "Invalid email or phone number";
       } else {
         hasError = false;
         error = "";

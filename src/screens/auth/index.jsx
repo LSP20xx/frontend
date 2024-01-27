@@ -1,4 +1,4 @@
-import { useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import {
   View,
   Text,
@@ -12,13 +12,35 @@ import { useDispatch, useSelector } from "react-redux";
 import { styles } from "./styles";
 import { Input } from "../../components";
 import { COLORS } from "../../constants";
-import { clearError, signIn, signUp } from "../../store/actions";
+import {
+  clearError,
+  signInWithEmail,
+  signUpWithEmail,
+  signInWithPhoneNumber,
+  signUpWithPhoneNumber,
+} from "../../store/actions";
 import { UPDATE_FORM, onInputChange } from "../../utils/forms";
+import CountryPicker from "react-native-country-picker-modal";
 
 const initialState = {
   email: { value: "", error: "", touched: false, hasError: true },
   password: { value: "", error: "", touched: false, hasError: true },
   isFormValid: false,
+};
+
+const formatEmail =
+  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const formatPhoneNumber = /^[0-9]{7,20}$/;
+
+const identifyInputType = (value) => {
+  const formatValue = value.trim();
+  if (formatEmail.test(formatValue)) {
+    return "email";
+  } else if (formatPhoneNumber.test(formatValue)) {
+    return "phoneNumber";
+  } else {
+    return "unknown";
+  }
 };
 
 const formReducer = (state, action) => {
@@ -45,28 +67,87 @@ const Auth = () => {
   const { error, isLoading, hasError } = useSelector((state) => state.auth);
   const [isLogin, setIsLogin] = useState(true);
   const [formState, dispatchFormState] = useReducer(formReducer, initialState);
+  const [inputType, setInputType] = useState("unknown");
+  const [countryCode, setCountryCode] = useState("AR");
+  const [callingCode, setCallingCode] = useState("");
+  const { userId } = useSelector((state) => state.auth);
   const title = isLogin ? "Iniciar sesión" : "Registrarse";
   const buttonTitle = isLogin ? "Iniciar sesión" : "Registrar";
   const messageText = isLogin
     ? "¿No creaste una cuenta?"
     : "¿Ya creaste una cuenta?";
 
+  const onSelectCountry = (country) => {
+    setCountryCode(country.cca2);
+    if (country.callingCode) {
+      const callingCode = country.callingCode[0];
+      setCallingCode(callingCode);
+    }
+  };
+
   const onHandleChangeAuth = () => {
     setIsLogin(!isLogin);
   };
-
   const onHandleAuth = () => {
+    /*  let authData;
+    if (inputType === "phoneNumber") {
+      const phoneNumberWithCode = `+${callingCode}${formState.email.value}`;
+      authData = {
+        email: "",
+        phoneNumber: phoneNumberWithCode,
+        password: formState.password.value,
+      };
+    } else {
+      authData = {
+        email: formState.email.value,
+        phoneNumber: "",
+        password: formState.password.value,
+      };
+    }
+ */
+
+    console.log(callingCode);
+
+    if (inputType === "phoneNumber") {
+      const phoneNumberWithCode = `+${callingCode}${formState.email.value}`;
+      dispatch(
+        isLogin
+          ? signInWithPhoneNumber({
+              phoneNumber: phoneNumberWithCode,
+              password: formState.password.value,
+            })
+          : signUpWithPhoneNumber({
+              phoneNumber: phoneNumberWithCode,
+              password: formState.password.value,
+            })
+      );
+    } else {
+      dispatch(
+        isLogin
+          ? signInWithEmail({
+              email: formState.email.value,
+              password: formState.password.value,
+            })
+          : signUpWithEmail({
+              email: formState.email.value,
+              password: formState.password.value,
+            })
+      );
+    }
+    /* 
     dispatch(
       isLogin
         ? signIn({
-            email: formState.email.value,
-            password: formState.password.value,
+            email: authData.email,
+            phoneNumber: authData.phoneNumber,
+            password: authData.password,
           })
         : signUp({
-            email: formState.email.value,
-            password: formState.password.value,
+            email: authData.email,
+            phoneNumber: authData.phoneNumber,
+            password: authData.password,
           })
-    );
+    ); */
   };
 
   const onHandleButtonModal = () => {
@@ -74,25 +155,49 @@ const Auth = () => {
   };
 
   const onHandlerInputChange = ({ value, name }) => {
+    const type = identifyInputType(value);
+    setInputType(type);
     onInputChange({ name, value, dispatch: dispatchFormState, formState });
   };
+
+  const onEmailInputFocus = () => {
+    if (formatPhoneNumber.test(formState.email.value.trim())) {
+      setInputType("phoneNumber");
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.title}>{title}</Text>
+
         <Input
-          placeholder="Tu email"
+          placeholder="Tu email/Tu número de teléfono"
           placeholderTextColor={COLORS.darkGray}
           autoCapitalize="none"
           autoCorrect={false}
           onChangeText={(text) =>
             onHandlerInputChange({ value: text, name: "email" })
           }
+          onFocus={onEmailInputFocus}
           value={formState.email.value}
-          label="Correo"
+          label="Correo/número de teléfono"
           error={formState.email.error}
           touched={formState.email.touched}
           hasError={formState.email.hasError}
+          leftIcon={
+            inputType === "phoneNumber" && (
+              <CountryPicker
+                withFilter
+                withFlag
+                withCallingCode
+                withCallingCodeButton
+                withEmoji
+                countryCode={countryCode}
+                onSelect={onSelectCountry}
+              />
+            )
+          }
         />
         <Input
           placeholder="********"

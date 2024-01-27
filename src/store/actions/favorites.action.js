@@ -1,5 +1,5 @@
 import { favoritesTypes } from "../types";
-import { FIREBASE_REALTIME_DB_URL } from "../../constants";
+import { REALTIME_DB_URL } from "../../constants";
 
 const { ADD_TO_FAVORITES, REMOVE_FROM_FAVORITES, GET_FAVORITES, IS_FAVORITE } =
   favoritesTypes;
@@ -7,16 +7,13 @@ const { ADD_TO_FAVORITES, REMOVE_FROM_FAVORITES, GET_FAVORITES, IS_FAVORITE } =
 export const addToFavorites = (place) => {
   return async (dispatch) => {
     try {
-      const response = await fetch(
-        `${FIREBASE_REALTIME_DB_URL}/favorites.json`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(place),
-        }
-      );
+      const response = await fetch(`${REALTIME_DB_URL}/favorites.json`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(place),
+      });
 
       const result = await response.json();
       dispatch({

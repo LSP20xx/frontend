@@ -44,7 +44,7 @@ export const styles = StyleSheet.create({
   },
   linkText: {
     fontSize: 14,
-    borderBottomColor:  COLORS.primaryDark,
+    borderBottomColor: COLORS.primaryDark,
     borderBottomWidth: 1,
     color: COLORS.primaryDark,
     textAlign: "center",
@@ -71,5 +71,13 @@ export const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 14,
     textAlign: "center",
+  },
+
+  inputField: {
+    fontSize: 14,
+    borderBottomColor: COLORS.primary,
+    borderBottomWidth: 1,
+    width: "100%",
+    paddingVertical: 5,
   },
 });

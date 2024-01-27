@@ -23,4 +23,16 @@ export const styles = StyleSheet.create({
     paddingVertical: 5,
     color: COLORS.error,
   },
+  inputWithIcon: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+  input: {
+    fontSize: 13,
+    borderBottomColor: COLORS.primary,
+    borderBottomWidth: 1,
+    flex: 1,
+    paddingVertical: 5,
+  },
 });
