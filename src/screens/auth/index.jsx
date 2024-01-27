@@ -25,7 +25,6 @@ import CountryPicker from "react-native-country-picker-modal";
 const initialState = {
   email: { value: "", error: "", touched: false, hasError: true },
   password: { value: "", error: "", touched: false, hasError: true },
-  phoneNumber: { value: "", error: "", touched: false, hasError: true },
   isFormValid: false,
 };
 
