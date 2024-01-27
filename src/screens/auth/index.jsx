@@ -139,16 +139,6 @@ const Auth = () => {
     dispatch(
       isLogin
         ? signIn({
-<<<<<<< HEAD
-            email: authData.email,
-            phoneNumber: authData.phoneNumber,
-            password: authData.password,
-          })
-        : signUp({
-            email: authData.email,
-            phoneNumber: authData.phoneNumber,
-            password: authData.password,
-=======
             email: formState.email.value,
             phoneNumber: formState.phoneNumber.value,
             password: formState.password.value,
@@ -157,7 +147,6 @@ const Auth = () => {
             email: formState.email.value,
             phoneNumber: formState.phoneNumber.value,
             password: formState.password.value,
->>>>>>> 788a2979011eb3ac400d4405c852fbd2cb3078a4
           })
     ); */
   };

@@ -11,19 +11,11 @@ const {
   CLEAR_ERROR,
 } = authTypes;
 
-<<<<<<< HEAD
 export const signUpWithEmail = ({ email, password }) => {
-=======
-export const signUp = ({ email, phoneNumber, password }) => {
->>>>>>> 788a2979011eb3ac400d4405c852fbd2cb3078a4
   return async (dispatch) => {
     try {
       console.log("llega al try1", email, phoneNumber, password);
       dispatch({ type: SIGN_UP_REQUEST });
-<<<<<<< HEAD
-      console.log("llega al try2", email, phoneNumber, password);
-=======
->>>>>>> 788a2979011eb3ac400d4405c852fbd2cb3078a4
       const response = await fetch(AUTH_SIGN_UP_URL, {
         method: "POST",
         headers: {
@@ -48,11 +40,8 @@ export const signUp = ({ email, phoneNumber, password }) => {
       dispatch({
         type: SIGN_UP_SUCCESS,
         userId: data.userId,
-<<<<<<< HEAD
-=======
         email: data.email,
         phoneNumber: data.phoneNumber,
->>>>>>> 788a2979011eb3ac400d4405c852fbd2cb3078a4
       });
     } catch (error) {
       console.log("llega al error", error);
@@ -64,11 +53,7 @@ export const signUp = ({ email, phoneNumber, password }) => {
   };
 };
 
-<<<<<<< HEAD
 export const signUpWithPhoneNumber = ({ phoneNumber, password }) => {
-=======
-export const signIn = ({ email, phoneNumber, password }) => {
->>>>>>> 788a2979011eb3ac400d4405c852fbd2cb3078a4
   return async (dispatch) => {
     try {
       dispatch({ type: SIGN_UP_REQUEST });
@@ -114,10 +99,6 @@ export const signInWithEmail = ({ email, password }) => {
     try {
       console.log("llega al try", email, phoneNumber, password);
       dispatch({ type: SIGN_IN_REQUEST });
-<<<<<<< HEAD
-      console.log("llega al try2", email, phoneNumber, password);
-=======
->>>>>>> 788a2979011eb3ac400d4405c852fbd2cb3078a4
       const response = await fetch(AUTH_SIGN_IN_URL, {
         method: "POST",
         headers: {
