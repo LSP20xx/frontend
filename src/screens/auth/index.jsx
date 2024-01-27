@@ -25,6 +25,7 @@ import CountryPicker from "react-native-country-picker-modal";
 const initialState = {
   email: { value: "", error: "", touched: false, hasError: true },
   password: { value: "", error: "", touched: false, hasError: true },
+  phoneNumber: { value: "", error: "", touched: false, hasError: true },
   isFormValid: false,
 };
 
@@ -138,6 +139,7 @@ const Auth = () => {
     dispatch(
       isLogin
         ? signIn({
+<<<<<<< HEAD
             email: authData.email,
             phoneNumber: authData.phoneNumber,
             password: authData.password,
@@ -146,6 +148,16 @@ const Auth = () => {
             email: authData.email,
             phoneNumber: authData.phoneNumber,
             password: authData.password,
+=======
+            email: formState.email.value,
+            phoneNumber: formState.phoneNumber.value,
+            password: formState.password.value,
+          })
+        : signUp({
+            email: formState.email.value,
+            phoneNumber: formState.phoneNumber.value,
+            password: formState.password.value,
+>>>>>>> 788a2979011eb3ac400d4405c852fbd2cb3078a4
           })
     ); */
   };

@@ -13,9 +13,9 @@ const {
 const initialState = {
   isLoading: false,
   error: null,
-  token: null,
   userId: null,
   email: null,
+  phoneNumber: null,
   hasError: false,
 };
 
@@ -32,9 +32,9 @@ const authReducer = (state = initialState, action) => {
     case SIGN_UP_SUCCESS:
       return {
         ...state,
-        token: action.token,
         userId: action.userId,
         email: action.email,
+        phoneNumber: action.phoneNumber,
         isLoading: false,
         error: null,
         hasError: false,
@@ -42,10 +42,10 @@ const authReducer = (state = initialState, action) => {
     case SIGN_UP_FAILURE:
       return {
         ...state,
-        token: null,
         userId: null,
         isLoading: false,
         email: null,
+        phoneNumber: null,
         error: action.error,
         hasError: true,
       };
@@ -57,9 +57,9 @@ const authReducer = (state = initialState, action) => {
     case SIGN_IN_SUCCESS:
       return {
         ...state,
-        token: action.token,
         userId: action.userId,
         email: action.email,
+        phoneNumber: action.phoneNumber,
         isLoading: false,
         error: null,
         hasError: false,
@@ -67,9 +67,9 @@ const authReducer = (state = initialState, action) => {
     case SIGN_IN_FAILURE:
       return {
         ...state,
-        token: null,
         userId: null,
         email: null,
+        phoneNumber: null,
         isLoading: false,
         error: action.error,
         hasError: true,
