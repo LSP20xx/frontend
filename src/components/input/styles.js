@@ -8,8 +8,6 @@ export const styles = StyleSheet.create({
   },
   input: {
     fontSize: 13,
-    borderBottomColor: COLORS.primary,
-    borderBottomWidth: 1,
     width: "90%",
     color: COLORS.text,
     paddingVertical: 5,
@@ -29,10 +27,9 @@ export const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   input: {
-    fontSize: 13,
-    borderBottomColor: COLORS.primary,
-    borderBottomWidth: 1,
+    fontSize: 16,
     flex: 1,
     paddingVertical: 5,
+    color: COLORS.black,
   },
 });

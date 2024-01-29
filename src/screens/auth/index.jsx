@@ -70,7 +70,6 @@ const Auth = () => {
   const [inputType, setInputType] = useState("unknown");
   const [countryCode, setCountryCode] = useState("AR");
   const [callingCode, setCallingCode] = useState("");
-  const { userId } = useSelector((state) => state.auth);
   const title = isLogin ? "Iniciar sesión" : "Registrarse";
   const buttonTitle = isLogin ? "Iniciar sesión" : "Registrar";
   const messageText = isLogin
@@ -89,25 +88,6 @@ const Auth = () => {
     setIsLogin(!isLogin);
   };
   const onHandleAuth = () => {
-    /*  let authData;
-    if (inputType === "phoneNumber") {
-      const phoneNumberWithCode = `+${callingCode}${formState.email.value}`;
-      authData = {
-        email: "",
-        phoneNumber: phoneNumberWithCode,
-        password: formState.password.value,
-      };
-    } else {
-      authData = {
-        email: formState.email.value,
-        phoneNumber: "",
-        password: formState.password.value,
-      };
-    }
- */
-
-    console.log(callingCode);
-
     if (inputType === "phoneNumber") {
       const phoneNumberWithCode = `+${callingCode}${formState.email.value}`;
       dispatch(
@@ -121,7 +101,8 @@ const Auth = () => {
               password: formState.password.value,
             })
       );
-    } else {
+    } else if (inputType === "email") {
+      console.log("email");
       dispatch(
         isLogin
           ? signInWithEmail({
@@ -155,8 +136,10 @@ const Auth = () => {
   };
 
   const onHandlerInputChange = ({ value, name }) => {
-    const type = identifyInputType(value);
-    setInputType(type);
+    if (name === "email") {
+      const type = identifyInputType(value);
+      setInputType(type);
+    }
     onInputChange({ name, value, dispatch: dispatchFormState, formState });
   };
 

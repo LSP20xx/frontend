@@ -15,8 +15,6 @@ export const styles = StyleSheet.create({
     padding: 15,
     margin: 15,
     backgroundColor: COLORS.white,
-    borderWidth: 1,
-    borderColor: COLORS.primary,
     shadowColor: COLORS.black,
     shadowOffset: {
       width: 0,
@@ -72,7 +70,6 @@ export const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: "center",
   },
-
   inputField: {
     fontSize: 14,
     borderBottomColor: COLORS.primary,
