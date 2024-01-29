@@ -102,7 +102,6 @@ const Auth = () => {
             })
       );
     } else if (inputType === "email") {
-      console.log("email");
       dispatch(
         isLogin
           ? signInWithEmail({
