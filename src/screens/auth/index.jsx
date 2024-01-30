@@ -14,10 +14,8 @@ import { Input } from "../../components";
 import { COLORS } from "../../constants";
 import {
   clearError,
-  signInWithEmail,
-  signUpWithEmail,
-  signInWithPhoneNumber,
-  signUpWithPhoneNumber,
+  checkEmailAuthData,
+  checkPhoneNumberAuthData,
 } from "../../store/actions";
 import { UPDATE_FORM, onInputChange } from "../../utils/forms";
 import CountryPicker from "react-native-country-picker-modal";
@@ -62,14 +60,18 @@ const formReducer = (state, action) => {
   }
 };
 
-const Auth = () => {
+const Auth = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { error, isLoading, hasError } = useSelector((state) => state.auth);
+  const { error, isLoading, hasError, token } = useSelector(
+    (state) => state.auth
+  );
   const [isLogin, setIsLogin] = useState(true);
   const [formState, dispatchFormState] = useReducer(formReducer, initialState);
   const [inputType, setInputType] = useState("unknown");
   const [countryCode, setCountryCode] = useState("AR");
   const [callingCode, setCallingCode] = useState("");
+  const [redirected, setRedirected] = useState(false);
+
   const title = isLogin ? "Iniciar sesión" : "Registrarse";
   const buttonTitle = isLogin ? "Iniciar sesión" : "Registrar";
   const messageText = isLogin
@@ -91,43 +93,21 @@ const Auth = () => {
     if (inputType === "phoneNumber") {
       const phoneNumberWithCode = `+${callingCode}${formState.email.value}`;
       dispatch(
-        isLogin
-          ? signInWithPhoneNumber({
-              phoneNumber: phoneNumberWithCode,
-              password: formState.password.value,
-            })
-          : signUpWithPhoneNumber({
-              phoneNumber: phoneNumberWithCode,
-              password: formState.password.value,
-            })
+        checkPhoneNumberAuthData({
+          phoneNumber: phoneNumberWithCode,
+          password: formState.password.value,
+          isLogin,
+        })
       );
     } else if (inputType === "email") {
       dispatch(
-        isLogin
-          ? signInWithEmail({
-              email: formState.email.value,
-              password: formState.password.value,
-            })
-          : signUpWithEmail({
-              email: formState.email.value,
-              password: formState.password.value,
-            })
+        checkEmailAuthData({
+          email: formState.email.value,
+          password: formState.password.value,
+          isLogin,
+        })
       );
     }
-    /* 
-    dispatch(
-      isLogin
-        ? signIn({
-            email: formState.email.value,
-            phoneNumber: formState.phoneNumber.value,
-            password: formState.password.value,
-          })
-        : signUp({
-            email: formState.email.value,
-            phoneNumber: formState.phoneNumber.value,
-            password: formState.password.value,
-          })
-    ); */
   };
 
   const onHandleButtonModal = () => {
@@ -148,13 +128,19 @@ const Auth = () => {
     }
   };
 
+  useEffect(() => {
+    if (token && !redirected) {
+      navigation.navigate("Verification");
+      setRedirected(true);
+    }
+  }, [token, navigation, redirected]);
+
   return (
     <View style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.title}>{title}</Text>
-
         <Input
-          placeholder="Tu email/Tu número de teléfono"
+          placeholder="Email/Número de teléfono"
           placeholderTextColor={COLORS.darkGray}
           autoCapitalize="none"
           autoCorrect={false}
@@ -163,7 +149,6 @@ const Auth = () => {
           }
           onFocus={onEmailInputFocus}
           value={formState.email.value}
-          label="Correo/número de teléfono"
           error={formState.email.error}
           touched={formState.email.touched}
           hasError={formState.email.hasError}
@@ -182,7 +167,7 @@ const Auth = () => {
           }
         />
         <Input
-          placeholder="********"
+          placeholder="Contraseña"
           placeholderTextColor={COLORS.darkGray}
           secureTextEntry
           autoCapitalize="none"
@@ -191,7 +176,6 @@ const Auth = () => {
             onHandlerInputChange({ value: text, name: "password" })
           }
           value={formState.password.value}
-          label="Contraseña"
           error={formState.password.error}
           touched={formState.password.touched}
           hasError={formState.password.hasError}

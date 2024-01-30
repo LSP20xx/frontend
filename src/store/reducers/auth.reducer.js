@@ -7,6 +7,9 @@ const {
   SIGN_IN_REQUEST,
   SIGN_IN_SUCCESS,
   SIGN_IN_FAILURE,
+  VERIFICATION_TOKEN_REQUEST,
+  VERIFICATION_TOKEN_SUCCESS,
+  VERIFICATION_TOKEN_FAILURE,
   CLEAR_ERROR,
 } = authTypes;
 
@@ -15,18 +18,41 @@ const initialState = {
   error: null,
   userId: null,
   email: null,
+  token: null,
   phoneNumber: null,
   hasError: false,
 };
 
 const authReducer = (state = initialState, action) => {
-  if (action.type === SIGN_UP_SUCCESS) {
-    console.log("llega al reducer", action.userId);
-  }
   switch (action.type) {
+    case VERIFICATION_TOKEN_REQUEST:
+      return {
+        ...state,
+        isLoading: true,
+        token: null,
+      };
+    case VERIFICATION_TOKEN_SUCCESS:
+      return {
+        ...state,
+        token: action.token,
+        email: action.email,
+        phoneNumber: action.phoneNumber,
+        isLoading: false,
+        error: null,
+        hasError: false,
+      };
+    case VERIFICATION_TOKEN_FAILURE:
+      return {
+        ...state,
+        token: null,
+        isLoading: false,
+        error: action.error,
+        hasError: true,
+      };
     case SIGN_UP_REQUEST:
       return {
         ...state,
+
         isLoading: true,
       };
     case SIGN_UP_SUCCESS:

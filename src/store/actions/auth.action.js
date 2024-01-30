@@ -1,11 +1,17 @@
-import { AUTH_SIGN_IN_URL, AUTH_SIGN_UP_URL } from "../../constants";
+import {
+  AUTH_SIGN_IN_URL,
+  AUTH_SIGN_UP_URL,
+  AUTH_CHECK_DATA,
+} from "../../constants";
 import { authTypes } from "../types";
 
 const {
   SIGN_IN_REQUEST,
   SIGN_IN_SUCCESS,
   SIGN_IN_FAILURE,
-  SIGN_IN_VERIFY_CODE_REQUEST,
+  VERIFICATION_TOKEN_REQUEST,
+  VERIFICATION_TOKEN_SUCCESS,
+  VERIFICATION_TOKEN_FAILURE,
   SIGN_UP_REQUEST,
   SIGN_UP_SUCCESS,
   SIGN_UP_FAILURE,
@@ -115,7 +121,7 @@ export const signInWithEmail = ({ email, password }) => {
     } catch (error) {
       dispatch({
         type: SIGN_IN_FAILURE,
-        error: error.message,
+        error: data.error.message,
       });
     }
   };
@@ -150,6 +156,81 @@ export const signInWithPhoneNumber = ({ phoneNumber, password }) => {
     } catch (error) {
       dispatch({
         type: SIGN_IN_FAILURE,
+        error: error.message,
+      });
+    }
+  };
+};
+
+export const checkEmailAuthData = ({ email, password, isLogin }) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: VERIFICATION_TOKEN_REQUEST });
+      const response = await fetch(AUTH_CHECK_DATA, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+          isLogin,
+        }),
+      });
+      const data = await response.json();
+      if (data.error) {
+        throw new Error(data.error.message);
+      }
+      dispatch({
+        type: VERIFICATION_TOKEN_SUCCESS,
+        token: data.token,
+      });
+    } catch (error) {
+      console.log("ERROR: ", error);
+      console.log("Error Details: ", JSON.stringify(error, null, 2));
+      dispatch({
+        type: VERIFICATION_TOKEN_FAILURE,
+        error: error.message,
+      });
+    }
+  };
+};
+
+export const checkPhoneNumberAuthData = ({
+  phoneNumber,
+  password,
+  isLogin,
+}) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: VERIFICATION_TOKEN_REQUEST });
+
+      const response = await fetch(AUTH_CHECK_DATA, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          phoneNumber,
+          password,
+          isLogin,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "An error occurred");
+      }
+
+      dispatch({
+        type: VERIFICATION_TOKEN_SUCCESS,
+        token: data.token,
+      });
+    } catch (error) {
+      console.error("ERROR: ", error);
+      dispatch({
+        type: VERIFICATION_TOKEN_FAILURE,
         error: error.message,
       });
     }
