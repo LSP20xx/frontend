@@ -11,6 +11,7 @@ const {
   VERIFICATION_TOKEN_SUCCESS,
   VERIFICATION_TOKEN_FAILURE,
   CLEAR_ERROR,
+  CLEAR_STATE,
 } = authTypes;
 
 const initialState = {
@@ -105,6 +106,14 @@ const authReducer = (state = initialState, action) => {
         ...state,
         error: null,
         hasError: false,
+      };
+    case CLEAR_STATE:
+      return {
+        ...state,
+        userId: null,
+        email: null,
+        phoneNumber: null,
+        token: null,
       };
     default:
       return state;

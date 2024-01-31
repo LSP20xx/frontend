@@ -1,25 +1,25 @@
 import { useEffect, useReducer, useState } from "react";
 import {
-  View,
-  Text,
-  Modal,
-  Button,
-  TouchableOpacity,
   ActivityIndicator,
+  Button,
+  Modal,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
-import { styles } from "./styles";
-import { Input } from "../../components";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { COLORS } from "../../constants";
 import {
-  clearError,
   checkEmailAuthData,
   checkPhoneNumberAuthData,
+  clearError,
   clearState,
 } from "../../store/actions";
 import { UPDATE_FORM, onInputChange } from "../../utils/forms";
-import CountryPicker from "react-native-country-picker-modal";
+import { styles } from "./styles";
 
 const initialState = {
   email: { value: "", error: "", touched: false, hasError: true },
@@ -61,31 +61,30 @@ const formReducer = (state, action) => {
   }
 };
 
-const Auth = ({ navigation }) => {
+export const Verification = ({ navigation }) => {
   const dispatch = useDispatch();
   const { error, isLoading, hasError, token } = useSelector(
     (state) => state.auth
   );
   const [isLogin, setIsLogin] = useState(true);
   const [formState, dispatchFormState] = useReducer(formReducer, initialState);
-  const [inputType, setInputType] = useState("unknown");
-  const [countryCode, setCountryCode] = useState("AR");
-  const [callingCode, setCallingCode] = useState("");
-  const [redirected, setRedirected] = useState(false);
+  const [code, setCode] = useState(new Array(6).fill(""));
+  const inputs = [];
 
-  const title = isLogin ? "Iniciar sesión" : "Registrarse";
-  const buttonTitle = isLogin ? "Iniciar sesión" : "Registrarse";
-  const messageText = isLogin
-    ? "¿No creaste una cuenta?"
-    : "¿Ya creaste una cuenta?";
-
-  const onSelectCountry = (country) => {
-    setCountryCode(country.cca2);
-    if (country.callingCode) {
-      const callingCode = country.callingCode[0];
-      setCallingCode(callingCode);
+  const handleInput = (text, index) => {
+    const newCode = [...code];
+    newCode[index] = text;
+    setCode(newCode);
+    if (text.length === 1 && index < 5) {
+      inputs[index + 1].focus();
     }
   };
+
+  const title = isLogin ? "Verificación de seguridad" : "Registrarse";
+  const buttonTitle = isLogin ? "Verificar" : "Registrarse";
+  const messageText = isLogin
+    ? "¿Necesitás otro método de verificación?"
+    : "¿Ya creaste una cuenta?";
 
   const onHandleChangeAuth = () => {
     setIsLogin(!isLogin);
@@ -133,67 +132,45 @@ const Auth = ({ navigation }) => {
     }
   };
 
-  useEffect(() => {
+  const onHandleOnBackPress = () => {
     clearState();
-  }, []);
-
-  useEffect(() => {
-    if (token) {
-      navigation.navigate("Verification");
-    }
-  }, [token, navigation]);
+    navigation.goBack();
+  };
 
   return (
     <View style={styles.container}>
-      <View style={styles.content}>
+      <View style={styles.headerContainer}>
+        <TouchableOpacity
+          onPress={onHandleOnBackPress}
+          style={styles.backButton}
+        >
+          <Ionicons name="arrow-back-outline" style={styles.backIcon} />
+        </TouchableOpacity>
         <Text style={styles.title}>{title}</Text>
-        <Input
-          placeholder="Email/Número de teléfono"
-          placeholderTextColor={COLORS.darkGray}
-          autoCapitalize="none"
-          autoCorrect={false}
-          onChangeText={(text) =>
-            onHandlerInputChange({ value: text, name: "email" })
-          }
-          onFocus={onEmailInputFocus}
-          value={formState.email.value}
-          error={formState.email.error}
-          touched={formState.email.touched}
-          hasError={formState.email.hasError}
-          leftIcon={
-            inputType === "phoneNumber" && (
-              <CountryPicker
-                withFilter
-                withFlag
-                withCallingCode
-                withCallingCodeButton
-                withEmoji
-                countryCode={countryCode}
-                onSelect={onSelectCountry}
-              />
-            )
-          }
-        />
-        <Input
-          placeholder="Contraseña"
-          placeholderTextColor={COLORS.darkGray}
-          secureTextEntry
-          autoCapitalize="none"
-          autoCorrect={false}
-          onChangeText={(text) =>
-            onHandlerInputChange({ value: text, name: "password" })
-          }
-          value={formState.password.value}
-          error={formState.password.error}
-          touched={formState.password.touched}
-          hasError={formState.password.hasError}
-        />
+      </View>
+      <View style={styles.content}>
+        <View style={styles.inputContainer}>
+          {code.map((digit, index) => (
+            <TextInput
+              key={index}
+              style={styles.codeInput}
+              maxLength={1}
+              keyboardType="number-pad"
+              onChangeText={(text) => handleInput(text, index)}
+              value={digit}
+              ref={(ref) => (inputs[index] = ref)}
+            />
+          ))}
+        </View>
+
         <View style={styles.linkForgetPassword}>
           <TouchableOpacity
             style={styles.link}
             onPress={onHandleForgetPassword}
           >
-            <Text style={styles.linkText}>¿Olvidaste tu contraseña?</Text>
+            <Text style={styles.linkText}>
+              ¿Metódo de verificación no disponible?
+            </Text>
           </TouchableOpacity>
         </View>
         <View style={styles.submitContainer}>
@@ -230,5 +207,3 @@ const Auth = ({ navigation }) => {
     </View>
   );
 };
-
-export default Auth;

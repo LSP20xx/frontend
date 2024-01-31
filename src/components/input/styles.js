@@ -6,15 +6,10 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  input: {
-    fontSize: 13,
-    width: "90%",
-    color: COLORS.text,
-    paddingVertical: 5,
-  },
+
   errorContainer: {
     flex: 1,
-    marginVertical: 5,
+    marginTop: 20,
   },
   errorMessage: {
     fontSize: 12,
@@ -25,6 +20,12 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-start",
+    border: 1,
+    borderWidth: 1,
+    borderColor: COLORS.greySecondary,
+    borderRadius: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 15,
   },
   input: {
     fontSize: 16,

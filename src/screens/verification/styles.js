@@ -92,4 +92,42 @@ export const styles = StyleSheet.create({
   buttonDisabled: {
     backgroundColor: "grey",
   },
+  inputContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 20,
+  },
+  codeInput: {
+    width: 50,
+    height: 50,
+    borderWidth: 1,
+    borderColor: COLORS.primaryDark,
+    borderRadius: 10,
+    textAlign: "center",
+    fontSize: 22,
+  },
+  headerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+    paddingTop: 24,
+    paddingHorizontal: 16,
+    backgroundColor: COLORS.white,
+  },
+  backButton: {
+    marginRight: 8,
+    zIndex: 10,
+  },
+  title: {
+    flex: 1,
+    fontFamily: "Uto-Bold",
+    fontSize: 24,
+    textAlign: "center",
+    color: COLORS.grey,
+    marginRight: 24,
+  },
+  backIcon: {
+    fontSize: 24,
+    color: COLORS.black,
+  },
 });

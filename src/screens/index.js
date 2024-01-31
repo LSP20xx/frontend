@@ -8,3 +8,4 @@ export { default as Favorites } from "./favorites/index";
 export { default as Auth } from "./auth/index";
 export { default as Profile } from "./profile/index";
 export { default as Maps } from "./maps/index";
+export { default as Verification } from "./verification/index";

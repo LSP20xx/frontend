@@ -15,6 +15,7 @@ const {
   SIGN_UP_REQUEST,
   SIGN_UP_SUCCESS,
   SIGN_UP_FAILURE,
+  CLEAR_STATE,
   CLEAR_ERROR,
 } = authTypes;
 
@@ -161,36 +162,37 @@ export const signInWithPhoneNumber = ({ phoneNumber, password }) => {
     }
   };
 };
-
 export const checkEmailAuthData = ({ email, password, isLogin }) => {
   return async (dispatch) => {
+    dispatch({ type: VERIFICATION_TOKEN_REQUEST });
+
     try {
-      dispatch({ type: VERIFICATION_TOKEN_REQUEST });
       const response = await fetch(AUTH_CHECK_DATA, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email,
-          password,
-          isLogin,
-        }),
+        body: JSON.stringify({ email, password, isLogin }),
       });
+
       const data = await response.json();
+      console.log("DATA: ", data);
+
       if (data.error) {
-        throw new Error(data.error.message);
+        dispatch({
+          type: VERIFICATION_TOKEN_FAILURE,
+          error: data.message,
+        });
+      } else {
+        dispatch({
+          type: VERIFICATION_TOKEN_SUCCESS,
+          token: data.token,
+        });
       }
-      dispatch({
-        type: VERIFICATION_TOKEN_SUCCESS,
-        token: data.token,
-      });
     } catch (error) {
-      console.log("ERROR: ", error);
-      console.log("Error Details: ", JSON.stringify(error, null, 2));
       dispatch({
         type: VERIFICATION_TOKEN_FAILURE,
-        error: error.message,
+        error: error.message || "An unexpected error occurred",
       });
     }
   };
@@ -220,13 +222,16 @@ export const checkPhoneNumberAuthData = ({
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "An error occurred");
+        dispatch({
+          type: VERIFICATION_TOKEN_FAILURE,
+          error: data.message || "An error occurred",
+        });
+      } else {
+        dispatch({
+          type: VERIFICATION_TOKEN_SUCCESS,
+          token: data.token,
+        });
       }
-
-      dispatch({
-        type: VERIFICATION_TOKEN_SUCCESS,
-        token: data.token,
-      });
     } catch (error) {
       console.error("ERROR: ", error);
       dispatch({
@@ -234,6 +239,12 @@ export const checkPhoneNumberAuthData = ({
         error: error.message,
       });
     }
+  };
+};
+
+export const clearState = () => {
+  return (dispatch) => {
+    dispatch({ type: CLEAR_STATE });
   };
 };
 

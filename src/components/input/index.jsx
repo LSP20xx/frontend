@@ -14,7 +14,7 @@ const Input = ({
   onBlur,
   maxLength,
   placeholder,
-  placeholderTextColor = COLORS.disabled,
+  placeholderTextColor = COLORS.grey,
   keyboardType = "default",
   hasError,
   error,
