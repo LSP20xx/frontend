@@ -63,50 +63,40 @@ const formReducer = (state, action) => {
 
 export const Verification = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { error, isLoading, hasError, token } = useSelector(
-    (state) => state.auth
-  );
-  const [isLogin, setIsLogin] = useState(true);
+  const {
+    error,
+    isLoading,
+    hasError,
+    verificationMethods,
+    email,
+    phoneNumber,
+  } = useSelector((state) => state.auth);
   const [formState, dispatchFormState] = useReducer(formReducer, initialState);
   const [code, setCode] = useState(new Array(6).fill(""));
+  const [selectedVerificationMethod, setSelectedVerificationMethod] =
+    useState("");
+  const [timer, setTimer] = useState(60); // Iniciar contador en 60 segundos
+  const [canResend, setCanResend] = useState(false); // Controlar si se puede reenviar el código
+
   const inputs = [];
 
   const handleInput = (text, index) => {
     const newCode = [...code];
     newCode[index] = text;
     setCode(newCode);
-    if (text.length === 1 && index < 5) {
+    if (text?.length === 1 && index < 5) {
       inputs[index + 1].focus();
     }
   };
 
-  const title = isLogin ? "Verificación de seguridad" : "Registrarse";
-  const buttonTitle = isLogin ? "Verificar" : "Registrarse";
-  const messageText = isLogin
-    ? "¿Necesitás otro método de verificación?"
-    : "¿Ya creaste una cuenta?";
+  const title = "Verificación de seguridad";
+  const buttonTitle = "Verificar";
+  const messageText = "¿Necesitás otro método de verificación?";
 
-  const onHandleChangeAuth = () => {
-    setIsLogin(!isLogin);
-  };
+  const onHandleChangeAuth = () => {};
   const onHandleAuth = () => {
-    if (inputType === "phoneNumber") {
-      const phoneNumberWithCode = `+${callingCode}${formState.email.value}`;
-      dispatch(
-        checkPhoneNumberAuthData({
-          phoneNumber: phoneNumberWithCode,
-          password: formState.password.value,
-          isLogin,
-        })
-      );
-    } else if (inputType === "email") {
-      dispatch(
-        checkEmailAuthData({
-          email: formState.email.value,
-          password: formState.password.value,
-          isLogin,
-        })
-      );
+    if (selectedVerificationMethod === "EMAIL") {
+    } else if (selectedVerificationMethod === "SMS") {
     }
   };
 
@@ -137,8 +127,67 @@ export const Verification = ({ navigation }) => {
     navigation.goBack();
   };
 
+  const updateSelectedVerificationMethod = (method) => {
+    setSelectedVerificationMethod(method);
+  };
+
+  const obfuscateEmail = (email) => {
+    const [localPart, domain] = email.split("@");
+    const obfuscatedLocal =
+      localPart?.length > 2
+        ? localPart.substring(0, 2) + "*".repeat(localPart?.length - 2)
+        : localPart;
+    return `${obfuscatedLocal}@${domain}`;
+  };
+
+  const obfuscatePhoneNumber = (phoneNumber) => {
+    const visibleDigits = 4;
+    return (
+      "*".repeat(phoneNumber?.length - visibleDigits) +
+      phoneNumber?.slice(-visibleDigits)
+    );
+  };
+
+  const resendCode = () => {
+    setTimer(60);
+    setCanResend(false);
+  };
+
+  useEffect(() => {
+    let interval;
+    if (timer > 0) {
+      interval = setInterval(() => {
+        setTimer((currentTimer) => currentTimer - 1);
+      }, 1000);
+    } else {
+      setCanResend(true);
+    }
+
+    return () => clearInterval(interval);
+  }, [timer]);
+
+  useEffect(() => {
+    if (verificationMethods && verificationMethods?.length > 0) {
+      updateSelectedVerificationMethod(verificationMethods[0]);
+    }
+  }, [verificationMethods]);
+
+  const verificationMessage =
+    selectedVerificationMethod === "EMAIL"
+      ? `Se enviará un email a ${obfuscateEmail(email)}`
+      : `Se enviará un SMS a ${obfuscatePhoneNumber(phoneNumber)}`;
+
   return (
     <View style={styles.container}>
+      {canResend ? (
+        <TouchableOpacity onPress={resendCode} style={styles.resendButton}>
+          <Text style={styles.resendButtonText}>Reenviar Código</Text>
+        </TouchableOpacity>
+      ) : (
+        <Text style={styles.timerText}>
+          Puede reenviarlo en: {timer} {timer === 1 ? "segundo" : "segundos"}
+        </Text>
+      )}
       <View style={styles.headerContainer}>
         <TouchableOpacity
           onPress={onHandleOnBackPress}
@@ -149,8 +198,9 @@ export const Verification = ({ navigation }) => {
         <Text style={styles.title}>{title}</Text>
       </View>
       <View style={styles.content}>
+        <Text style={styles.verificationTitle}>{verificationMessage}</Text>
         <View style={styles.inputContainer}>
-          {code.map((digit, index) => (
+          {code?.map((digit, index) => (
             <TextInput
               key={index}
               style={styles.codeInput}

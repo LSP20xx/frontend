@@ -21,6 +21,7 @@ const initialState = {
   email: null,
   token: null,
   phoneNumber: null,
+  verificationMethods: [],
   hasError: false,
 };
 
@@ -38,6 +39,7 @@ const authReducer = (state = initialState, action) => {
         token: action.token,
         email: action.email,
         phoneNumber: action.phoneNumber,
+        verificationMethods: action.verificationMethods,
         isLoading: false,
         error: null,
         hasError: false,
@@ -53,7 +55,6 @@ const authReducer = (state = initialState, action) => {
     case SIGN_UP_REQUEST:
       return {
         ...state,
-
         isLoading: true,
       };
     case SIGN_UP_SUCCESS:
@@ -114,6 +115,7 @@ const authReducer = (state = initialState, action) => {
         email: null,
         phoneNumber: null,
         token: null,
+        verificationMethods: [],
       };
     default:
       return state;

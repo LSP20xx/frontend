@@ -187,6 +187,9 @@ export const checkEmailAuthData = ({ email, password, isLogin }) => {
         dispatch({
           type: VERIFICATION_TOKEN_SUCCESS,
           token: data.token,
+          verificationMethods: data.verificationMethods,
+          phoneNumber: data.phoneNumber,
+          email: data.email,
         });
       }
     } catch (error) {
@@ -230,6 +233,10 @@ export const checkPhoneNumberAuthData = ({
         dispatch({
           type: VERIFICATION_TOKEN_SUCCESS,
           token: data.token,
+          verificationMethods: data.verificationMethods,
+          phoneNumber: data.phoneNumber,
+          email: data.email,
+          password: data.password,
         });
       }
     } catch (error) {

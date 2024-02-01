@@ -130,4 +130,20 @@ export const styles = StyleSheet.create({
     fontSize: 24,
     color: COLORS.black,
   },
+  verificationTitle: {
+    fontFamily: "Uto-Light",
+    fontSize: 14,
+    color: COLORS.grey,
+    marginBottom: 10,
+  },
+  timerText: {
+    fontFamily: "Uto-SemiBold",
+    fontSize: 16,
+    color: COLORS.primaryDark,
+  },
+  resendButtonText: {
+    fontFamily: "Uto-Bold",
+    fontSize: 16,
+    color: COLORS.secondary,
+  },
 });
