@@ -144,6 +144,6 @@ export const styles = StyleSheet.create({
   resendButtonText: {
     fontFamily: "Uto-Bold",
     fontSize: 16,
-    color: COLORS.secondary,
+    color: COLORS.primaryDark,
   },
 });

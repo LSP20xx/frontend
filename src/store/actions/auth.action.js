@@ -2,6 +2,7 @@ import {
   AUTH_SIGN_IN_URL,
   AUTH_SIGN_UP_URL,
   AUTH_CHECK_DATA,
+  VERIFY_SMS_URL,
 } from "../../constants";
 import { authTypes } from "../types";
 
@@ -17,6 +18,9 @@ const {
   SIGN_UP_FAILURE,
   CLEAR_STATE,
   CLEAR_ERROR,
+  VERIFY_SMS_CODE,
+  VERIFY_SMS_CODE_SUCCESS,
+  VERIFY_SMS_CODE_FAILURE,
 } = authTypes;
 
 export const signUpWithEmail = ({ email, password }) => {
@@ -54,7 +58,7 @@ export const signUpWithEmail = ({ email, password }) => {
   };
 };
 
-export const signUpWithPhoneNumber = ({ phoneNumber, password }) => {
+export const signUpWithPhoneNumber = ({ phoneNumber, tempId }) => {
   return async (dispatch) => {
     try {
       dispatch({ type: SIGN_UP_REQUEST });
@@ -65,7 +69,7 @@ export const signUpWithPhoneNumber = ({ phoneNumber, password }) => {
         },
         body: JSON.stringify({
           phoneNumber,
-          password,
+          tempId,
         }),
       });
 
@@ -128,7 +132,7 @@ export const signInWithEmail = ({ email, password }) => {
   };
 };
 
-export const signInWithPhoneNumber = ({ phoneNumber, password }) => {
+export const signInWithPhoneNumber = ({ phoneNumber, tempId }) => {
   return async (dispatch) => {
     try {
       dispatch({ type: SIGN_IN_REQUEST });
@@ -139,7 +143,7 @@ export const signInWithPhoneNumber = ({ phoneNumber, password }) => {
         },
         body: JSON.stringify({
           login: phoneNumber,
-          password,
+          tempId,
         }),
       });
 
@@ -152,7 +156,6 @@ export const signInWithPhoneNumber = ({ phoneNumber, password }) => {
       dispatch({
         type: SIGN_IN_SUCCESS,
         userId: data.userId,
-        phoneNumber: data.phoneNumber,
       });
     } catch (error) {
       dispatch({
@@ -232,11 +235,12 @@ export const checkPhoneNumberAuthData = ({
       } else {
         dispatch({
           type: VERIFICATION_TOKEN_SUCCESS,
+          tempId: data.tempId,
+          isLogin: isLogin,
           token: data.token,
           verificationMethods: data.verificationMethods,
           phoneNumber: data.phoneNumber,
           email: data.email,
-          password: data.password,
         });
       }
     } catch (error) {
@@ -245,6 +249,40 @@ export const checkPhoneNumberAuthData = ({
         type: VERIFICATION_TOKEN_FAILURE,
         error: error.message,
       });
+    }
+  };
+};
+
+export const verifySmsCode = (to, code, tempId, isLogin) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: VERIFY_SMS_CODE,
+      });
+      const response = await fetch(VERIFY_SMS_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ to, code }),
+      });
+      if (!response.ok) {
+        throw new Error("Error verifying sms code");
+      }
+      const result = await response.json();
+      if (result.isVerified) {
+        dispatch({ type: VERIFY_SMS_CODE_SUCCESS });
+        if (isLogin) {
+          dispatch(signInWithPhoneNumber({ phoneNumber: to, tempId }));
+        } else {
+          dispatch(signUpWithPhoneNumber({ phoneNumber: to, tempId }));
+        }
+      } else {
+        dispatch({ type: VERIFY_SMS_CODE_FAILURE });
+      }
+    } catch (error) {
+      console.error(error);
+      dispatch({ type: VERIFY_SMS_CODE_FAILURE });
     }
   };
 };

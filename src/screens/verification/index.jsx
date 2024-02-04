@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Button,
@@ -13,70 +13,32 @@ import { useDispatch, useSelector } from "react-redux";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { COLORS } from "../../constants";
 import {
-  checkEmailAuthData,
-  checkPhoneNumberAuthData,
   clearError,
   clearState,
+  sendEmail,
+  sendSMS,
+  verifySmsCode,
 } from "../../store/actions";
-import { UPDATE_FORM, onInputChange } from "../../utils/forms";
 import { styles } from "./styles";
-
-const initialState = {
-  email: { value: "", error: "", touched: false, hasError: true },
-  password: { value: "", error: "", touched: false, hasError: true },
-  isFormValid: false,
-};
-
-const formatEmail =
-  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-const formatPhoneNumber = /^[0-9]{7,20}$/;
-
-const identifyInputType = (value) => {
-  const formatValue = value.trim();
-  if (formatEmail.test(formatValue)) {
-    return "email";
-  } else if (formatPhoneNumber.test(formatValue)) {
-    return "phoneNumber";
-  } else {
-    return "unknown";
-  }
-};
-
-const formReducer = (state, action) => {
-  switch (action.type) {
-    case UPDATE_FORM:
-      const { name, value, hasError, error, touched, isFormValid } =
-        action.data;
-      return {
-        ...state,
-        [name]: {
-          ...state[name],
-          value,
-          hasError,
-          error,
-          touched,
-        },
-        isFormValid,
-      };
-  }
-};
 
 export const Verification = ({ navigation }) => {
   const dispatch = useDispatch();
   const {
     error,
     isLoading,
+    isLogin,
     hasError,
     verificationMethods,
     email,
     phoneNumber,
+    tempId,
   } = useSelector((state) => state.auth);
-  const [formState, dispatchFormState] = useReducer(formReducer, initialState);
   const [code, setCode] = useState(new Array(6).fill(""));
   const [selectedVerificationMethod, setSelectedVerificationMethod] =
     useState("");
-  const [timer, setTimer] = useState(60); // Iniciar contador en 60 segundos
-  const [canResend, setCanResend] = useState(false); // Controlar si se puede reenviar el código
+  const [timer, setTimer] = useState(60);
+  const [canResend, setCanResend] = useState(false);
+  const isCodeComplete = code.every((digit) => digit.trim() !== "");
 
   const inputs = [];
 
@@ -94,9 +56,10 @@ export const Verification = ({ navigation }) => {
   const messageText = "¿Necesitás otro método de verificación?";
 
   const onHandleChangeAuth = () => {};
-  const onHandleAuth = () => {
+  const onHandleVerification = () => {
     if (selectedVerificationMethod === "EMAIL") {
     } else if (selectedVerificationMethod === "SMS") {
+      dispatch(verifySmsCode(phoneNumber, code.join(""), tempId, isLogin));
     }
   };
 
@@ -104,22 +67,8 @@ export const Verification = ({ navigation }) => {
     dispatch(clearError());
   };
 
-  const onHandlerInputChange = ({ value, name }) => {
-    if (name === "email") {
-      const type = identifyInputType(value);
-      setInputType(type);
-    }
-    onInputChange({ name, value, dispatch: dispatchFormState, formState });
-  };
-
   const onHandleForgetPassword = () => {
     navigation.navigate("ForgetPassword");
-  };
-
-  const onEmailInputFocus = () => {
-    if (formatPhoneNumber.test(formState.email.value.trim())) {
-      setInputType("phoneNumber");
-    }
   };
 
   const onHandleOnBackPress = () => {
@@ -167,6 +116,24 @@ export const Verification = ({ navigation }) => {
   }, [timer]);
 
   useEffect(() => {
+    console.log("llega antes de enviar email o sms");
+    if (selectedVerificationMethod === "EMAIL") {
+      dispatch(sendEmail(email, "prueba", "hola mundo"));
+    } else {
+      console.log("llega antes de enviar sms");
+      dispatch(sendSMS(phoneNumber));
+    }
+  }, []);
+
+  useEffect(() => {
+    const isCodeComplete = code.every((digit) => digit.trim() !== "");
+
+    if (isCodeComplete) {
+      onHandleVerification();
+    }
+  }, [code]);
+
+  useEffect(() => {
     if (verificationMethods && verificationMethods?.length > 0) {
       updateSelectedVerificationMethod(verificationMethods[0]);
     }
@@ -174,14 +141,14 @@ export const Verification = ({ navigation }) => {
 
   const verificationMessage =
     selectedVerificationMethod === "EMAIL"
-      ? `Se enviará un email a ${obfuscateEmail(email)}`
-      : `Se enviará un SMS a ${obfuscatePhoneNumber(phoneNumber)}`;
+      ? `Se enviará un código a ${obfuscateEmail(email)}`
+      : `Se enviará un código a ${obfuscatePhoneNumber(phoneNumber)}`;
 
   return (
     <View style={styles.container}>
       {canResend ? (
         <TouchableOpacity onPress={resendCode} style={styles.resendButton}>
-          <Text style={styles.resendButtonText}>Reenviar Código</Text>
+          <Text style={styles.resendButtonText}>Reenviar código</Text>
         </TouchableOpacity>
       ) : (
         <Text style={styles.timerText}>
@@ -225,8 +192,8 @@ export const Verification = ({ navigation }) => {
         </View>
         <View style={styles.submitContainer}>
           <TouchableOpacity
-            disabled={!formState.isFormValid}
-            onPress={onHandleAuth}
+            disabled={!isCodeComplete || isLoading}
+            onPress={onHandleVerification}
             style={[styles.button]}
           >
             <Text style={styles.buttonText}>{buttonTitle}</Text>

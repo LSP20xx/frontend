@@ -12,12 +12,17 @@ const {
   VERIFICATION_TOKEN_FAILURE,
   CLEAR_ERROR,
   CLEAR_STATE,
+  VERIFY_SMS_CODE,
+  VERIFY_SMS_CODE_SUCCESS,
+  VERIFY_SMS_CODE_FAILURE,
 } = authTypes;
 
 const initialState = {
   isLoading: false,
   error: null,
   userId: null,
+  tempId: null,
+  isLogin: true,
   email: null,
   token: null,
   phoneNumber: null,
@@ -36,6 +41,8 @@ const authReducer = (state = initialState, action) => {
     case VERIFICATION_TOKEN_SUCCESS:
       return {
         ...state,
+        tempId: action.tempId,
+        isLogin: action.isLogin,
         token: action.token,
         email: action.email,
         phoneNumber: action.phoneNumber,
@@ -86,11 +93,6 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         userId: action.userId,
-        email: action.email,
-        phoneNumber: action.phoneNumber,
-        isLoading: false,
-        error: null,
-        hasError: false,
       };
     case SIGN_IN_FAILURE:
       return {
@@ -116,6 +118,22 @@ const authReducer = (state = initialState, action) => {
         phoneNumber: null,
         token: null,
         verificationMethods: [],
+      };
+    case VERIFY_SMS_CODE:
+      return {
+        ...state,
+        isLoading: true,
+      };
+    case VERIFY_SMS_CODE_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        userId: action.userId,
+      };
+    case VERIFY_SMS_CODE_FAILURE:
+      return {
+        ...state,
+        isLoading: false,
       };
     default:
       return state;

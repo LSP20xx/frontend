@@ -70,8 +70,7 @@ const Auth = ({ navigation }) => {
   const [formState, dispatchFormState] = useReducer(formReducer, initialState);
   const [inputType, setInputType] = useState("unknown");
   const [countryCode, setCountryCode] = useState("AR");
-  const [callingCode, setCallingCode] = useState("");
-  const [redirected, setRedirected] = useState(false);
+  const [callingCode, setCallingCode] = useState("54");
 
   const title = isLogin ? "Iniciar sesión" : "Registrarse";
   const buttonTitle = isLogin ? "Iniciar sesión" : "Registrarse";
