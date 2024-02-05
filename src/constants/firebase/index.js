@@ -7,3 +7,5 @@ export const AUTH_CHECK_PASSWORD_URL = `http://192.168.0.92:8000/api/auth/check-
 export const SEND_EMAIL_URL = `http://192.168.0.92:8000/api/email/send-email`;
 export const SEND_SMS_URL = `http://192.168.0.92:8000/api/verification/send-sms-code`;
 export const VERIFY_SMS_URL = `http://192.168.0.92:8000/api/verification/verify-sms-code`;
+export const LITTLE_LINE_CHARTS_URL = `http://192.168.0.92:8000/api/tokens/little-line-charts`;
+export const STORED_PRICES_URL = `http://192.168.0.92:8000/api/tokens/stored-prices`;

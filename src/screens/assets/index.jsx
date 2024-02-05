@@ -12,16 +12,19 @@ import io from "socket.io-client";
 import { Header } from "../../components";
 import Navbar from "../../components/navbar";
 import { COLORS } from "../../constants";
-import { selectAsset } from "../../store/actions";
+import {
+  getAssetsLittleLineCharts,
+  getStoredPrices,
+  selectAsset,
+} from "../../store/actions";
 import { styles } from "./styles";
 import { InteractionManager } from "react-native";
 import LittleLineChart from "../../components/little-line-chart";
 import { processKrakenData } from "../../workers/kraken";
 import { updateAssetsPrices } from "../../store/actions";
 const Assets = ({ navigation }) => {
-  const { assets, selectedAsset, currencies } = useSelector(
-    (state) => state.assets
-  );
+  const { assets, selectedAsset, assetsLittleLineCharts, storedPrices } =
+    useSelector((state) => state.assets);
   const { userId } = useSelector((state) => state.auth);
   // const { userId, email } = useSelector((state) => state.auth);
   // const { user } = useSelector((state) => state.user);
@@ -106,12 +109,21 @@ const Assets = ({ navigation }) => {
     };
   }, []);
 
+  useEffect(() => {
+    dispatch(getStoredPrices());
+    dispatch(getAssetsLittleLineCharts());
+  }, []);
+
   const handleAssetPress = (id) => {
     dispatch(selectAsset(id));
     navigation.navigate("Asset");
   };
 
   const formatFiatValue = (value) => {
+    if (value === undefined || value === null) {
+      return "0.00";
+    }
+
     const decimalPart = value.toString().split(".")[1];
     return decimalPart && decimalPart.length > 2
       ? value.toFixed(4)
@@ -172,14 +184,42 @@ const Assets = ({ navigation }) => {
             </View>
             <ScrollView style={styles.popularScrolLView}>
               {assets.map((item) => {
-                const currentPrice = parseFloat(item.fiatValue);
-                const openingPrice = parseFloat(item.opening24h);
-                const priceVariation = calculatePriceVariation(
-                  currentPrice,
-                  openingPrice
+                const assetChartData = assetsLittleLineCharts.find(
+                  (chartData) =>
+                    chartData.assetName.toLowerCase() ===
+                    item.name.toLowerCase()
                 );
-                const variationColor =
-                  priceVariation >= 0 ? COLORS.green : "red";
+
+                const assetStoredPrice = storedPrices.find(
+                  (storedPrice) =>
+                    storedPrice.assetName.toLowerCase() ===
+                    item.name.toLowerCase()
+                );
+
+                const displayPrice = item.fiatValue
+                  ? item.fiatValue
+                  : assetStoredPrice?.price;
+
+                let priceVariation;
+                let variationColor;
+
+                if (item.fiatValue && item.opening24h) {
+                  const currentPrice = parseFloat(item.fiatValue);
+                  const openingPrice = parseFloat(item.opening24h);
+                  priceVariation = calculatePriceVariation(
+                    currentPrice,
+                    openingPrice
+                  );
+                  variationColor = priceVariation >= 0 ? COLORS.green : "red";
+                } else if (assetStoredPrice?.priceVariation) {
+                  priceVariation = assetStoredPrice.priceVariation;
+                  variationColor =
+                    parseFloat(priceVariation) >= 0 ? COLORS.green : "red";
+                } else {
+                  priceVariation = "0.00";
+                  variationColor = "grey";
+                }
+
                 return (
                   <TouchableOpacity
                     key={item.id}
@@ -200,20 +240,25 @@ const Assets = ({ navigation }) => {
                       </View>
                     </View>
                     <View style={styles.middleContainer}>
-                      <LittleLineChart symbol={item.symbol} />
+                      {assetChartData ? (
+                        <LittleLineChart
+                          symbol={item.symbol}
+                          last7DaysData={assetChartData.last7DaysData}
+                        />
+                      ) : null}
                     </View>
                     <View style={styles.rightContainer}>
                       <View style={styles.priceRow}>
                         <Text style={styles.priceFiatAmount}>$</Text>
                         <Text style={styles.price}>
-                          {formatFiatValue(item.fiatValue)}
+                          {formatFiatValue(displayPrice)}
                         </Text>
                       </View>
                       <Text
                         style={[styles.variation, { color: variationColor }]}
                       >
                         {priceVariation >= 0 && "+"}
-                        {priceVariation ? priceVariation : 0}%
+                        {priceVariation}%
                       </Text>
                     </View>
                   </TouchableOpacity>

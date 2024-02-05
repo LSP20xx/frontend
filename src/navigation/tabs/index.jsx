@@ -1,4 +1,3 @@
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import { COLORS } from "../../constants";
@@ -7,7 +6,7 @@ import FavoritesNavigator from "../favorites";
 import ProfileNavigator from "../profile";
 import CardNavigator from "../card";
 import { View } from "react-native";
-import Svg, { SvgXml } from "react-native-svg";
+import { SvgXml } from "react-native-svg";
 
 const getMarketsIconSvg = (isFocused, primaryColor) => {
   const strokeColor = isFocused ? "#FFFFFF" : primaryColor;

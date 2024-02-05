@@ -6,7 +6,6 @@ import ETHUSD from "../../../ETH-USD.json";
 import LTCUSD from "../../../LTC-USD.json";
 import DOGEUSD from "../../../DOGE-USD.json";
 import USDTUSD from "../../../USDT-USD.json";
-import { COLORS } from "../../constants";
 
 const dataFiles = {
   "BTC-USD": BTCUSD,
@@ -19,36 +18,33 @@ const dataFiles = {
 const screenWidth = 75;
 const screenHeight = 30;
 
-const LittleLineChart = ({ symbol }) => {
-  const jsonData = dataFiles[`${symbol}-USD`];
+const getMinValue = (data) => Math.min(...data.map((item) => item.close));
+const getMaxValue = (data) => Math.max(...data.map((item) => item.close));
 
-  if (!jsonData) {
+const LittleLineChart = ({ symbol, last7DaysData }) => {
+  if (!last7DaysData || last7DaysData.length === 0) {
     console.error(`No se encontraron datos para el símbolo: ${symbol}`);
     return null;
   }
 
-  const data = Object.entries(jsonData).map(([date, { Close }], index) => ({
-    x: (screenWidth / (Object.keys(jsonData).length - 1)) * index,
+  const minValue = getMinValue(last7DaysData);
+  const maxValue = getMaxValue(last7DaysData);
+
+  const data = last7DaysData.map((item, index) => ({
+    x: (screenWidth / (last7DaysData.length - 1)) * index,
     y:
       screenHeight -
-      ((Close - getMinValue(jsonData)) /
-        (getMaxValue(jsonData) - getMinValue(jsonData))) *
-        screenHeight,
+      ((item.close - minValue) / (maxValue - minValue)) * screenHeight,
   }));
 
   const pathData = data
     .map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`)
     .join(" ");
 
-  const firstClose = jsonData[Object.keys(jsonData)[0]].Close;
-  const lastClose =
-    jsonData[Object.keys(jsonData)[Object.keys(jsonData).length - 1]].Close;
   const lineColor =
-    firstClose > lastClose
-      ? "red"
-      : firstClose < lastClose
+    last7DaysData[0].close <= last7DaysData[last7DaysData.length - 1].close
       ? "#0A8956"
-      : "black";
+      : "red";
 
   return (
     <View>
@@ -57,14 +53,6 @@ const LittleLineChart = ({ symbol }) => {
       </Svg>
     </View>
   );
-};
-
-const getMinValue = (data) => {
-  return Math.min(...Object.values(data).map((item) => item.Close));
-};
-
-const getMaxValue = (data) => {
-  return Math.max(...Object.values(data).map((item) => item.Close));
 };
 
 export default LittleLineChart;

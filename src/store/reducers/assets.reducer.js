@@ -1,10 +1,17 @@
 import { assetsTypes } from "../types";
 import { ASSETS } from "../../constants/data/assets";
-const { SELECT_ASSET, UPDATE_ASSETS_PRICES } = assetsTypes;
+const {
+  SELECT_ASSET,
+  UPDATE_ASSETS_PRICES,
+  GET_ASSETS_LITTLE_LINE_CHARTS,
+  GET_STORED_PRICES,
+} = assetsTypes;
 
 const initialState = {
   assets: ASSETS,
   selectedAsset: null,
+  assetsLittleLineCharts: [],
+  storedPrices: [],
 };
 
 const assetsReducer = (state = initialState, action) => {
@@ -38,7 +45,16 @@ const assetsReducer = (state = initialState, action) => {
         return asset;
       });
       return { ...state, assets: updatedAssets };
-
+    case GET_ASSETS_LITTLE_LINE_CHARTS:
+      return {
+        ...state,
+        assetsLittleLineCharts: action.payload,
+      };
+    case GET_STORED_PRICES:
+      return {
+        ...state,
+        storedPrices: action.payload,
+      };
     default:
       return state;
   }
