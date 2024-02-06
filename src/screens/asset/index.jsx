@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
 import { Header } from "../../components/index";
@@ -6,9 +6,7 @@ import { styles } from "./styles";
 import BigLineChart from "../../components/big-line-chart";
 
 const Asset = ({ navigation }) => {
-  const { selectedAsset, currencies } = useSelector((state) => state.assets);
-
-  console.log("currency", currencies);
+  const { selectedAsset } = useSelector((state) => state.assets);
 
   return (
     <SafeAreaView style={styles.container}>

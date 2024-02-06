@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   Image,
   SafeAreaView,
@@ -8,7 +8,6 @@ import {
   View,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import io from "socket.io-client";
 import { Header } from "../../components";
 import Navbar from "../../components/navbar";
 import { COLORS } from "../../constants";
@@ -18,16 +17,15 @@ import {
   selectAsset,
 } from "../../store/actions";
 import { styles } from "./styles";
-import { InteractionManager } from "react-native";
 import LittleLineChart from "../../components/little-line-chart";
-import { processKrakenData } from "../../workers/kraken";
-import { updateAssetsPrices } from "../../store/actions";
+import webSocketService from "../../services/websocketService";
+import { calculatePriceVariation, formatFiatValue } from "../../utils/prices";
+
 const Assets = ({ navigation }) => {
-  const { assets, selectedAsset, assetsLittleLineCharts, storedPrices } =
-    useSelector((state) => state.assets);
-  const { userId } = useSelector((state) => state.auth);
-  // const { userId, email } = useSelector((state) => state.auth);
-  // const { user } = useSelector((state) => state.user);
+  const { assets, assetsLittleLineCharts, storedPrices } = useSelector(
+    (state) => state.assets
+  );
+
   const dispatch = useDispatch();
 
   const symbolImages = {
@@ -38,102 +36,22 @@ const Assets = ({ navigation }) => {
     ltc: require("../../../assets/crypto-logos/ltc.png"),
   };
 
-  // useEffect(() => {
-  //   const getUserData = async () => {
-  //     dispatch(getUser(userId));
-  //   };
-
-  //   const addUserIfNull = async () => {
-  //     if (user === null) {
-  //       dispatch(
-  //         addUser({
-  //           userId: userId,
-  //           email: email,
-  //           datetimeSignUp: new Date().getTime(),
-  //           favorites: [],
-  //           image: "",
-  //         })
-  //       );
-  //     }
-  //   };
-
-  //   getUserData()
-  //     .then(() => {
-  //       addUserIfNull();
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }, []);
-
-  // const onSelectedCategory = (name) => {
-  //   dispatch(selectCategory(name));
-  //   navigation.navigate(name);
-  // };
-
-  // const onSelectedPlace = (item) => {
-  //   dispatch(selectPlace(item.id));
-  //   navigation.navigate("Local");
-  // };
-
-  // const renderHomePlaceItem = ({ item }) => (
-  //   <TouchableOpacity
-  //     style={styles.placesContainer}
-  //     onPress={() => onSelectedPlace(item)}
-  //   >
-  //     <Image source={{ uri: item.imageSrc }} style={styles.image} />
-  //     <Text style={styles.title}>{item.title}</Text>
-  //   </TouchableOpacity>
-  // );
-
-  const socketUrl = "http://192.168.0.92:8000";
-
-  useEffect(() => {
-    console.log("userId", userId);
-  }, [userId]);
-
-  useEffect(() => {
-    const socket = io(socketUrl);
-
-    socket.on("kraken-data", (data) => {
-      InteractionManager.runAfterInteractions(() => {
-        const processedData = processKrakenData(data);
-        if (processedData) {
-          dispatch(updateAssetsPrices(processedData));
-        }
-      });
-    });
-
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
-
-  useEffect(() => {
-    dispatch(getStoredPrices());
-    dispatch(getAssetsLittleLineCharts());
-  }, []);
-
   const handleAssetPress = (id) => {
     dispatch(selectAsset(id));
     navigation.navigate("Asset");
   };
 
-  const formatFiatValue = (value) => {
-    if (value === undefined || value === null) {
-      return "0.00";
-    }
+  useEffect(() => {
+    webSocketService.connect(dispatch);
+    return () => {
+      webSocketService.disconnect();
+    };
+  }, [dispatch]);
 
-    const decimalPart = value.toString().split(".")[1];
-    return decimalPart && decimalPart.length > 2
-      ? value.toFixed(4)
-      : value.toFixed(2);
-  };
-
-  const calculatePriceVariation = (currentPrice, openingPrice) => {
-    let variation = ((currentPrice - openingPrice) / openingPrice) * 100;
-    return variation ? variation.toFixed(2) : 0;
-  };
+  useEffect(() => {
+    dispatch(getStoredPrices());
+    dispatch(getAssetsLittleLineCharts());
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>

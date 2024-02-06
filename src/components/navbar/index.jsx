@@ -8,7 +8,7 @@ const Navbar = ({ navigation }) => {
     {
       text: "Recibir",
       icon: "chevron-down-sharp",
-      route: "Receive",
+      route: "ReceiveList",
       disabled: false,
     },
     {
@@ -20,7 +20,7 @@ const Navbar = ({ navigation }) => {
     {
       text: "Enviar",
       icon: "chevron-up-sharp",
-      route: "Send",
+      route: "SendList",
       disabled: false,
     },
   ];
@@ -31,7 +31,9 @@ const Navbar = ({ navigation }) => {
         <View style={styles.navItemContainer} key={index}>
           <TouchableOpacity
             style={styles.navItem}
-            onPress={() => navigation.navigate(item.route)}
+            onPress={() =>
+              navigation.navigate(item.route, { mode: item.text.toLowerCase() })
+            }
             disabled={item.disabled}
           >
             <Ionicons name={item.icon} style={styles.icon} />

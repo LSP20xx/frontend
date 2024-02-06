@@ -21,16 +21,13 @@ const assetsReducer = (state = initialState, action) => {
         .map((asset) => asset.id)
         .indexOf(action.id);
 
+      console.log(state.assets);
+
       if (indexAsset === -1) return state;
       return {
         ...state,
         selectedAsset: state.assets[indexAsset],
       };
-    /*case FILTER_PLACES:
-            return {
-                ...state,
-                filteredPlaces: state.data.filter(place => place.categories.some(category => category === action.categoryName)),
-            }*/
     case UPDATE_ASSETS_PRICES:
       const updatedAssets = state.assets?.map((asset) => {
         if (action.payload.symbol === `${asset.symbol}/USD`) {
@@ -45,6 +42,31 @@ const assetsReducer = (state = initialState, action) => {
         return asset;
       });
       return { ...state, assets: updatedAssets };
+    // case UPDATE_ASSETS_PRICES:
+    //   const assetIndexToUpdate = state.assets.findIndex(
+    //     (asset) => asset.id === action.payload.id
+    //   );
+    //   if (assetIndexToUpdate === -1) return state;
+
+    //   const updatedAssets = [...state.assets];
+    //   updatedAssets[assetIndexToUpdate] = {
+    //     ...state.assets[assetIndexToUpdate],
+    //     ...action.payload.prices,
+    //   };
+
+    //   let updatedSelectedAsset = state.selectedAsset;
+    //   if (state.selectedAsset && state.selectedAsset.id === action.payload.id) {
+    //     updatedSelectedAsset = {
+    //       ...state.selectedAsset,
+    //       ...action.payload.prices,
+    //     };
+    //   }
+
+    //   return {
+    //     ...state,
+    //     assets: updatedAssets,
+    //     selectedAsset: updatedSelectedAsset,
+    //   };
     case GET_ASSETS_LITTLE_LINE_CHARTS:
       return {
         ...state,

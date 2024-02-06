@@ -8,7 +8,7 @@ import QRCode from "react-native-qrcode-svg";
 import { Clipboard, Alert } from "react-native";
 import { SvgFromUri } from "react-native-svg";
 import { Ionicons } from "@expo/vector-icons";
-const Receive = ({}) => {
+const Receive = ({ navigation }) => {
   const { selectedAsset } = useSelector((state) => state.assets);
   const address = "14fYB93AzSvc4TatnLJVKMnPAiXYBRgQ6M";
 
@@ -23,7 +23,7 @@ const Receive = ({}) => {
     <SafeAreaView style={styles.container}>
       <Header navigation={navigation} showBackButton={true} />
       <View style={styles.screenTitleContainer}>
-        <Text style={styles.screenTitle}>Receive {selectedAsset.symbol}</Text>
+        <Text style={styles.screenTitle}>Recibir {selectedAsset.symbol}</Text>
       </View>
       <View style={styles.logoContainer}>
         <SvgFromUri uri={selectedAsset.logo} style={styles.logo} />
@@ -44,11 +44,11 @@ const Receive = ({}) => {
       </View>
       <View style={styles.warningContainer}>
         <Text style={styles.warning}>
-          Send only {selectedAsset.name} {`(${selectedAsset.symbol})`} to this
-          address.
+          Envía solo {selectedAsset.name} {`(${selectedAsset.symbol})`} a esta
+          dirección.
         </Text>
         <Text style={styles.warning}>
-          Sending any other coins may result in permanent loss.
+          Si envías cualquier otro activo, podrías perderlo.
         </Text>
       </View>
     </SafeAreaView>
