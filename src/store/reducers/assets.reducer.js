@@ -5,10 +5,12 @@ const {
   UPDATE_ASSETS_PRICES,
   GET_ASSETS_LITTLE_LINE_CHARTS,
   GET_STORED_PRICES,
+  UPDATE_BALANCES,
 } = assetsTypes;
 
 const initialState = {
   assets: ASSETS,
+  balances: [],
   selectedAsset: null,
   assetsLittleLineCharts: [],
   storedPrices: [],
@@ -42,6 +44,11 @@ const assetsReducer = (state = initialState, action) => {
         return asset;
       });
       return { ...state, assets: updatedAssets };
+    case UPDATE_BALANCES:
+      return {
+        ...state,
+        balances: action.payload,
+      };
     // case UPDATE_ASSETS_PRICES:
     //   const assetIndexToUpdate = state.assets.findIndex(
     //     (asset) => asset.id === action.payload.id

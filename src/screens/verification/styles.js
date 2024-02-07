@@ -137,7 +137,7 @@ export const styles = StyleSheet.create({
     marginBottom: 10,
   },
   timerText: {
-    fontFamily: "Uto-SemiBold",
+    fontFamily: "Uto-Light",
     fontSize: 16,
     color: COLORS.primaryDark,
   },

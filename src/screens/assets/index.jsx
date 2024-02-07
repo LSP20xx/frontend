@@ -49,6 +49,12 @@ const Assets = ({ navigation }) => {
   }, [dispatch]);
 
   useEffect(() => {
+    webSocketService.requestBalanceUpdate(
+      "f1408d21-5826-4184-86e7-db08c48c3bfa"
+    );
+  }, []);
+
+  useEffect(() => {
     dispatch(getStoredPrices());
     dispatch(getAssetsLittleLineCharts());
   }, []);
@@ -59,7 +65,7 @@ const Assets = ({ navigation }) => {
       <Text style={styles.balanceTitle}>BALANCE TOTAL</Text>
       <View style={styles.balanceDetails}>
         <Text style={styles.fiatSymbol}>$</Text>
-        <Text style={styles.fiatConvertedAmount}>10.87 </Text>
+        <Text style={styles.fiatConvertedAmount}>0.00 </Text>
         <Text style={styles.fiatTicker}>USD</Text>
       </View>
       <Navbar navigation={navigation} />
@@ -91,8 +97,8 @@ const Assets = ({ navigation }) => {
             </View>
 
             <View style={styles.rightContainer}>
-              <Text style={styles.amountStyle}>$10.87</Text>
-              <Text style={styles.percentageStyle}>+1.70%</Text>
+              <Text style={styles.amountStyle}>$0.00</Text>
+              <Text style={styles.percentageStyle}>0.00%</Text>
             </View>
           </View>
           <View style={styles.sectionContainer}>
