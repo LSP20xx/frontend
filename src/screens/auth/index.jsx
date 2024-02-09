@@ -6,6 +6,7 @@ import {
   Button,
   TouchableOpacity,
   ActivityIndicator,
+  Image,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -144,6 +145,14 @@ const Auth = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.centerContainer}>
+        <Image
+          source={require("../../../assets/icons/billete-logo.png")}
+          style={styles.categoryImage}
+          resizeMode="stretch"
+        />
+        <Text style={styles.logo}>Billete</Text>
+      </View>
       <View style={styles.content}>
         <Text style={styles.title}>{title}</Text>
         <Input

@@ -92,4 +92,21 @@ export const styles = StyleSheet.create({
   buttonDisabled: {
     backgroundColor: "grey",
   },
+  centerContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 60,
+    display: "flex",
+    flexDirection: "row",
+  },
+  logo: {
+    left: 0,
+    right: 0,
+    color: COLORS.primaryDark,
+    width: 150,
+    textAlign: "center",
+    marginTop: 4,
+    fontSize: 42,
+    fontFamily: "Uto-Medium",
+  },
 });

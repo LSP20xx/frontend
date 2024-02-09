@@ -50,7 +50,7 @@ const Assets = ({ navigation }) => {
 
   useEffect(() => {
     webSocketService.requestBalanceUpdate(
-      "f1408d21-5826-4184-86e7-db08c48c3bfa"
+      "ce5314b8-fda9-43dc-8ebc-f527332aa299"
     );
   }, []);
 
@@ -73,11 +73,6 @@ const Assets = ({ navigation }) => {
         <ScrollView style={styles.scrollView}>
           <View style={styles.sectionComponent}>
             <View style={styles.leftContainer}>
-              <Image
-                source={require("../../../assets/icons/dollar-circle.png")}
-                style={styles.categoryImage}
-                resizeMode="stretch"
-              />
               <Text style={styles.titleStyle}>Cash</Text>
             </View>
 
