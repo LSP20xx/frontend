@@ -18,6 +18,7 @@ class WebSocketService {
       }
     });
     this.socket.on("balance-update", (balances) => {
+      console.log("balance-update", balances);
       dispatch(updateBalances(balances));
     });
   }

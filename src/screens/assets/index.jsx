@@ -42,19 +42,6 @@ const Assets = ({ navigation }) => {
   };
 
   useEffect(() => {
-    webSocketService.connect(dispatch);
-    return () => {
-      webSocketService.disconnect();
-    };
-  }, [dispatch]);
-
-  useEffect(() => {
-    webSocketService.requestBalanceUpdate(
-      "c7dda908-ccff-485e-94a1-697fd183847c"
-    );
-  }, [dispatch]);
-
-  useEffect(() => {
     dispatch(getStoredPrices());
     dispatch(getAssetsLittleLineCharts());
   }, []);
