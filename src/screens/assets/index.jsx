@@ -50,9 +50,9 @@ const Assets = ({ navigation }) => {
 
   useEffect(() => {
     webSocketService.requestBalanceUpdate(
-      "ce5314b8-fda9-43dc-8ebc-f527332aa299"
+      "c7dda908-ccff-485e-94a1-697fd183847c"
     );
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(getStoredPrices());

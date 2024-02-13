@@ -13,14 +13,14 @@ const validateInput = ({ name, value }) => {
     case "email":
       if (formatValue === "") {
         hasError = true;
-        error = "Email or phone number is required";
+        error = "Se requiere un email o número de teléfono";
         console.log("llega al email", hasError, error);
       } else if (
         !formatEmail.test(formatValue) &&
         !formatPhoneNumber.test(formatValue)
       ) {
         hasError = true;
-        error = "Invalid email or phone number";
+        error = "Email o número de teléfono inválido";
       } else {
         hasError = false;
         error = "";
@@ -29,10 +29,10 @@ const validateInput = ({ name, value }) => {
     case "password":
       if (formatValue === "") {
         hasError = true;
-        error = "Password is required";
+        error = "Se requiere una contraseña";
       } else if (formatValue.length < minPasswordLength) {
         hasError = true;
-        error = `Password must be at least ${minPasswordLength} characters`;
+        error = `La contraseña debe tener al menos ${minPasswordLength} caracteres`;
       } else {
         hasError = false;
         error = "";
