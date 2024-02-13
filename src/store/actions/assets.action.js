@@ -58,7 +58,6 @@ export const getStoredPrices = () => {
 };
 
 export const updateBalances = (balances) => {
-  console.log(JSON.stringify(balances));
   return {
     type: UPDATE_BALANCES,
     payload: balances,

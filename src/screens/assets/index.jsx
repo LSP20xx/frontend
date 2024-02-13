@@ -22,9 +22,8 @@ import webSocketService from "../../services/websocketService";
 import { calculatePriceVariation, formatFiatValue } from "../../utils/prices";
 
 const Assets = ({ navigation }) => {
-  const { assets, assetsLittleLineCharts, storedPrices } = useSelector(
-    (state) => state.assets
-  );
+  const { assets, assetsLittleLineCharts, storedPrices, balances } =
+    useSelector((state) => state.assets);
 
   const dispatch = useDispatch();
 
@@ -45,6 +44,14 @@ const Assets = ({ navigation }) => {
     dispatch(getStoredPrices());
     dispatch(getAssetsLittleLineCharts());
   }, []);
+
+  useEffect(() => {
+    console.log("BALANCES", balances);
+  }, [balances]);
+
+  useEffect(() => {
+    console.log("ASSETS", assets);
+  }, [assets]);
 
   return (
     <SafeAreaView style={styles.container}>
