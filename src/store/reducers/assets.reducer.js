@@ -14,6 +14,7 @@ const initialState = {
   selectedAsset: null,
   assetsLittleLineCharts: [],
   storedPrices: [],
+  totalBalance: 0,
 };
 
 const assetsReducer = (state = initialState, action) => {
