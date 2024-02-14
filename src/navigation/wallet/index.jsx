@@ -27,7 +27,9 @@ const WalletNavigator = () => {
       <Stack.Screen name="Assets" component={Assets} />
       <Stack.Screen name="Asset" component={Asset} />
       <Stack.Screen name="ReceiveList" component={AssetsList} />
+      <Stack.Screen name="Receive" component={Receive} />
       <Stack.Screen name="SendList" component={AssetsList} />
+      <Stack.Screen name="Send" component={Send} />
       <Stack.Screen name="Confirm" component={Confirm} />
     </Stack.Navigator>
   );

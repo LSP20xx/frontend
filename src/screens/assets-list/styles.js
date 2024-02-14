@@ -96,11 +96,11 @@ export const styles = StyleSheet.create({
     flex: 1,
     marginTop: 16,
   },
-  priceRow: {
+  amountRow: {
     flexDirection: "row",
     alignItems: "baseline",
   },
-  variation: {
+  calculatedBalance: {
     fontSize: 12,
     fontFamily: "Uto-Light",
   },
@@ -215,7 +215,7 @@ export const styles = StyleSheet.create({
     marginRight: 1,
     marginTop: 10,
   },
-  price: {
+  amount: {
     fontSize: 16,
     fontFamily: "Uto-Light",
     color: COLORS.black,

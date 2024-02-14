@@ -4,7 +4,7 @@ import { COLORS } from "../../constants";
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.black,
+    backgroundColor: COLORS.white,
     paddingTop: 20,
     alignItems: "center",
   },
@@ -23,27 +23,28 @@ export const styles = StyleSheet.create({
   sectionContainer: {
     width: "98%",
     paddingTop: 10,
-    backgroundColor: COLORS.greyDark,
+    backgroundColor: COLORS.white,
     marginTop: 32,
     flex: 1,
   },
   screenTitleContainer: {
     width: "100%",
-    backgroundColor: COLORS.greyDark,
+    backgroundColor: COLORS.white,
   },
   screenTitle: {
     fontSize: 20,
-    color: COLORS.white,
+    color: COLORS.black,
     textAlign: "left",
     marginHorizontal: 46,
     marginTop: 50,
     marginBottom: 14,
-    backgroundColor: COLORS.greyDark,
+    backgroundColor: COLORS.white,
+    fontFamily: "Uto-Medium",
   },
   sectionTitle: {
     textAlign: "center",
     fontSize: 24,
-    fontWeight: "normal",
+    fontFamily: "Uto-Medium",
     color: COLORS.black,
     marginTop: 8,
     marginBottom: 8,
@@ -66,7 +67,7 @@ export const styles = StyleSheet.create({
   address: {
     fontSize: 14,
     fontWeight: "bold",
-    color: COLORS.white,
+    color: COLORS.black,
     marginTop: 18,
   },
   copyIcon: {
@@ -87,7 +88,7 @@ export const styles = StyleSheet.create({
   },
   warning: {
     fontSize: 12,
-    color: COLORS.white,
+    color: COLORS.black,
   },
   row: {
     flex: 1,
@@ -110,7 +111,7 @@ export const styles = StyleSheet.create({
   fiatConvertedAmount: {
     fontSize: 36,
     fontWeight: "bold",
-    color: COLORS.white,
+    color: COLORS.black,
     textAlign: "center",
     marginVertical: 50,
   },
@@ -131,7 +132,7 @@ export const styles = StyleSheet.create({
   cryptoAmount: {
     fontSize: 18,
     fontWeight: "bold",
-    color: COLORS.white,
+    color: COLORS.black,
     marginRight: 10,
   },
   fiatValue: {
@@ -143,7 +144,7 @@ export const styles = StyleSheet.create({
     margin: 16,
     fontSize: 18,
     fontWeight: "light",
-    color: COLORS.white,
+    color: COLORS.black,
   },
   separator: {
     height: 1,

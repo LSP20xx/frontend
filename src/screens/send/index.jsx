@@ -13,38 +13,45 @@ import { Header } from "../../components";
 import { styles } from "./styles";
 import { COLORS } from "../../constants";
 import { useSelector } from "react-redux";
+import { formatBalance } from "../../utils/prices";
 
 const Send = ({ navigation }) => {
   const [address, setAddress] = useState("");
   const [amount, setAmount] = useState("");
   const [recommendedFeePerByte, setRecommendedFeePerByte] = useState(0);
-  const { selectedAsset } = useSelector((state) => state.assets);
+  const { selectedAsset, balances } = useSelector((state) => state.assets);
+  const assetBalance = balances.find(
+    (balance) => balance.symbol === selectedAsset.symbol
+  );
+  const balance = assetBalance ? assetBalance.balance : "";
 
   const handleSendPress = () => {
     navigation.navigate("Confirm", { address, amount, recommendedFeePerByte });
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          "https://api.blockchair.com/bitcoin/stats"
-        );
-        const recommendedFeePerByte =
-          response.data.data.suggested_transaction_fee_per_byte_sat;
-        setRecommendedFeePerByte(recommendedFeePerByte);
-      } catch (error) {
-        console.error("Error fetching data: ", error);
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         "https://api.blockchair.com/bitcoin/stats"
+  //       );
+  //       const recommendedFeePerByte =
+  //         response.data.data.suggested_transaction_fee_per_byte_sat;
+  //       setRecommendedFeePerByte(recommendedFeePerByte);
+  //     } catch (error) {
+  //       console.error("Error fetching data: ", error);
+  //       setLoading(false);
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
 
   return (
     <View style={styles.container}>
       <Header navigation={navigation} showBackButton={true} />
-      <Text style={styles.assetAmount}>0 {selectedAsset.symbol}</Text>
+      <Text style={styles.assetAmount}>
+        {formatBalance(balance)} {selectedAsset.symbol}
+      </Text>
       <View style={styles.screenTitleContainer}>
         <Text style={styles.screenTitle}>Send {selectedAsset.symbol}</Text>
       </View>

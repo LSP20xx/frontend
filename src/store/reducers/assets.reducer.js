@@ -46,9 +46,27 @@ const assetsReducer = (state = initialState, action) => {
       });
       return { ...state, assets: updatedAssets };
     case UPDATE_BALANCES:
+      const updatedBalances = action.payload.map((balance) => {
+        const asset = state.assets.find((a) => a.symbol === balance.symbol);
+        const price = asset ? parseFloat(asset.fiatValue) : 1;
+        const balanceAmount = parseFloat(balance.balance);
+        const calculatedBalanceValue = balanceAmount * price;
+        return {
+          ...balance,
+          balance: balanceAmount,
+          calculatedBalance: calculatedBalanceValue,
+        };
+      });
+
+      const totalBalance = updatedBalances.reduce(
+        (acc, balance) => acc + balance.calculatedBalance,
+        0
+      );
+
       return {
         ...state,
-        balances: action.payload,
+        balances: updatedBalances,
+        totalBalance: totalBalance,
       };
     // case UPDATE_ASSETS_PRICES:
     //   const assetIndexToUpdate = state.assets.findIndex(

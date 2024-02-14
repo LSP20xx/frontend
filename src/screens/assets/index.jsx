@@ -22,8 +22,13 @@ import webSocketService from "../../services/websocketService";
 import { calculatePriceVariation, formatFiatValue } from "../../utils/prices";
 
 const Assets = ({ navigation }) => {
-  const { assets, assetsLittleLineCharts, storedPrices, balances } =
-    useSelector((state) => state.assets);
+  const {
+    assets,
+    assetsLittleLineCharts,
+    storedPrices,
+    balances,
+    totalBalance,
+  } = useSelector((state) => state.assets);
 
   const dispatch = useDispatch();
 
@@ -45,21 +50,15 @@ const Assets = ({ navigation }) => {
     dispatch(getAssetsLittleLineCharts());
   }, []);
 
-  useEffect(() => {
-    console.log("BALANCES", balances);
-  }, [balances]);
-
-  useEffect(() => {
-    console.log("ASSETS", assets);
-  }, [assets]);
-
   return (
     <SafeAreaView style={styles.container}>
       <Header showBackButton={false} />
       <Text style={styles.balanceTitle}>BALANCE TOTAL</Text>
       <View style={styles.balanceDetails}>
         <Text style={styles.fiatSymbol}>$</Text>
-        <Text style={styles.fiatConvertedAmount}>0.00 </Text>
+        <Text style={styles.fiatConvertedAmount}>
+          {formatFiatValue(totalBalance, 2)}
+        </Text>
         <Text style={styles.fiatTicker}>USD</Text>
       </View>
       <Navbar navigation={navigation} />

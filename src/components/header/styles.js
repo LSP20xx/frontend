@@ -60,4 +60,14 @@ export const styles = StyleSheet.create({
     width: "33%",
     alignItems: "flex-end",
   },
+  totalBalance: {
+    fontSize: 12,
+    fontFamily: "Uto-Medium",
+    color: COLORS.primaryDark,
+  },
+  balance: {
+    fontSize: 14,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
 });

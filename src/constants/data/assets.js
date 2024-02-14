@@ -8,7 +8,6 @@ export const ASSETS = [
     lowest24h: 0.0,
     highest24h: 0.0,
     logo: "https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=002",
-    address: "14fYB93AzSvc4TatnLJVKMnPAiXYBRgQ6M",
     disabled: false,
   },
   // {
@@ -30,8 +29,7 @@ export const ASSETS = [
     lowest24h: 0.0,
     highest24h: 0.0,
     logo: "https://cryptologos.cc/logos/ethereum-eth-logo.png?v=002",
-    address: "14fYB93AzSvc4TatnLJVKMnPAiXYBRgQ6M",
-    disabled: true,
+    disabled: false,
   },
   {
     id: "3",
@@ -42,7 +40,6 @@ export const ASSETS = [
     lowest24h: 0.0,
     highest24h: 0.0,
     logo: "https://cryptologos.cc/logos/tether-usdt-logo.png?v=002",
-    address: "14fYB93AzSvc4TatnLJVKMnPAiXYBRgQ6M",
     disabled: true,
   },
   {
@@ -54,8 +51,7 @@ export const ASSETS = [
     lowest24h: 0.0,
     highest24h: 0.0,
     logo: "https://cryptologos.cc/logos/dogecoin-doge-logo.png?v=002",
-    address: "14fYB93AzSvc4TatnLJVKMnPAiXYBRgQ6M",
-    disabled: true,
+    disabled: false,
   },
   {
     id: "5",
@@ -66,7 +62,6 @@ export const ASSETS = [
     lowest24h: 0.0,
     highest24h: 0.0,
     logo: "https://cryptologos.cc/logos/litecoin-ltc-logo.png?v=002",
-    address: "14fYB93AzSvc4TatnLJVKMnPAiXYBRgQ6M",
-    disabled: true,
+    disabled: false,
   },
 ];

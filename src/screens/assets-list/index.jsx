@@ -8,15 +8,23 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Header } from "../../components/index";
 
 import { styles } from "./styles";
 import { COLORS } from "../../constants";
-import { calculatePriceVariation, formatFiatValue } from "../../utils/prices";
+import {
+  calculatePriceVariation,
+  formatFiatValue,
+  formatBalance,
+} from "../../utils/prices";
+import { selectAsset } from "../../store/actions";
 
 const AssetsList = ({ navigation, route }) => {
-  const { assets, storedPrices } = useSelector((state) => state.assets);
+  const dispatch = useDispatch();
+  const { assets, storedPrices, balances } = useSelector(
+    (state) => state.assets
+  );
 
   const { mode } = route.params;
 
@@ -32,6 +40,15 @@ const AssetsList = ({ navigation, route }) => {
     doge: require("../../../assets/crypto-logos/doge.png"),
     usdt: require("../../../assets/crypto-logos/usdt.png"),
     ltc: require("../../../assets/crypto-logos/ltc.png"),
+  };
+
+  const handleAssetPress = (id) => {
+    dispatch(selectAsset(id));
+    if (mode === "recibir") {
+      return navigation.navigate("Receive");
+    } else if (mode === "enviar") {
+      return navigation.navigate("Send");
+    }
   };
 
   return (
@@ -51,6 +68,10 @@ const AssetsList = ({ navigation, route }) => {
             //     chartData.assetName.toLowerCase() === item.name.toLowerCase()
             // );
 
+            const balance = balances.find(
+              (balance) => balance.symbol === item.symbol
+            );
+
             const assetStoredPrice = storedPrices.find(
               (storedPrice) =>
                 storedPrice.assetName.toLowerCase() === item.name.toLowerCase()
@@ -61,7 +82,6 @@ const AssetsList = ({ navigation, route }) => {
               : assetStoredPrice?.price;
 
             let priceVariation;
-            let variationColor;
 
             if (item.fiatValue && item.opening24h) {
               const currentPrice = parseFloat(item.fiatValue);
@@ -101,15 +121,13 @@ const AssetsList = ({ navigation, route }) => {
                 </View>
 
                 <View style={styles.rightContainer}>
-                  <View style={styles.priceRow}>
-                    <Text style={styles.priceFiatAmount}>$</Text>
-                    <Text style={styles.price}>
-                      {formatFiatValue(displayPrice)}
+                  <View style={styles.amountRow}>
+                    <Text style={styles.amount}>
+                      {formatBalance(balance?.balance)} {item.symbol}
                     </Text>
                   </View>
-                  <Text style={[styles.variation, { color: variationColor }]}>
-                    {priceVariation >= 0 && "+"}
-                    {priceVariation}%
+                  <Text style={styles.calculatedBalance}>
+                    ${formatFiatValue(balance?.calculatedBalance)}
                   </Text>
                 </View>
               </TouchableOpacity>

@@ -2,8 +2,11 @@ import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { styles } from "./styles";
+import { useSelector } from "react-redux";
+import { formatFiatValue } from "../../utils/prices";
 
 const Header = ({ navigation, showBackButton }) => {
+  const { totalBalance } = useSelector((state) => state.assets);
   const handleOnBackPress = () => {
     navigation.goBack();
   };
@@ -269,7 +272,14 @@ const Header = ({ navigation, showBackButton }) => {
         </TouchableOpacity>
       </View>
       <View style={styles.centerContainer}>
-        <Text style={styles.logo}>Billete</Text>
+        {showBackButton ? (
+          <View>
+            <Text style={styles.totalBalance}>BALANCE TOTAL</Text>
+            <Text style={styles.balance}>${formatFiatValue(totalBalance)}</Text>
+          </View>
+        ) : (
+          <Text style={styles.logo}>Billete</Text>
+        )}
       </View>
       <View style={styles.rightContainer}>
         <TouchableOpacity onPress={handleNotificationPress}>

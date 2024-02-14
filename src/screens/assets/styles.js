@@ -166,7 +166,7 @@ export const styles = StyleSheet.create({
     color: COLORS.greyLight,
     textAlign: "center",
     top: 8,
-    right: 8,
+    right: 0,
   },
   fiatConvertedAmount: {
     fontSize: 52,
