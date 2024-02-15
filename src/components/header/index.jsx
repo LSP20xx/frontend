@@ -275,7 +275,9 @@ const Header = ({ navigation, showBackButton }) => {
         {showBackButton ? (
           <View>
             <Text style={styles.totalBalance}>BALANCE TOTAL</Text>
-            <Text style={styles.balance}>${formatFiatValue(totalBalance)}</Text>
+            <Text style={styles.balance}>
+              ${formatFiatValue(totalBalance)} USD
+            </Text>
           </View>
         ) : (
           <Text style={styles.logo}>Billete</Text>

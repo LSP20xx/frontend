@@ -22,13 +22,8 @@ import webSocketService from "../../services/websocketService";
 import { calculatePriceVariation, formatFiatValue } from "../../utils/prices";
 
 const Assets = ({ navigation }) => {
-  const {
-    assets,
-    assetsLittleLineCharts,
-    storedPrices,
-    balances,
-    totalBalance,
-  } = useSelector((state) => state.assets);
+  const { assets, assetsLittleLineCharts, storedPrices, totalBalance } =
+    useSelector((state) => state.assets);
 
   const dispatch = useDispatch();
 
@@ -85,8 +80,9 @@ const Assets = ({ navigation }) => {
             </View>
 
             <View style={styles.rightContainer}>
-              <Text style={styles.amountStyle}>$0.00</Text>
-              <Text style={styles.percentageStyle}>0.00%</Text>
+              <Text style={styles.amountStyle}>
+                ${formatFiatValue(totalBalance, 2)}
+              </Text>
             </View>
           </View>
           <View style={styles.sectionContainer}>

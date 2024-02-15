@@ -57,9 +57,12 @@ export const Verification = ({ navigation }) => {
 
   const onHandleChangeAuth = () => {};
   const onHandleVerification = () => {
+    console.log("selectedVerificationMethod: ", selectedVerificationMethod);
     if (selectedVerificationMethod === "EMAIL") {
     } else if (selectedVerificationMethod === "SMS") {
+      console.log("llega antes de verificar sms");
       dispatch(verifySmsCode(phoneNumber, code.join(""), tempId, isLogin));
+      console.log("llega después de verificar sms");
     }
   };
 
@@ -77,6 +80,7 @@ export const Verification = ({ navigation }) => {
   };
 
   const updateSelectedVerificationMethod = (method) => {
+    console.log("updateSelectedVerificationMethod: ", method);
     setSelectedVerificationMethod(method);
   };
 
@@ -134,6 +138,7 @@ export const Verification = ({ navigation }) => {
   }, [code]);
 
   useEffect(() => {
+    console.log("verificationMethods: ", verificationMethods);
     if (verificationMethods && verificationMethods?.length > 0) {
       updateSelectedVerificationMethod(verificationMethods[0]);
     }

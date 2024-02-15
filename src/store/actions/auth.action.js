@@ -133,6 +133,7 @@ export const signInWithEmail = ({ email, password }) => {
 };
 
 export const signInWithPhoneNumber = ({ phoneNumber, tempId }) => {
+  console.log("llega a signInWithPhoneNumber");
   return async (dispatch) => {
     try {
       dispatch({ type: SIGN_IN_REQUEST });
@@ -227,6 +228,8 @@ export const checkPhoneNumberAuthData = ({
 
       const data = await response.json();
 
+      console.log("DATA check: ", data);
+
       if (!response.ok) {
         dispatch({
           type: VERIFICATION_TOKEN_FAILURE,
@@ -255,6 +258,16 @@ export const checkPhoneNumberAuthData = ({
 
 export const verifySmsCode = (to, code, tempId, isLogin) => {
   return async (dispatch) => {
+    console.log(
+      "to: ",
+      to,
+      "code: ",
+      code,
+      "tempId: ",
+      tempId,
+      "isLogin: ",
+      isLogin
+    );
     try {
       dispatch({
         type: VERIFY_SMS_CODE,
@@ -270,9 +283,11 @@ export const verifySmsCode = (to, code, tempId, isLogin) => {
         throw new Error("Error verifying sms code");
       }
       const result = await response.json();
+      console.log("llegó a verificarse CORRECTAMENTE");
       if (result.isVerified) {
         dispatch({ type: VERIFY_SMS_CODE_SUCCESS });
         if (isLogin) {
+          console.log("llega antes de loguear con teléfono");
           dispatch(signInWithPhoneNumber({ phoneNumber: to, tempId }));
         } else {
           dispatch(signUpWithPhoneNumber({ phoneNumber: to, tempId }));

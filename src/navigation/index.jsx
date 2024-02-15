@@ -4,7 +4,7 @@ import AuthNavigator from "./auth";
 import { useEffect } from "react";
 import webSocketService from "../services/websocketService";
 import { useDispatch } from "react-redux";
-// import { useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 const Navigation = () => {
   const userId = "c7dda908-ccff-485e-94a1-697fd183847c";
   const dispatch = useDispatch();
@@ -24,12 +24,13 @@ const Navigation = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    const interval = setInterval(
-      () => webSocketService.requestBalanceUpdate(userId),
-      10000
-    );
-
-    return () => clearInterval(interval);
+    if (userId) {
+      let interval = setInterval(
+        () => webSocketService.requestBalanceUpdate(userId),
+        10000
+      );
+      return () => clearInterval(interval);
+    }
   }, [dispatch, userId]);
 
   return (
