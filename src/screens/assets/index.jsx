@@ -52,7 +52,7 @@ const Assets = ({ navigation }) => {
       <View style={styles.balanceDetails}>
         <Text style={styles.fiatSymbol}>$</Text>
         <Text style={styles.fiatConvertedAmount}>
-          {formatFiatValue(totalBalance, 2)}
+          {totalBalance ? formatFiatValue(totalBalance, 2) : "0.00"}
         </Text>
         <Text style={styles.fiatTicker}>USD</Text>
       </View>
@@ -61,6 +61,11 @@ const Assets = ({ navigation }) => {
         <ScrollView style={styles.scrollView}>
           <View style={styles.sectionComponent}>
             <View style={styles.leftContainer}>
+              <Image
+                source={require("../../../assets/icons/dollar-circle.png")}
+                style={styles.categoryImage}
+                resizeMode="stretch"
+              />
               <Text style={styles.titleStyle}>Cash</Text>
             </View>
 
@@ -81,7 +86,7 @@ const Assets = ({ navigation }) => {
 
             <View style={styles.rightContainer}>
               <Text style={styles.amountStyle}>
-                ${formatFiatValue(totalBalance, 2)}
+                ${totalBalance ? formatFiatValue(totalBalance, 2) : "0.00"}
               </Text>
             </View>
           </View>
@@ -133,7 +138,7 @@ const Assets = ({ navigation }) => {
                     key={item.id}
                     style={styles.cryptoItem}
                     onPress={() => handleAssetPress(item.id)}
-                    disabled={item.disabled}
+                    disabled={true}
                   >
                     <View style={styles.leftContainer}>
                       <Image

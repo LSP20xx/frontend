@@ -158,7 +158,7 @@ export const styles = StyleSheet.create({
     fontFamily: "Uto-Light",
     color: COLORS.black,
     textAlign: "center",
-    bottom: 10,
+    bottom: 6,
   },
   fiatTicker: {
     fontSize: 12,
@@ -170,7 +170,7 @@ export const styles = StyleSheet.create({
   },
   fiatConvertedAmount: {
     fontSize: 52,
-    fontFamily: "Uto-Medium",
+    fontFamily: "Uto-Light",
     color: COLORS.black,
     textAlign: "center",
     marginTop: 0,

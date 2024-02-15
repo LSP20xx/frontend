@@ -5,7 +5,7 @@ import { Header } from "../../components/index";
 import { styles } from "./styles";
 import BigLineChart from "../../components/big-line-chart";
 
-const Asset = ({ navigation }) => {
+const MarketAsset = ({ navigation }) => {
   const { selectedAsset } = useSelector((state) => state.assets);
 
   return (
@@ -60,4 +60,4 @@ const Asset = ({ navigation }) => {
   );
 };
 
-export default Asset;
+export default MarketAsset;

@@ -29,8 +29,6 @@ export const getAssetsLittleLineCharts = () => {
       const response = await fetch(LITTLE_LINE_CHARTS_URL);
       const result = await response.json();
 
-      console.log("result", result);
-
       dispatch({
         type: GET_ASSETS_LITTLE_LINE_CHARTS,
         payload: result,

@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import Place from "../../screens/place";
-import Places from "../../screens/asset";
+import Places from "../../screens/market-asset";
 
 import { COLORS } from "../../constants";
 import { Favorites } from "../../screens";

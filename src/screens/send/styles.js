@@ -24,7 +24,6 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-start",
-    border: 1,
     borderWidth: 1,
     borderColor: COLORS.greySecondary,
     borderRadius: 5,

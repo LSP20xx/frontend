@@ -5,12 +5,12 @@ import {
 
 import Assets from "../../screens/assets";
 import Receive from "../../screens/receive";
-import Asset from "../../screens/asset";
 import Send from "../../screens/send";
 import Confirm from "../../screens/confirm";
 
 import { COLORS } from "../../constants";
 import AssetsList from "../../screens/assets-list";
+import MarketAsset from "../../screens/market-asset";
 
 const Stack = createNativeStackNavigator();
 
@@ -25,7 +25,7 @@ const WalletNavigator = () => {
       }}
     >
       <Stack.Screen name="Assets" component={Assets} />
-      <Stack.Screen name="Asset" component={Asset} />
+      <Stack.Screen name="MarketAsset" component={MarketAsset} />
       <Stack.Screen name="ReceiveList" component={AssetsList} />
       <Stack.Screen name="Receive" component={Receive} />
       <Stack.Screen name="SendList" component={AssetsList} />

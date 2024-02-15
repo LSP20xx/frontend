@@ -27,10 +27,13 @@ const Navigation = () => {
     if (userId) {
       let interval = setInterval(
         () => webSocketService.requestBalanceUpdate(userId),
-        10000
+        3000
       );
       return () => clearInterval(interval);
     }
+    return () => {
+      webSocketService.disconnect();
+    };
   }, [dispatch, userId]);
 
   return (
