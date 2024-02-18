@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import {
   Button,
   FlatList,
@@ -9,14 +9,22 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Header } from "../../components";
+import { Header, Input } from "../../components";
 import { styles } from "./styles";
 import { COLORS } from "../../constants";
 import { useSelector } from "react-redux";
 // import { validateAddress } from "../../utils/address";
 import { formatBalance } from "../../utils/prices";
+import { onInputChange } from "../../utils/forms";
+import formReducer from "../../store/reducers/form.reducer";
+
+const initialState = {
+  address: { value: "", error: "", touched: false, hasError: true },
+  isFormValid: false,
+};
 
 const Send = ({ navigation }) => {
+  const [formState, dispatchFormState] = useReducer(formReducer, initialState);
   const [address, setAddress] = useState("");
   const [amount, setAmount] = useState("");
   const [recommendedFeePerByte, setRecommendedFeePerByte] = useState(0);
@@ -30,6 +38,10 @@ const Send = ({ navigation }) => {
   const assetCalculatedBalance = assetBalance
     ? assetBalance.calculatedBalance
     : 0;
+
+  const onHandlerInputChange = ({ value, name }) => {
+    onInputChange({ name, value, dispatch: dispatchFormState, formState });
+  };
 
   const handleSendPress = () => {
     if (
@@ -72,7 +84,22 @@ const Send = ({ navigation }) => {
       <View style={styles.screenTitleContainer}>
         <Text style={styles.screenTitle}>Enviar {selectedAsset.symbol}</Text>
       </View>
-      <TextInput
+      <Input
+        placeholder="Dirección de destino"
+        placeholderTextColor={COLORS.darkGray}
+        autoCapitalize="none"
+        autoCorrect={false}
+        onChangeText={(text) =>
+          onHandlerInputChange({ value: text, name: "address" })
+        }
+        // onFocus={onEmailInputFocus}
+        value={formState.address.value}
+        error={formState.address.error}
+        touched={formState.address.touched}
+        hasError={formState.address.hasError}
+      />
+
+      {/* <TextInput
         placeholder="Dirección de destino"
         placeholderTextColor={COLORS.greyLight}
         value={address}
@@ -83,7 +110,7 @@ const Send = ({ navigation }) => {
         //     validateAddress(address, selectedAsset.symbol, true)
         //   )
         // }
-      />
+      /> */}
       {!isValidAddress && <Text style={styles.errorText}>Invalid address</Text>}
       <TextInput
         placeholder="Cantidad a enviar"
@@ -105,7 +132,8 @@ const Send = ({ navigation }) => {
       <TouchableOpacity
         style={styles.button}
         onPress={handleSendPress}
-        disabled={!address || !amount || !isValidAddress || !isValidAmount}
+        // disabled={!address || !amount || !isValidAddress || !isValidAmount}
+        disabled={!formState.isFormValid}
       >
         <Text style={styles.buttonText}>Continue</Text>
       </TouchableOpacity>

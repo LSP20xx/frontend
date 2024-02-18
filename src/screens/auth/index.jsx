@@ -19,8 +19,9 @@ import {
   checkPhoneNumberAuthData,
   clearState,
 } from "../../store/actions";
-import { UPDATE_FORM, onInputChange } from "../../utils/forms";
+import { onInputChange } from "../../utils/forms";
 import CountryPicker from "react-native-country-picker-modal";
+import formReducer from "../../store/reducers/form.reducer";
 
 const initialState = {
   email: { value: "", error: "", touched: false, hasError: true },
@@ -40,25 +41,6 @@ const identifyInputType = (value) => {
     return "phoneNumber";
   } else {
     return "unknown";
-  }
-};
-
-const formReducer = (state, action) => {
-  switch (action.type) {
-    case UPDATE_FORM:
-      const { name, value, hasError, error, touched, isFormValid } =
-        action.data;
-      return {
-        ...state,
-        [name]: {
-          ...state[name],
-          value,
-          hasError,
-          error,
-          touched,
-        },
-        isFormValid,
-      };
   }
 };
 

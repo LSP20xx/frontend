@@ -89,6 +89,7 @@ export const styles = StyleSheet.create({
   warning: {
     fontSize: 12,
     color: COLORS.black,
+    fontFamily: "Uto-Light",
   },
   row: {
     flex: 1,
