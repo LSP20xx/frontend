@@ -84,22 +84,7 @@ const Send = ({ navigation }) => {
       <View style={styles.screenTitleContainer}>
         <Text style={styles.screenTitle}>Enviar {selectedAsset.symbol}</Text>
       </View>
-      <Input
-        placeholder="Dirección de destino"
-        placeholderTextColor={COLORS.darkGray}
-        autoCapitalize="none"
-        autoCorrect={false}
-        onChangeText={(text) =>
-          onHandlerInputChange({ value: text, name: "address" })
-        }
-        // onFocus={onEmailInputFocus}
-        value={formState.address.value}
-        error={formState.address.error}
-        touched={formState.address.touched}
-        hasError={formState.address.hasError}
-      />
-
-      {/* <TextInput
+      <TextInput
         placeholder="Dirección de destino"
         placeholderTextColor={COLORS.greyLight}
         value={address}
@@ -110,7 +95,7 @@ const Send = ({ navigation }) => {
         //     validateAddress(address, selectedAsset.symbol, true)
         //   )
         // }
-      /> */}
+      />
       {!isValidAddress && <Text style={styles.errorText}>Invalid address</Text>}
       <TextInput
         placeholder="Cantidad a enviar"
@@ -126,9 +111,9 @@ const Send = ({ navigation }) => {
           La cantidad excede el saldo disponible
         </Text>
       )}
-      <View style={styles.recentTransfersContainer}>
+      {/* <View style={styles.recentTransfersContainer}>
         <Text style={styles.recentTransfersTitle}>Historial de retiros</Text>
-      </View>
+      </View> */}
       <TouchableOpacity
         style={styles.button}
         onPress={handleSendPress}

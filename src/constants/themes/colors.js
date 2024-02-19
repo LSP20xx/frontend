@@ -24,4 +24,5 @@ export const COLORS = {
   titles: "#6A6565",
   interest: "#4A4F5E",
   green: "#446F61",
+  input: "#f2f2f2",
 };
