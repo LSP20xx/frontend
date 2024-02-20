@@ -21,7 +21,7 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     backgroundColor: COLORS.input,
-    borderRadius: 5,
+    borderRadius: 16,
     paddingVertical: 5,
     paddingHorizontal: 15,
   },

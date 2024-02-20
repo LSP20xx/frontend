@@ -12,11 +12,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Header, Input } from "../../components";
 import { styles } from "./styles";
 import { COLORS } from "../../constants";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 // import { validateAddress } from "../../utils/address";
 import { formatBalance } from "../../utils/prices";
 import { onInputChange } from "../../utils/forms";
 import formReducer from "../../store/reducers/form.reducer";
+import { fetchBlockchains } from "../../store/actions";
 
 const initialState = {
   address: { value: "", error: "", touched: false, hasError: true },
@@ -24,6 +25,7 @@ const initialState = {
 };
 
 const Send = ({ navigation }) => {
+  const dispatch = useDispatch();
   const [formState, dispatchFormState] = useReducer(formReducer, initialState);
   const [address, setAddress] = useState("");
   const [amount, setAmount] = useState("");
@@ -31,6 +33,7 @@ const Send = ({ navigation }) => {
   const [isValidAddress, setIsValidAddress] = useState(true);
   const [isValidAmount, setIsValidAmount] = useState(true);
   const { selectedAsset, balances } = useSelector((state) => state.assets);
+  const { blockchains } = useSelector((state) => state.blockchains);
   const assetBalance = balances.find(
     (balance) => balance.symbol === selectedAsset.symbol
   );
@@ -73,7 +76,12 @@ const Send = ({ navigation }) => {
       }
     };
     fetchData();
+    dispatch(fetchBlockchains(selectedAsset.symbol));
   }, []);
+
+  useEffect(() => {
+    console.log("blockchains", blockchains);
+  }, [blockchains]);
 
   return (
     <View style={styles.container}>

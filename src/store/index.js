@@ -7,6 +7,7 @@ import {
   favoritesReducer,
   authReducer,
   userReducer,
+  blockchainsReducer,
 } from "./reducers/index";
 
 const rootReducer = combineReducers({
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   favorites: favoritesReducer,
   auth: authReducer,
   user: userReducer,
+  blockchains: blockchainsReducer,
 });
 
 export default createStore(rootReducer, applyMiddleware(thunk));
