@@ -54,7 +54,7 @@ const Assets = ({ navigation }) => {
         <Text style={styles.fiatConvertedAmount}>
           {totalBalance ? formatFiatValue(totalBalance, 2) : "0.00"}
         </Text>
-        <Text style={styles.fiatTicker}>USD</Text>
+        <Text style={styles.fiatTicker}> USD</Text>
       </View>
       <Navbar navigation={navigation} />
       <View style={{ flex: 1, position: "relative" }}>

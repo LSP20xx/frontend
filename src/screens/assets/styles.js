@@ -161,12 +161,12 @@ export const styles = StyleSheet.create({
     bottom: 6,
   },
   fiatTicker: {
-    fontSize: 12,
+    fontSize: 16,
     fontFamily: "Uto-Medium",
     color: COLORS.greyLight,
     textAlign: "center",
-    top: 8,
-    right: 0,
+    marginTop: 16,
+    marginLeft: 8,
   },
   fiatConvertedAmount: {
     fontSize: 52,
