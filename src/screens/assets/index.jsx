@@ -164,7 +164,7 @@ const Assets = ({ navigation }) => {
                       <View style={styles.priceRow}>
                         <Text style={styles.priceFiatAmount}>$</Text>
                         <Text style={styles.price}>
-                          {formatFiatValue(displayPrice)}
+                          {formatFiatValue(displayPrice, item.priceDecimals)}
                         </Text>
                       </View>
                       <Text

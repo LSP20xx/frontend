@@ -8,12 +8,13 @@ export const styles = StyleSheet.create({
     paddingTop: 20,
     alignItems: "center",
   },
+
   assetConversionContainer: {
     marginTop: 50,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    height: 80,
+    height: 140,
     width: "100%",
     maxWidth: "60%",
   },
@@ -22,16 +23,29 @@ export const styles = StyleSheet.create({
     fontFamily: "Uto-Light",
     color: COLORS.black,
     textAlign: "center",
-    marginTop: 0,
-    paddingBottom: 10,
+    paddingBottom: 0,
+    minWidth: 100,
   },
   selectedAssetSymbol: {
     fontSize: 16,
     fontFamily: "Uto-Medium",
     color: COLORS.greyLight,
     textAlign: "center",
-    marginTop: 16,
     marginHorizontal: 8,
+  },
+  calculatedAssetAmountContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  calculatedAssetAmount: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: COLORS.primaryDark,
+    textAlign: "center",
+  },
+  changeAssetIcon: {
+    color: COLORS.primaryDark,
   },
   selectedAssetImageContainer: {
     width: 80,
@@ -43,6 +57,7 @@ export const styles = StyleSheet.create({
     marginLeft: 8,
     flexDirection: "row",
     alignItems: "center",
+    marginBottom: 4,
   },
   selectedAssetImage: {
     width: 40,
@@ -54,7 +69,7 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     backgroundColor: COLORS.input,
-    borderRadius: 5,
+    borderRadius: 16,
     paddingVertical: 5,
     paddingHorizontal: 15,
     width: "90%",
@@ -108,6 +123,38 @@ export const styles = StyleSheet.create({
     marginTop: 50,
     marginBottom: 20,
     backgroundColor: COLORS.white,
+    fontFamily: "Uto-Medium",
+  },
+  maxButton: {
+    backgroundColor: COLORS.primary,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 5,
+    marginLeft: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  maxButtonText: {
+    color: "#FFFFFF",
+    fontSize: 14,
+  },
+
+  pickerContainer: {
+    borderRadius: 16,
+    marginBottom: 20,
+    width: "90%",
+    backgroundColor: COLORS.input,
+  },
+
+  pickerStyle: {
+    width: "100%",
+    height: 50,
+  },
+
+  pickerItem: {
+    fontSize: 16,
+    color: "#777C87",
     fontFamily: "Uto-Medium",
   },
 });

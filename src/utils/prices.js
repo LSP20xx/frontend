@@ -1,34 +1,23 @@
+import BigNumber from "bignumber.js";
+
+BigNumber.config({ DECIMAL_PLACES: 18 });
+
 export const calculatePriceVariation = (currentPrice, openingPrice) => {
-  let variation = ((currentPrice - openingPrice) / openingPrice) * 100;
-  return variation ? variation.toFixed(2) : 0;
+  if (!openingPrice) return "0.00";
+  const variation = new BigNumber(currentPrice)
+    .minus(openingPrice)
+    .div(openingPrice)
+    .multipliedBy(100)
+    .toNumber();
+  return variation.toFixed(2);
 };
 
-export const formatFiatValue = (value, decimal) => {
-  if (value === undefined || value === null) {
-    return "0.00";
-  }
-
-  const decimalPart = value.toString().split(".")[1];
-
-  if (decimal) {
-    return decimalPart && value.toFixed(decimal);
-  }
-  return decimalPart && decimalPart.length > 2
-    ? value.toFixed(2)
-    : value.toFixed(2);
+export const formatFiatValue = (value, decimals = 2) => {
+  if (!value) return "0.00";
+  return new BigNumber(value).toFixed(decimals, BigNumber.ROUND_DOWN);
 };
 
-export const formatBalance = (value, decimal) => {
-  if (!value) {
-    return "0";
-  }
-
-  const decimalPart = value.toString().split(".")[1];
-
-  if (decimal) {
-    return decimalPart && value.toFixed(decimal);
-  }
-  return decimalPart && decimalPart.length > 2
-    ? value.toFixed(4)
-    : value.toFixed(2);
+export const formatBalance = (value, decimals = 18) => {
+  if (!value) return "0";
+  return new BigNumber(value).toFixed(decimals, BigNumber.ROUND_DOWN);
 };

@@ -115,7 +115,7 @@ const AssetsList = ({ navigation, route }) => {
                   <View style={styles.textContainer}>
                     <Text style={styles.cryptoName}>{item.name}</Text>
                     <Text style={styles.cryptoSymbol}>
-                      ${formatFiatValue(displayPrice)}
+                      ${formatFiatValue(displayPrice, item.priceDecimals)}
                     </Text>
                   </View>
                 </View>
@@ -123,7 +123,8 @@ const AssetsList = ({ navigation, route }) => {
                 <View style={styles.rightContainer}>
                   <View style={styles.amountRow}>
                     <Text style={styles.amount}>
-                      {formatBalance(balance?.balance)} {item.symbol}
+                      {formatBalance(balance?.balance, item.assetDecimals)}{" "}
+                      {item.symbol}
                     </Text>
                   </View>
                   <Text style={styles.calculatedBalance}>
