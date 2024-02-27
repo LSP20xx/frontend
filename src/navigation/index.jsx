@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import { fetchBlockchains } from "../store/actions";
 
 const Navigation = () => {
-  const userId = "c7dda908-ccff-485e-94a1-697fd183847c";
+  const userId = useSelector((state) => state.auth.userId);
   const dispatch = useDispatch();
 
   // useEffect(() => {

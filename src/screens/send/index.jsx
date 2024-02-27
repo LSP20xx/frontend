@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import {
   Animated,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
@@ -52,7 +53,9 @@ const Send = ({ navigation }) => {
   const [recommendedFeePerByte, setRecommendedFeePerByte] = useState(0);
   const [isValidAddress, setIsValidAddress] = useState(true);
   const [isValidAmount, setIsValidAmount] = useState(true);
+  const [withdrawFee, setWithdrawFee] = useState(0);
   const [isAmountPrimary, setIsAmountPrimary] = useState(true);
+  const [errorMessages, setErrorMessages] = useState([]);
   const assetAmountInputRef = useRef(null);
   const rotateValueHolder = useRef(new Animated.Value(0)).current;
   const { blockchains } = useSelector((state) => state.blockchains);
@@ -75,15 +78,57 @@ const Send = ({ navigation }) => {
     (blockchain) => blockchain.tokenSymbol === selectedAsset.symbol
   );
 
+  // const handleSendPress = () => {
+  //   if (parseFloat(amount) <= balance) {
+  //     navigation.navigate("Confirm", {
+  //       address,
+  //       amount,
+  //       recommendedFeePerByte,
+  //     });
+  //   } else {
+  //     setIsValidAmount(parseFloat(amount) <= balance);
+  //   }
+  // };
+
+  const validateFields = () => {
+    // Inicia sin errores
+    let error = "";
+
+    // Verificación de la red seleccionada
+    if (!selectedBlockchain) {
+      error = "Por favor, selecciona una red.";
+    }
+    // Verificación de la dirección
+    else if (address.trim() === "") {
+      error = "Por favor, ingresa la dirección de envío.";
+    } else if (!isValidAddress) {
+      error = "La dirección es inválida.";
+    }
+    // Verificación del monto
+    else if (amount.trim() === "") {
+      error = "El monto no puede estar vacío.";
+    } else {
+      // Verificación del monto más la comisión de retiro
+      const amountBN = new BigNumber(amount || 0);
+      const withdrawFeeBN = new BigNumber(withdrawFee || 0);
+      const balanceBN = new BigNumber(balance);
+      const totalDeduction = amountBN.plus(withdrawFeeBN);
+      if (!totalDeduction.isLessThanOrEqualTo(balanceBN)) {
+        error =
+          "El monto más la comisión de retiro excede el saldo disponible.";
+      }
+    }
+
+    setErrorMessages([error]);
+    return error === "";
+  };
+
   const handleSendPress = () => {
-    if (parseFloat(amount) <= balance) {
-      navigation.navigate("Confirm", {
+    if (!errorMessages[0]) {
+      navigation.navigate("Verification", {
         address,
         amount,
-        recommendedFeePerByte,
       });
-    } else {
-      setIsValidAmount(parseFloat(amount) <= balance);
     }
   };
 
@@ -148,7 +193,7 @@ const Send = ({ navigation }) => {
     if (isAmountPrimary) {
       const calculatedFiat = amountBN
         .times(assetFiatValueBN)
-        .toFixed(2, BigNumber.ROUND_DOWN);
+        .toFixed(2, BigNumber.ROUND_HALF_DOWN);
       setCalculatedAmount(calculatedFiat);
     } else {
       const calculatedCrypto = amountBN
@@ -159,17 +204,14 @@ const Send = ({ navigation }) => {
   }, [amount, isAmountPrimary, assetFiatValue, selectedAsset.assetDecimals]);
 
   const handleAmountChange = (text) => {
-    // console.log("Input text before processing:", text);
-
+    // Limpiar y preparar el texto para convertirlo a un BigNumber
     const newText = text
-      .replace(/^0+/, "0")
-      .replace(/[^0-9.]/g, "")
-      .replace(/(\..*?)\..*/g, "$1")
-      .replace(/^(0\d)/g, "$1".slice(1));
+      .replace(/^0+/, "0") // Elimina ceros a la izquierda
+      .replace(/[^0-9.]/g, "") // Elimina caracteres no numéricos excepto el punto
+      .replace(/(\..*?)\..*/g, "$1") // Solo permite un punto para decimales
+      .replace(/^(0\d)/g, "$1".slice(1)); // Evita los ceros a la izquierda antes de dígitos
 
     const finalText = newText === "." ? "0." : newText;
-
-    // console.log("Final text after processing:", finalText);
 
     setAmount(finalText);
     adjustFontSizeAndMargin(finalText);
@@ -177,15 +219,13 @@ const Send = ({ navigation }) => {
     if (finalText === "" || finalText === "0.") {
       setCalculatedAmount("0.00");
     } else {
-      const numericAmount = parseFloat(finalText) || 0;
-      const calculatedFiatAmount = formatFiatValue(
-        numericAmount * assetFiatValue,
-        2
-      );
-      // console.log(
-      //   "Calculated fiat amount after input change:",
-      //   calculatedFiatAmount
-      // );
+      // Usa BigNumber para manejar el cálculo de la cantidad
+      const numericAmount = new BigNumber(finalText || 0);
+      const fiatValueBN = new BigNumber(assetFiatValue || 0);
+      const calculatedFiatAmount = numericAmount
+        .multipliedBy(fiatValueBN)
+        .toFixed(2); // Esto asegura que el resultado tenga 2 decimales
+
       setCalculatedAmount(calculatedFiatAmount);
     }
   };
@@ -239,8 +279,18 @@ const Send = ({ navigation }) => {
   }, [amount, calculatedAmount, isAmountPrimary]);
 
   useEffect(() => {
-    console.log("Selected blockchain:", selectedBlockchain);
+    if (selectedBlockchain) {
+      const blockchain = supportedBlockchains.find(
+        (blockchain) => blockchain.blockchainSymbol === selectedBlockchain
+      );
+      console.log("blockchain", blockchain);
+      setWithdrawFee(blockchain.withdrawFee);
+    }
   }, [selectedBlockchain]);
+
+  useEffect(() => {
+    validateFields();
+  }, [address, amount, selectedBlockchain, withdrawFee, balance]);
 
   return (
     <View style={styles.container}>
@@ -303,10 +353,14 @@ const Send = ({ navigation }) => {
         </TouchableOpacity>
       </View>
       <View style={styles.feeContainer}>
-        <Text style={styles.feeTitle}>Comisión de retiro</Text>
-        <Text style={styles.feeValue}>
-          {recommendedFeePerByte} {selectedAsset.symbol}
-        </Text>
+        {selectedBlockchain && (
+          <>
+            <Text style={styles.feeTitle}>Comisión de retiro:</Text>
+            <Text style={styles.feeValue}>
+              {withdrawFee} {selectedAsset.symbol}
+            </Text>
+          </>
+        )}
       </View>
 
       <View style={styles.screenTitleContainer}>
@@ -319,18 +373,19 @@ const Send = ({ navigation }) => {
             setSelectedBlockchain(itemValue)
           }
           style={styles.pickerStyle}
+          placeholderTextColor={COLORS.greyLight}
         >
           <Picker.Item
             label="Selecciona una red"
             value={null}
-            style={styles.pickerItem}
+            style={styles.pickerItemNull}
           />
           {supportedBlockchains.map((blockchain) => (
             <Picker.Item
               key={blockchain.blockchainId}
               label={blockchain.blockchainSymbol}
               value={blockchain.blockchainSymbol}
-              style={styles.pickerItem}
+              style={styles.pickerItemNotNull}
             />
           ))}
         </Picker>
@@ -361,11 +416,16 @@ const Send = ({ navigation }) => {
       {/* <View style={styles.recentTransfersContainer}>
               <Text style={styles.recentTransfersTitle}>Historial de retiros</Text>
             </View> */}
+      <View style={styles.errorContainer}>
+        {!!errorMessages[0] && (
+          <Text style={styles.errorText}>{errorMessages[0]}</Text>
+        )}
+      </View>
+
       <TouchableOpacity
         style={styles.button}
         onPress={handleSendPress}
-        // disabled={!address || !amount || !isValidAddress || !isValidAmount}
-        disabled={!formState.isFormValid}
+        disabled={!!errorMessages[0]}
       >
         <Text style={styles.buttonText}>Confirmar</Text>
       </TouchableOpacity>

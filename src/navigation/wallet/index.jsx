@@ -2,6 +2,7 @@ import {
   createNativeStackNavigator,
   cardStyleInterpolator,
 } from "@react-navigation/native-stack";
+import { Verification } from "../../screens/verification";
 
 import Assets from "../../screens/assets";
 import Receive from "../../screens/receive";
@@ -31,6 +32,7 @@ const WalletNavigator = () => {
       <Stack.Screen name="SendList" component={AssetsList} />
       <Stack.Screen name="Send" component={Send} />
       <Stack.Screen name="Confirm" component={Confirm} />
+      <Stack.Screen name="Verification" component={Verification} />
     </Stack.Navigator>
   );
 };

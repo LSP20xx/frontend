@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
   },
 
   assetConversionContainer: {
-    marginTop: 50,
+    marginTop: 25,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
@@ -46,7 +46,7 @@ export const styles = StyleSheet.create({
   },
   calculatedAssetAmount: {
     fontSize: 14,
-    fontWeight: "bold",
+    fontFamily: "Uto-Medium",
     color: COLORS.primaryDark,
     textAlign: "center",
   },
@@ -57,7 +57,7 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 10,
+    height: 20,
   },
   feeTitle: {
     fontSize: 14,
@@ -70,6 +70,8 @@ export const styles = StyleSheet.create({
     fontFamily: "Uto-Medium",
     color: COLORS.primaryDark,
     textAlign: "center",
+    marginTop: 4,
+    marginLeft: 4,
   },
   selectedAssetImageContainer: {
     width: 80,
@@ -99,6 +101,7 @@ export const styles = StyleSheet.create({
     width: "90%",
     height: 50,
     marginBottom: 50,
+    color: COLORS.black,
   },
   button: {
     backgroundColor: COLORS.primaryLight,
@@ -172,10 +175,27 @@ export const styles = StyleSheet.create({
     width: "100%",
     height: 50,
   },
-  pickerItem: {
+  pickerItemNull: {
     fontSize: 16,
     color: "#777C87",
     fontFamily: "Uto-Medium",
     fontSize: 14,
+  },
+  pickerItemNotNull: {
+    fontSize: 16,
+    color: COLORS.black,
+    fontFamily: "Uto-Medium",
+    fontSize: 14,
+  },
+  errorContainer: {
+    width: "90%",
+    backgroundColor: COLORS.white,
+    height: 50,
+  },
+  errorText: {
+    color: COLORS.error,
+    fontSize: 14,
+    fontFamily: "Uto-Medium",
+    textAlign: "center",
   },
 });

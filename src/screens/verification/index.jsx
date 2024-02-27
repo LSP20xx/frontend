@@ -191,7 +191,7 @@ export const Verification = ({ navigation }) => {
             onPress={onHandleForgetPassword}
           >
             <Text style={styles.linkText}>
-              ¿Metódo de verificación no disponible?
+              ¿Método de verificación no disponible?
             </Text>
           </TouchableOpacity>
         </View>

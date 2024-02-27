@@ -1,3 +1,5 @@
+import { UPDATE_FORM } from "../../utils/forms";
+
 const formReducer = (state, action) => {
   switch (action.type) {
     case UPDATE_FORM:
