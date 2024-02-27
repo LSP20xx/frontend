@@ -30,15 +30,16 @@ const validateInput = ({ name, value }) => {
       if (formatValue === "") {
         hasError = true;
         error = "Se requiere una contraseña";
-      } else if (formatValue.length < minPasswordLength) {
+      } else if (
+        formatValue.length < minPasswordLength ||
+        formatValue.length > 20
+      ) {
         hasError = true;
-        error = `La contraseña debe tener al menos ${minPasswordLength} caracteres`;
+        error = `La contraseña debe tener entre ${minPasswordLength} y 20 caracteres`;
       } else {
         hasError = false;
         error = "";
       }
-      break;
-    default:
       break;
   }
   return { hasError, error };
