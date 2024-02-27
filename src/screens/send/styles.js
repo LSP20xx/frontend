@@ -18,6 +18,11 @@ export const styles = StyleSheet.create({
     width: "100%",
     maxWidth: "60%",
   },
+  assetAmountContainerTop: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   assetAmount: {
     fontSize: 52,
     fontFamily: "Uto-Light",
@@ -32,6 +37,7 @@ export const styles = StyleSheet.create({
     color: COLORS.greyLight,
     textAlign: "center",
     marginHorizontal: 8,
+    marginTop: 4,
   },
   calculatedAssetAmountContainer: {
     flexDirection: "row",
@@ -46,6 +52,24 @@ export const styles = StyleSheet.create({
   },
   changeAssetIcon: {
     color: COLORS.primaryDark,
+  },
+  feeContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 10,
+  },
+  feeTitle: {
+    fontSize: 14,
+    fontFamily: "Uto-Light",
+    color: COLORS.black,
+    textAlign: "center",
+  },
+  feeValue: {
+    fontSize: 14,
+    fontFamily: "Uto-Medium",
+    color: COLORS.primaryDark,
+    textAlign: "center",
   },
   selectedAssetImageContainer: {
     width: 80,
@@ -76,7 +100,6 @@ export const styles = StyleSheet.create({
     height: 50,
     marginBottom: 50,
   },
-
   button: {
     backgroundColor: COLORS.primaryLight,
     padding: 10,
@@ -88,7 +111,7 @@ export const styles = StyleSheet.create({
   buttonText: {
     color: COLORS.black,
     fontSize: 16,
-    fontWeight: "bold",
+    fontFamily: "Uto-Medium",
   },
   separator: {
     height: 1,
@@ -126,7 +149,7 @@ export const styles = StyleSheet.create({
     fontFamily: "Uto-Medium",
   },
   maxButton: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.primaryLight,
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 5,
@@ -134,27 +157,25 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-
   maxButtonText: {
-    color: "#FFFFFF",
+    color: COLORS.black,
     fontSize: 14,
+    fontFamily: "Uto-Medium",
   },
-
   pickerContainer: {
     borderRadius: 16,
     marginBottom: 20,
     width: "90%",
     backgroundColor: COLORS.input,
   },
-
   pickerStyle: {
     width: "100%",
     height: 50,
   },
-
   pickerItem: {
     fontSize: 16,
     color: "#777C87",
     fontFamily: "Uto-Medium",
+    fontSize: 14,
   },
 });

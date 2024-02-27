@@ -71,6 +71,9 @@ const Send = ({ navigation }) => {
   const asset = assets.find((asset) => asset.symbol === selectedAsset.symbol);
   const assetFiatValue = asset ? asset.fiatValue : 0;
   const balance = assetBalance ? assetBalance.balance : 0;
+  const supportedBlockchains = blockchains.filter(
+    (blockchain) => blockchain.tokenSymbol === selectedAsset.symbol
+  );
 
   const handleSendPress = () => {
     if (parseFloat(amount) <= balance) {
@@ -141,7 +144,7 @@ const Send = ({ navigation }) => {
   useEffect(() => {
     const amountBN = new BigNumber(amount || 0);
     const assetFiatValueBN = new BigNumber(assetFiatValue || 0);
-    console.log("AmountBN:", amountBN.toString());
+    // console.log("AmountBN:", amountBN.toString());
     if (isAmountPrimary) {
       const calculatedFiat = amountBN
         .times(assetFiatValueBN)
@@ -156,7 +159,7 @@ const Send = ({ navigation }) => {
   }, [amount, isAmountPrimary, assetFiatValue, selectedAsset.assetDecimals]);
 
   const handleAmountChange = (text) => {
-    console.log("Input text before processing:", text);
+    // console.log("Input text before processing:", text);
 
     const newText = text
       .replace(/^0+/, "0")
@@ -166,7 +169,7 @@ const Send = ({ navigation }) => {
 
     const finalText = newText === "." ? "0." : newText;
 
-    console.log("Final text after processing:", finalText);
+    // console.log("Final text after processing:", finalText);
 
     setAmount(finalText);
     adjustFontSizeAndMargin(finalText);
@@ -179,28 +182,34 @@ const Send = ({ navigation }) => {
         numericAmount * assetFiatValue,
         2
       );
-      console.log(
-        "Calculated fiat amount after input change:",
-        calculatedFiatAmount
-      );
+      // console.log(
+      //   "Calculated fiat amount after input change:",
+      //   calculatedFiatAmount
+      // );
       setCalculatedAmount(calculatedFiatAmount);
     }
   };
 
   useEffect(() => {
+    console.log(
+      "useEffect balance and selectedAsset updated",
+      balance,
+      selectedAsset
+    );
     const initialAmount = formatBalance(balance, selectedAsset.assetDecimals);
     setAmount(initialAmount);
     adjustFontSizeAndMargin(initialAmount);
   }, [balance, adjustFontSizeAndMargin]);
+
   const handleSwapValues = () => {
-    console.log(
-      "Before swap - amount:",
-      amount,
-      "calculatedAmount:",
-      calculatedAmount,
-      "isAmountPrimary:",
-      isAmountPrimary
-    );
+    // console.log(
+    //   "Before swap - amount:",
+    //   amount,
+    //   "calculatedAmount:",
+    //   calculatedAmount,
+    //   "isAmountPrimary:",
+    //   isAmountPrimary
+    // );
 
     setIsAmountPrimary((current) => !current);
 
@@ -213,54 +222,46 @@ const Send = ({ navigation }) => {
 
   useEffect(() => {
     console.log(
-      "After swap - amount:",
+      "useEffect amount and calculatedAmount isAmountPrimary updated",
       amount,
-      "calculatedAmount:",
       calculatedAmount,
-      "isAmountPrimary:",
       isAmountPrimary
     );
-  }, [amount, calculatedAmount, isAmountPrimary]);
-  useEffect(() => {
-    console.log(
-      `After swap - amount: ${amount}, calculatedAmount: ${calculatedAmount}, isAmountPrimary: ${isAmountPrimary}`
-    );
-  }, [amount, calculatedAmount, isAmountPrimary]);
 
-  useEffect(() => {
-    console.log("Blockchains:", blockchains);
-    if (blockchains && blockchains.length > 0) {
-      setSelectedBlockchain(blockchains[0].blockchainSymbol);
-    }
-  }, [blockchains]);
-
-  useEffect(() => {
-    dispatch(fetchBlockchains(selectedAsset.symbol));
-  }, [selectedAsset.symbol]);
+    // console.log(
+    //   "After swap - amount:",
+    //   amount,
+    //   "calculatedAmount:",
+    //   calculatedAmount,
+    //   "isAmountPrimary:",
+    //   isAmountPrimary
+    // );
+  }, [amount, calculatedAmount, isAmountPrimary]);
 
   useEffect(() => {
     console.log("Selected blockchain:", selectedBlockchain);
   }, [selectedBlockchain]);
+
   return (
     <View style={styles.container}>
       <Header navigation={navigation} showBackButton={true} />
       <View style={styles.assetConversionContainer}>
         <View style={styles.assetAmountContainer}>
-          <TextInput
-            ref={assetAmountInputRef}
-            style={[styles.assetAmount, { fontSize: fontSize }]}
-            selectionColor={COLORS.primaryDark}
-            autoFocus={true}
-            keyboardType="decimal-pad"
-            value={amount}
-            onChangeText={handleAmountChange}
-          />
-          <TouchableOpacity
-            onPress={handleUseMaxAmount}
-            style={styles.maxButton}
-          >
-            <Text style={styles.maxButtonText}>Max</Text>
-          </TouchableOpacity>
+          <View style={styles.assetAmountContainerTop}>
+            <TextInput
+              ref={assetAmountInputRef}
+              style={[styles.assetAmount, { fontSize: fontSize }]}
+              selectionColor={COLORS.primaryDark}
+              autoFocus={true}
+              keyboardType="decimal-pad"
+              value={amount}
+              onChangeText={handleAmountChange}
+            />
+            <Text style={styles.selectedAssetSymbol}>
+              {amountSymbol.toUpperCase()}
+            </Text>
+          </View>
+
           <View style={styles.calculatedAssetAmountContainer}>
             <TouchableOpacity
               onPress={() => {
@@ -282,14 +283,10 @@ const Send = ({ navigation }) => {
             </Text>
           </View>
         </View>
-        <Text
-          style={[
-            styles.selectedAssetSymbol,
-            { marginTop: margin.top, marginLeft: margin.left },
-          ]}
-        >
-          {amountSymbol.toUpperCase()}
-        </Text>
+
+        <TouchableOpacity onPress={handleUseMaxAmount} style={styles.maxButton}>
+          <Text style={styles.maxButtonText}>Max</Text>
+        </TouchableOpacity>
         <TouchableOpacity
           style={styles.selectedAssetImageContainer}
           onPress={() =>
@@ -305,6 +302,16 @@ const Send = ({ navigation }) => {
           <Ionicons name="chevron-down" size={24} color={COLORS.greyLight} />
         </TouchableOpacity>
       </View>
+      <View style={styles.feeContainer}>
+        <Text style={styles.feeTitle}>Comisión de retiro</Text>
+        <Text style={styles.feeValue}>
+          {recommendedFeePerByte} {selectedAsset.symbol}
+        </Text>
+      </View>
+
+      <View style={styles.screenTitleContainer}>
+        <Text style={styles.screenTitle}>Enviar {selectedAsset.symbol}</Text>
+      </View>
       <View style={styles.pickerContainer}>
         <Picker
           selectedValue={selectedBlockchain}
@@ -313,7 +320,12 @@ const Send = ({ navigation }) => {
           }
           style={styles.pickerStyle}
         >
-          {blockchains.map((blockchain) => (
+          <Picker.Item
+            label="Selecciona una red"
+            value={null}
+            style={styles.pickerItem}
+          />
+          {supportedBlockchains.map((blockchain) => (
             <Picker.Item
               key={blockchain.blockchainId}
               label={blockchain.blockchainSymbol}
@@ -323,9 +335,7 @@ const Send = ({ navigation }) => {
           ))}
         </Picker>
       </View>
-      <View style={styles.screenTitleContainer}>
-        <Text style={styles.screenTitle}>Enviar {selectedAsset.symbol}</Text>
-      </View>
+
       <TextInput
         placeholder="Dirección de destino"
         placeholderTextColor={COLORS.greyLight}

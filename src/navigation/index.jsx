@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import webSocketService from "../services/websocketService";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import { fetchBlockchains } from "../store/actions";
 
 const Navigation = () => {
   const userId = "c7dda908-ccff-485e-94a1-697fd183847c";
@@ -35,6 +36,15 @@ const Navigation = () => {
     return () => {
       webSocketService.disconnect();
     };
+  }, [dispatch, userId]);
+
+  useEffect(() => {
+    if (userId) {
+      fetchBlockchains()(dispatch);
+
+      let interval = setInterval(() => fetchBlockchains()(dispatch), 60000);
+      return () => clearInterval(interval);
+    }
   }, [dispatch, userId]);
 
   return (
