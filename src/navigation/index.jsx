@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import { fetchBlockchains } from "../store/actions";
 
 const Navigation = () => {
-  const userId = useSelector((state) => state.auth.userId);
+  const userId = "c7dda908-ccff-485e-94a1-697fd183847c";
   const dispatch = useDispatch();
 
   // useEffect(() => {
@@ -27,6 +27,7 @@ const Navigation = () => {
 
   useEffect(() => {
     if (userId) {
+      console.log("userId: ", userId);
       let interval = setInterval(
         () => webSocketService.requestBalanceUpdate(userId),
         3000
@@ -39,6 +40,7 @@ const Navigation = () => {
   }, [dispatch, userId]);
 
   useEffect(() => {
+    console.log("userId: ", userId);
     if (userId) {
       fetchBlockchains()(dispatch);
 

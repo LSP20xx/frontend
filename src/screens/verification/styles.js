@@ -146,4 +146,21 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     color: COLORS.primaryDark,
   },
+  withdrawContainer: {
+    padding: 20,
+    backgroundColor: "#f2f2f2",
+    borderRadius: 16,
+    marginHorizontal: 10,
+    marginTop: 40,
+  },
+  withdrawTitle: {
+    fontSize: 18,
+    fontFamily: "Uto-Bold",
+    marginBottom: 10,
+  },
+  withdrawDetails: {
+    fontSize: 16,
+    marginBottom: 5,
+    fontFamily: "Uto-Light",
+  },
 });

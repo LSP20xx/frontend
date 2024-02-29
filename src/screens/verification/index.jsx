@@ -21,7 +21,9 @@ import {
 } from "../../store/actions";
 import { styles } from "./styles";
 
-export const Verification = ({ navigation }) => {
+export const Verification = ({ navigation, route }) => {
+  const { address, amount, assetSymbol, selectedBlockchain, verificationType } =
+    route.params;
   const dispatch = useDispatch();
   const {
     error,
@@ -122,10 +124,10 @@ export const Verification = ({ navigation }) => {
   useEffect(() => {
     console.log("llega antes de enviar email o sms");
     if (selectedVerificationMethod === "EMAIL") {
-      dispatch(sendEmail(email, "prueba", "hola mundo"));
+      // dispatch(sendEmail(email, "prueba", "hola mundo"));
     } else {
       console.log("llega antes de enviar sms");
-      dispatch(sendSMS(phoneNumber));
+      // dispatch(sendSMS(phoneNumber));
     }
   }, []);
 
@@ -204,6 +206,19 @@ export const Verification = ({ navigation }) => {
             <Text style={styles.buttonText}>{buttonTitle}</Text>
           </TouchableOpacity>
         </View>
+        {verificationType === "send" && (
+          <View style={styles.withdrawContainer}>
+            <Text style={styles.withdrawTitle}>
+              Envío de {amount} {assetSymbol}
+            </Text>
+            <Text style={styles.withdrawDetails}>
+              Dirección de destino: {address}
+            </Text>
+            <Text style={styles.withdrawDetails}>
+              Red: {selectedBlockchain}
+            </Text>
+          </View>
+        )}
       </View>
       <View style={styles.linkContainer}>
         <TouchableOpacity style={styles.link} onPress={onHandleChangeAuth}>

@@ -60,6 +60,7 @@ const Send = ({ navigation }) => {
   const rotateValueHolder = useRef(new Animated.Value(0)).current;
   const { blockchains } = useSelector((state) => state.blockchains);
   const [selectedBlockchain, setSelectedBlockchain] = useState();
+  const [selectedBlockchainName, setSelectedBlockchainName] = useState();
   const { assets, selectedAsset, balances } = useSelector(
     (state) => state.assets
   );
@@ -128,6 +129,9 @@ const Send = ({ navigation }) => {
       navigation.navigate("Verification", {
         address,
         amount,
+        assetSymbol: selectedAsset.symbol,
+        selectedBlockchain,
+        verificationType: "send",
       });
     }
   };
@@ -281,7 +285,8 @@ const Send = ({ navigation }) => {
   useEffect(() => {
     if (selectedBlockchain) {
       const blockchain = supportedBlockchains.find(
-        (blockchain) => blockchain.blockchainSymbol === selectedBlockchain
+        (blockchain) =>
+          blockchain.blockchainSymbol === selectedBlockchain.split(" ")[0]
       );
       console.log("blockchain", blockchain);
       setWithdrawFee(blockchain.withdrawFee);
@@ -383,8 +388,20 @@ const Send = ({ navigation }) => {
           {supportedBlockchains.map((blockchain) => (
             <Picker.Item
               key={blockchain.blockchainId}
-              label={blockchain.blockchainSymbol}
-              value={blockchain.blockchainSymbol}
+              label={`${blockchain.blockchainSymbol} (${
+                blockchain.blockchainName
+                  .split("-")[0]
+                  .charAt(0)
+                  .toUpperCase() +
+                blockchain.blockchainName.split("-")[0].slice(1)
+              })`}
+              value={`${blockchain.blockchainSymbol} (${
+                blockchain.blockchainName
+                  .split("-")[0]
+                  .charAt(0)
+                  .toUpperCase() +
+                blockchain.blockchainName.split("-")[0].slice(1)
+              })`}
               style={styles.pickerItemNotNull}
             />
           ))}

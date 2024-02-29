@@ -120,6 +120,7 @@ const Auth = ({ navigation }) => {
       const type = identifyInputType(value);
       setInputType(type);
     }
+    console.log("value: ", value, "name: ", name, "formState: ", formState);
     onInputChange({ name, value, dispatch: dispatchFormState, formState });
   };
 
