@@ -20,6 +20,7 @@ const {
   CLEAR_ERROR,
   VERIFY_SMS_CODE,
   VERIFY_SMS_CODE_SUCCESS,
+  VERIFY_SMS_CODE_ON_WITHDRAW_SUCCESS,
   VERIFY_SMS_CODE_FAILURE,
 } = authTypes;
 
@@ -252,6 +253,35 @@ export const checkPhoneNumberAuthData = ({
         type: VERIFICATION_TOKEN_FAILURE,
         error: error.message,
       });
+    }
+  };
+};
+
+export const verifySmsCodeOnWithdraw = (to, code) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: VERIFY_SMS_CODE,
+      });
+      const response = await fetch(VERIFY_SMS_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ to, code }),
+      });
+      if (!response.ok) {
+        throw new Error("Error verifying sms code");
+      }
+      const result = await response.json();
+      if (result.isVerified) {
+        dispatch({ type: VERIFY_SMS_CODE_ON_WITHDRAW_SUCCESS });
+      } else {
+        dispatch({ type: VERIFY_SMS_CODE_FAILURE });
+      }
+    } catch (error) {
+      console.error(error);
+      dispatch({ type: VERIFY_SMS_CODE_FAILURE });
     }
   };
 };

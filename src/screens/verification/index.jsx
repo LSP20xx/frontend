@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Button,
@@ -18,12 +18,13 @@ import {
   sendEmail,
   sendSMS,
   verifySmsCode,
+  verifySmsCodeOnWithdraw,
 } from "../../store/actions";
 import { styles } from "./styles";
 
 export const Verification = ({ navigation, route }) => {
   const { address, amount, assetSymbol, selectedBlockchain, verificationType } =
-    route.params;
+    route.params || {};
   const dispatch = useDispatch();
   const {
     error,
@@ -40,16 +41,24 @@ export const Verification = ({ navigation, route }) => {
     useState("");
   const [timer, setTimer] = useState(60);
   const [canResend, setCanResend] = useState(false);
+  const inputsRef = useRef([]);
   const isCodeComplete = code.every((digit) => digit.trim() !== "");
-
-  const inputs = [];
 
   const handleInput = (text, index) => {
     const newCode = [...code];
     newCode[index] = text;
     setCode(newCode);
-    if (text?.length === 1 && index < 5) {
-      inputs[index + 1].focus();
+
+    if (text && index < 5) {
+      inputsRef.current[index + 1].focus();
+    }
+  };
+
+  const handleKeyPress = ({ nativeEvent: { key } }, index) => {
+    if (key === "Backspace" && index > 0) {
+      if (!code[index] || code[index] === "") {
+        inputsRef.current[index - 1].focus();
+      }
     }
   };
 
@@ -59,12 +68,15 @@ export const Verification = ({ navigation, route }) => {
 
   const onHandleChangeAuth = () => {};
   const onHandleVerification = () => {
-    console.log("selectedVerificationMethod: ", selectedVerificationMethod);
-    if (selectedVerificationMethod === "EMAIL") {
-    } else if (selectedVerificationMethod === "SMS") {
-      console.log("llega antes de verificar sms");
-      dispatch(verifySmsCode(phoneNumber, code.join(""), tempId, isLogin));
-      console.log("llega después de verificar sms");
+    if (verificationType === "send") {
+      dispatch(verifySmsCodeOnWithdraw(phoneNumber, code.join("")));
+    } else {
+      if (selectedVerificationMethod === "EMAIL") {
+      } else if (selectedVerificationMethod === "SMS") {
+        console.log("llega antes de verificar sms");
+        dispatch(verifySmsCode(phoneNumber, code.join(""), tempId, isLogin));
+        console.log("llega después de verificar sms");
+      }
     }
   };
 
@@ -124,10 +136,10 @@ export const Verification = ({ navigation, route }) => {
   useEffect(() => {
     console.log("llega antes de enviar email o sms");
     if (selectedVerificationMethod === "EMAIL") {
-      // dispatch(sendEmail(email, "prueba", "hola mundo"));
+      dispatch(sendEmail(email, "prueba", "hola mundo"));
     } else {
       console.log("llega antes de enviar sms");
-      // dispatch(sendSMS(phoneNumber));
+      dispatch(sendSMS(phoneNumber));
     }
   }, []);
 
@@ -174,15 +186,16 @@ export const Verification = ({ navigation, route }) => {
       <View style={styles.content}>
         <Text style={styles.verificationTitle}>{verificationMessage}</Text>
         <View style={styles.inputContainer}>
-          {code?.map((digit, index) => (
+          {code.map((digit, index) => (
             <TextInput
               key={index}
               style={styles.codeInput}
               maxLength={1}
               keyboardType="number-pad"
               onChangeText={(text) => handleInput(text, index)}
+              onKeyPress={(e) => handleKeyPress(e, index)}
               value={digit}
-              ref={(ref) => (inputs[index] = ref)}
+              ref={(el) => (inputsRef.current[index] = el)}
             />
           ))}
         </View>

@@ -1,15 +1,35 @@
 import { NavigationContainer } from "@react-navigation/native";
 import TabsNavigator from "./tabs";
 import AuthNavigator from "./auth";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import webSocketService from "../services/websocketService";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { fetchBlockchains } from "../store/actions";
+import { AppState } from "react-native";
 
 const Navigation = () => {
-  const userId = "c7dda908-ccff-485e-94a1-697fd183847c";
+  const userId = useSelector((state) => state.auth.userId);
   const dispatch = useDispatch();
+  const [appState, setAppState] = useState(AppState.currentState);
+
+  const useIntervalEffect = (callback, delay) => {
+    const savedCallback = useRef();
+
+    useEffect(() => {
+      savedCallback.current = callback;
+    }, [callback]);
+
+    useEffect(() => {
+      function tick() {
+        savedCallback.current();
+      }
+      if (delay !== null) {
+        let id = setInterval(tick, delay);
+        return () => clearInterval(id);
+      }
+    }, [delay]);
+  };
 
   // useEffect(() => {
   //   dispatch(getBalance(userId));
@@ -19,11 +39,21 @@ const Navigation = () => {
   // }, [dispatch, userId]);
 
   useEffect(() => {
-    webSocketService.connect(dispatch);
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
+      if (appState.match(/inactive|background/) && nextAppState === "active") {
+        console.log("App has come to the foreground!");
+        webSocketService.connect(dispatch);
+      } else if (nextAppState.match(/inactive|background/)) {
+        console.log("App has gone to the background!");
+        webSocketService.disconnect();
+      }
+      setAppState(nextAppState);
+    });
+
     return () => {
-      webSocketService.disconnect();
+      subscription.remove();
     };
-  }, [dispatch]);
+  }, [appState, dispatch]);
 
   useEffect(() => {
     if (userId) {
@@ -32,12 +62,12 @@ const Navigation = () => {
         () => webSocketService.requestBalanceUpdate(userId),
         3000
       );
-      return () => clearInterval(interval);
+      return () => {
+        clearInterval(interval);
+        webSocketService.disconnect();
+      };
     }
-    return () => {
-      webSocketService.disconnect();
-    };
-  }, [dispatch, userId]);
+  }, [userId]);
 
   useEffect(() => {
     console.log("userId: ", userId);

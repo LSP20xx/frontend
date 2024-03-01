@@ -191,6 +191,7 @@ const Send = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
+    console.log("useEffect amount and assetFiatValue updated");
     const amountBN = new BigNumber(amount || 0);
     const assetFiatValueBN = new BigNumber(assetFiatValue || 0);
     // console.log("AmountBN:", amountBN.toString());
@@ -294,6 +295,7 @@ const Send = ({ navigation }) => {
   }, [selectedBlockchain]);
 
   useEffect(() => {
+    console.log("useEffect run");
     validateFields();
   }, [address, amount, selectedBlockchain, withdrawFee, balance]);
 

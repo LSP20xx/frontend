@@ -14,6 +14,7 @@ const {
   CLEAR_STATE,
   VERIFY_SMS_CODE,
   VERIFY_SMS_CODE_SUCCESS,
+  VERIFY_SMS_CODE_ON_WITHDRAW_SUCCESS,
   VERIFY_SMS_CODE_FAILURE,
 } = authTypes;
 
@@ -129,6 +130,11 @@ const authReducer = (state = initialState, action) => {
         ...state,
         isLoading: false,
         userId: action.userId,
+      };
+    case VERIFY_SMS_CODE_ON_WITHDRAW_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
       };
     case VERIFY_SMS_CODE_FAILURE:
       return {
