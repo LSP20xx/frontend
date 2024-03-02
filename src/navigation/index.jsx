@@ -9,7 +9,7 @@ import { fetchBlockchains } from "../store/actions";
 import { AppState } from "react-native";
 
 const Navigation = () => {
-  const userId = useSelector((state) => state.auth.userId);
+  const userId = "c7dda908-ccff-485e-94a1-697fd183847c";
   const dispatch = useDispatch();
   const [appState, setAppState] = useState(AppState.currentState);
 
@@ -57,12 +57,13 @@ const Navigation = () => {
 
   useEffect(() => {
     if (userId) {
-      console.log("userId: ", userId);
-      let interval = setInterval(
-        () => webSocketService.requestBalanceUpdate(userId),
-        3000
-      );
+      console.log("Setting up interval for balance updates");
+      let interval = setInterval(() => {
+        console.log("Requesting balance update");
+        webSocketService.requestBalanceUpdate(userId);
+      }, 3000);
       return () => {
+        console.log("Clearing interval and disconnecting WebSocket");
         clearInterval(interval);
         webSocketService.disconnect();
       };
@@ -70,7 +71,6 @@ const Navigation = () => {
   }, [userId]);
 
   useEffect(() => {
-    console.log("userId: ", userId);
     if (userId) {
       fetchBlockchains()(dispatch);
 

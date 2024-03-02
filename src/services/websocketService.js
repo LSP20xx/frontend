@@ -15,15 +15,18 @@ class WebSocketService {
   }
 
   connect(dispatch) {
+    console.log("Attempting to connect to WebSocket");
     if (!this.socket) {
       this.socket = io(socketUrl);
       this.socket.on("kraken-data", (data) => {
+        console.log("Received kraken-data:", data);
         const processedData = processKrakenData(data);
         if (processedData) {
           dispatch(updateAssetsPrices(processedData));
         }
       });
       this.socket.on("balance-update", (balances) => {
+        console.log("Received balance-update:", balances);
         dispatch(updateBalances(balances));
       });
     }
@@ -31,6 +34,7 @@ class WebSocketService {
 
   requestBalanceUpdate(userId) {
     if (this.socket) {
+      console.log("Requesting balance update for user:", userId);
       this.socket.emit("requestBalanceUpdate", { userId });
     }
   }
