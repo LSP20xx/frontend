@@ -4,14 +4,14 @@ import Place from "../../screens/place";
 import Places from "../../screens/market-asset";
 
 import { COLORS } from "../../constants";
-import { Favorites } from "../../screens";
+import AssetsList from "../../screens/assets-list";
 
 const Stack = createNativeStackNavigator();
 
-const FavoritesNavigator = () => {
+const MarketsNavigator = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Favoritos"
+      initialRouteName="AssetsList"
       screenOptions={{
         headerStyle: {
           backgroundColor: COLORS.primaryLight,
@@ -19,9 +19,9 @@ const FavoritesNavigator = () => {
         headerTintColor: COLORS.white,
       }}
     >
-      <Stack.Screen name="Favoritos" component={Favorites} />
+      <Stack.Screen name="AssetsList" component={AssetsList} />
     </Stack.Navigator>
   );
 };
 
-export default FavoritesNavigator;
+export default MarketsNavigator;

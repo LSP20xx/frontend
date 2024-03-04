@@ -4,19 +4,8 @@ import {
   SEND_SMS_URL,
   VERIFY_SMS_URL,
 } from "../../constants";
-import { authTypes } from "../types";
 import { userTypes } from "../types/user.types";
 const { GET_USER, ADD_USER, SET_USER_IMAGE, SEND_EMAIL, SEND_SMS } = userTypes;
-const {
-  SIGN_IN_REQUEST,
-  SIGN_IN_SUCCESS,
-  SIGN_IN_FAILURE,
-  SIGN_UP_REQUEST,
-  SIGN_UP_SUCCESS,
-  SIGN_UP_FAILURE,
-  CLEAR_ERROR,
-  CLEAR_STATE,
-} = authTypes;
 
 export const getUser = (userId) => {
   return async (dispatch) => {

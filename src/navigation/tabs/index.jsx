@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import { COLORS } from "../../constants";
 import WalletNavigator from "../wallet";
-import FavoritesNavigator from "../favorites";
+import MarketsNavigator from "../markets";
 import ProfileNavigator from "../profile";
 import CardNavigator from "../card";
 import { View } from "react-native";
@@ -141,8 +141,8 @@ const TabsNavigator = () => {
         }}
       />
       <BottomTab.Screen
-        name="FavoritesTab"
-        component={FavoritesNavigator}
+        name="MarketsTab"
+        component={MarketsNavigator}
         options={{
           tabBarLabel: "Mercado",
           tabBarIcon: ({ focused, color, size }) => (

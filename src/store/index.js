@@ -8,6 +8,7 @@ import {
   authReducer,
   userReducer,
   blockchainsReducer,
+  transactionsReducer,
 } from "./reducers/index";
 
 const rootReducer = combineReducers({
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
   user: userReducer,
   blockchains: blockchainsReducer,
+  transactions: transactionsReducer,
 });
 
 export default createStore(rootReducer, applyMiddleware(thunk));

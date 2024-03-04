@@ -5,6 +5,7 @@ import {
   VERIFY_SMS_URL,
 } from "../../constants";
 import { authTypes } from "../types";
+import { withdrawFromEvmWallet } from "./transactions.action";
 
 const {
   SIGN_IN_REQUEST,
@@ -257,8 +258,18 @@ export const checkPhoneNumberAuthData = ({
   };
 };
 
-export const verifySmsCodeOnWithdraw = (to, code) => {
+export const verifySmsCodeOnWithdraw = (
+  to,
+  code,
+  fromAddress,
+  toAddress,
+  amount,
+  coin,
+  userId,
+  blockchainId
+) => {
   return async (dispatch) => {
+    console.log("fromAddress: ", fromAddress, "toAddress: ", toAddress);
     try {
       dispatch({
         type: VERIFY_SMS_CODE,
@@ -271,11 +282,28 @@ export const verifySmsCodeOnWithdraw = (to, code) => {
         body: JSON.stringify({ to, code }),
       });
       if (!response.ok) {
-        throw new Error("Error verifying sms code");
+        const errorResponse = await response.text();
+        console.error("Error verifying sms code:", errorResponse);
+        throw new Error(`Error verifying sms code: ${errorResponse}`);
       }
       const result = await response.json();
       if (result.isVerified) {
+        console.log("llega a verificarse CORRECTAMENTE");
         dispatch({ type: VERIFY_SMS_CODE_ON_WITHDRAW_SUCCESS });
+        console.log("blockchainId: ", blockchainId, typeof blockchainId);
+        if (["1", "5"].includes(blockchainId)) {
+          console.log("llega a dispatchear withdrawFromEvmWallet");
+          dispatch(
+            withdrawFromEvmWallet(
+              fromAddress,
+              toAddress,
+              amount,
+              coin,
+              userId,
+              blockchainId
+            )
+          );
+        }
       } else {
         dispatch({ type: VERIFY_SMS_CODE_FAILURE });
       }

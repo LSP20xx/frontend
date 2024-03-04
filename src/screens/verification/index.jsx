@@ -23,8 +23,15 @@ import {
 import { styles } from "./styles";
 
 export const Verification = ({ navigation, route }) => {
-  const { address, amount, assetSymbol, selectedBlockchain, verificationType } =
-    route.params || {};
+  const {
+    toAddress,
+    fromAddress,
+    amount,
+    coin,
+    selectedBlockchain,
+    verificationType,
+    blockchainId,
+  } = route.params || {};
   const dispatch = useDispatch();
   const {
     error,
@@ -35,6 +42,7 @@ export const Verification = ({ navigation, route }) => {
     email,
     phoneNumber,
     tempId,
+    userId,
   } = useSelector((state) => state.auth);
   const [code, setCode] = useState(new Array(6).fill(""));
   const [selectedVerificationMethod, setSelectedVerificationMethod] =
@@ -69,7 +77,19 @@ export const Verification = ({ navigation, route }) => {
   const onHandleChangeAuth = () => {};
   const onHandleVerification = () => {
     if (verificationType === "send") {
-      dispatch(verifySmsCodeOnWithdraw(phoneNumber, code.join("")));
+      console.log("llega antes de verificar sms con withdraw");
+      dispatch(
+        verifySmsCodeOnWithdraw(
+          phoneNumber,
+          code.join(""),
+          fromAddress,
+          toAddress,
+          amount,
+          coin,
+          userId,
+          blockchainId
+        )
+      );
     } else {
       if (selectedVerificationMethod === "EMAIL") {
       } else if (selectedVerificationMethod === "SMS") {
@@ -212,7 +232,7 @@ export const Verification = ({ navigation, route }) => {
         </View>
         <View style={styles.submitContainer}>
           <TouchableOpacity
-            disabled={!isCodeComplete || isLoading}
+            disabled={!isCodeComplete}
             onPress={onHandleVerification}
             style={[styles.button]}
           >
@@ -222,14 +242,20 @@ export const Verification = ({ navigation, route }) => {
         {verificationType === "send" && (
           <View style={styles.withdrawContainer}>
             <Text style={styles.withdrawTitle}>
-              Envío de {amount} {assetSymbol}
+              Envío de {amount} {coin}
             </Text>
-            <Text style={styles.withdrawDetails}>
-              Dirección de destino: {address}
+            <Text style={styles.withdrawSubtitle}>
+              Dirección de destino
+              <View style={styles.separator}></View>
             </Text>
-            <Text style={styles.withdrawDetails}>
-              Red: {selectedBlockchain}
+
+            <Text style={styles.withdrawDetails}>{toAddress}</Text>
+
+            <Text style={styles.withdrawSubtitle}>
+              Red
+              <View style={styles.separator}></View>
             </Text>
+            <Text style={styles.withdrawDetails}>{selectedBlockchain}</Text>
           </View>
         )}
       </View>
@@ -238,7 +264,7 @@ export const Verification = ({ navigation, route }) => {
           <Text style={styles.linkTextBold}>{messageText}</Text>
         </TouchableOpacity>
       </View>
-      <Modal visible={hasError || isLoading} transparent animationType="fade">
+      <Modal visible={hasError} transparent animationType="fade">
         <View style={styles.containerStyle}>
           <View style={styles.modalContainer}>
             <Text style={styles.modalTitle}>{error ? error : "Cargando"}</Text>

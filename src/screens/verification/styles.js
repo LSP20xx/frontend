@@ -163,4 +163,8 @@ export const styles = StyleSheet.create({
     marginBottom: 5,
     fontFamily: "Uto-Light",
   },
+  withdrawSubtitle: {
+    fontSize: 14,
+    fontFamily: "Uto-Bold",
+  },
 });

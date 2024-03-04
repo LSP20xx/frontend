@@ -29,7 +29,7 @@ import { fetchBlockchains } from "../../store/actions/blockchains.action";
 BigNumber.config({ DECIMAL_PLACES: 18 });
 
 const initialState = {
-  address: { value: "", error: "", touched: false, hasError: true },
+  toAddress: { value: "", error: "", touched: false, hasError: true },
   isFormValid: false,
 };
 
@@ -45,8 +45,10 @@ const Send = ({ navigation }) => {
   const dispatch = useDispatch();
   const fiatSymbol = "USD";
   const [formState, dispatchFormState] = useReducer(formReducer, initialState);
-  const [address, setAddress] = useState("");
+  const [toAddress, setToAddress] = useState("");
+  const [fromAddress, setFromAddress] = useState("");
   const [amount, setAmount] = useState("");
+  const [blockchainId, setBlockchainId] = useState("");
   const [calculatedAmount, setCalculatedAmount] = useState("");
   const [fontSize, setFontSize] = useState(52);
   const [margin, setMargin] = useState({ top: 16, left: 8 });
@@ -100,7 +102,7 @@ const Send = ({ navigation }) => {
       error = "Por favor, selecciona una red.";
     }
     // Verificación de la dirección
-    else if (address.trim() === "") {
+    else if (toAddress.trim() === "") {
       error = "Por favor, ingresa la dirección de envío.";
     } else if (!isValidAddress) {
       error = "La dirección es inválida.";
@@ -127,11 +129,13 @@ const Send = ({ navigation }) => {
   const handleSendPress = () => {
     if (!errorMessages[0]) {
       navigation.navigate("Verification", {
-        address,
+        toAddress,
+        fromAddress,
         amount,
-        assetSymbol: selectedAsset.symbol,
+        coin: selectedAsset.symbol,
         selectedBlockchain,
         verificationType: "send",
+        blockchainId,
       });
     }
   };
@@ -285,20 +289,26 @@ const Send = ({ navigation }) => {
 
   useEffect(() => {
     if (selectedBlockchain) {
+      console.log("SUPPORTE BLOCKCHAINS", supportedBlockchains);
       const blockchain = supportedBlockchains.find(
         (blockchain) =>
           blockchain.blockchainSymbol === selectedBlockchain.split(" ")[0]
       );
-      console.log("blockchain", blockchain);
+      console.log("BLOCKCHAIN ************", blockchain);
       setWithdrawFee(blockchain.withdrawFee);
+      setFromAddress(blockchain.walletAddress);
+      setBlockchainId(blockchain.blockchainId);
     }
   }, [selectedBlockchain]);
 
   useEffect(() => {
     console.log("useEffect run");
     validateFields();
-  }, [address, amount, selectedBlockchain, withdrawFee, balance]);
+  }, [toAddress, amount, selectedBlockchain, withdrawFee, balance]);
 
+  useEffect(() => {
+    console.log("blockchains", blockchains);
+  }, [blockchains]);
   return (
     <View style={styles.container}>
       <Header navigation={navigation} showBackButton={true} />
@@ -413,8 +423,8 @@ const Send = ({ navigation }) => {
       <TextInput
         placeholder="Dirección de destino"
         placeholderTextColor={COLORS.greyLight}
-        value={address}
-        onChangeText={setAddress}
+        value={toAddress}
+        onChangeText={setToAddress}
         style={styles.input}
       />
       {!isValidAddress && <Text style={styles.errorText}>Invalid address</Text>}

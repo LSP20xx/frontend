@@ -10,3 +10,4 @@ export const VERIFY_SMS_URL = `http://192.168.0.92:8000/api/verification/verify-
 export const LITTLE_LINE_CHARTS_URL = `http://192.168.0.92:8000/api/tokens/little-line-charts`;
 export const STORED_PRICES_URL = `http://192.168.0.92:8000/api/tokens/stored-prices`;
 export const FETCH_BLOCKCHAINS_URL = `http://192.168.0.92:8000/api/tokens/get-blockchains-for-tokens`;
+export const WITHDRAW_FROM_EVM_WALLET_URL = `http://192.168.0.92:8000/api/evm-wallet/withdraw`;

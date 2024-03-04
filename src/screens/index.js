@@ -4,7 +4,7 @@ export { default as Receive } from "./receive/index";
 export { default as Send } from "./send/index";
 export { default as Confirm } from "./confirm/index";
 export { default as Place } from "./place/index";
-export { default as Favorites } from "./favorites/index";
+export { default as Favorites } from "./markets/index";
 export { default as Auth } from "./auth/index";
 export { default as Profile } from "./profile/index";
 export { default as Maps } from "./maps/index";
