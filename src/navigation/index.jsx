@@ -13,26 +13,56 @@ const Navigation = () => {
   const dispatch = useDispatch();
   const [appState, setAppState] = useState(AppState.currentState);
 
-  const useIntervalEffect = (callback, delay) => {
-    const savedCallback = useRef();
+  // const useIntervalEffect = (callback, delay) => {
+  //   const savedCallback = useRef();
 
-    useEffect(() => {
-      savedCallback.current = callback;
-    }, [callback]);
+  //   useEffect(() => {
+  //     savedCallback.current = callback;
+  //   }, [callback]);
 
-    useEffect(() => {
-      function tick() {
-        savedCallback.current();
-      }
-      if (delay !== null) {
-        let id = setInterval(tick, delay);
-        return () => clearInterval(id);
-      }
-    }, [delay]);
-  };
+  //   useEffect(() => {
+  //     function tick() {
+  //       savedCallback.current();
+  //     }
+  //     if (delay !== null) {
+  //       let id = setInterval(tick, delay);
+  //       return () => clearInterval(id);
+  //     }
+  //   }, [delay]);
+  // };
+
+  // useEffect(() => {
+  //   const balanceFetchInterval = setInterval(() => {
+  //     if (userId) {
+  //       dispatch(getBalance(userId));
+  //     }
+  //   }, 30000);
+
+  //   return () => clearInterval(balanceFetchInterval);
+  // }, [userId, dispatch]);
+
+  // useEffect(() => {
+  //   const handleAppStateChange = (nextAppState) => {
+  //     if (appState.match(/inactive|background/) && nextAppState === "active") {
+  //       console.log("App has come to the foreground!");
+  //       webSocketService.connect(dispatch);
+  //     } else if (nextAppState.match(/inactive|background/)) {
+  //       console.log("App has gone to the background!");
+  //       webSocketService.disconnect();
+  //     }
+  //     setAppState(nextAppState);
+  //   };
+
+  //   AppState.addEventListener("change", handleAppStateChange);
+
+  //   return () => {
+  //     AppState.removeEventListener("change", handleAppStateChange);
+  //   };
+  // }, [appState, dispatch]);
 
   useEffect(() => {
     webSocketService.connect(dispatch);
+
     return () => {
       webSocketService.disconnect();
     };
@@ -40,16 +70,30 @@ const Navigation = () => {
 
   useEffect(() => {
     if (userId) {
-      let interval = setInterval(
-        () => webSocketService.requestBalanceUpdate(userId),
-        3000
-      );
-      return () => clearInterval(interval);
+      webSocketService.subscribeToBalanceUpdates(userId);
     }
-    return () => {
-      webSocketService.disconnect();
-    };
   }, [userId]);
+
+  // useEffect(() => {
+  //   webSocketService.connect(dispatch);
+  //   return () => {
+  //     webSocketService.disconnect();
+  //   };
+  // }, [dispatch]);
+
+  // useEffect(() => {
+  //   if (userId) {
+  //     webSocketService.connect(dispatch);
+  //     let interval = setInterval(
+  //       () => webSocketService.requestBalanceUpdate(userId),
+  //       3000
+  //     );
+  //     return () => clearInterval(interval);
+  //   }
+  //   return () => {
+  //     webSocketService.disconnect();
+  //   };
+  // }, [userId]);
 
   // useEffect(() => {
   //   dispatch(getBalance(userId));
@@ -92,12 +136,9 @@ const Navigation = () => {
   useEffect(() => {
     console.log("userId: ", userId);
     if (userId) {
-      fetchBlockchains(userId)(dispatch);
+      fetchBlockchains()(dispatch);
 
-      let interval = setInterval(
-        () => fetchBlockchains(userId)(dispatch),
-        60000
-      );
+      let interval = setInterval(() => fetchBlockchains()(dispatch), 60000);
       return () => clearInterval(interval);
     }
   }, [dispatch, userId]);

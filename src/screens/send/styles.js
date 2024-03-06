@@ -15,21 +15,18 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     height: 140,
-    width: "100%",
-    maxWidth: "60%",
   },
   assetAmountContainerTop: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-end",
   },
   assetAmount: {
     fontSize: 52,
     fontFamily: "Uto-Light",
     color: COLORS.black,
     textAlign: "center",
-    paddingBottom: 0,
-    minWidth: 100,
+    minWidth: 76,
   },
   selectedAssetSymbol: {
     fontSize: 16,
@@ -37,7 +34,7 @@ export const styles = StyleSheet.create({
     color: COLORS.greyLight,
     textAlign: "center",
     marginHorizontal: 8,
-    marginTop: 4,
+    marginTop: 8,
   },
   calculatedAssetAmountContainer: {
     flexDirection: "row",
@@ -74,20 +71,20 @@ export const styles = StyleSheet.create({
     marginLeft: 4,
   },
   selectedAssetImageContainer: {
-    width: 80,
-    height: 50,
+    width: 65,
+    height: 55,
     borderRadius: 16,
     borderWidth: 1,
     borderColor: COLORS.greyLight,
     backgroundColor: COLORS.white,
-    marginLeft: 8,
+    marginLeft: 20,
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 4,
+    marginBottom: 16,
   },
   selectedAssetImage: {
-    width: 40,
-    height: 40,
+    width: 30,
+    height: 30,
     marginLeft: 8,
   },
   input: {
@@ -152,8 +149,8 @@ export const styles = StyleSheet.create({
     fontFamily: "Uto-Medium",
   },
   maxButton: {
-    backgroundColor: COLORS.primaryLight,
-    paddingHorizontal: 10,
+    backgroundColor: COLORS.primary,
+    paddingHorizontal: 20,
     paddingVertical: 5,
     borderRadius: 5,
     marginLeft: 10,
@@ -161,7 +158,7 @@ export const styles = StyleSheet.create({
     alignItems: "center",
   },
   maxButtonText: {
-    color: COLORS.black,
+    color: COLORS.white,
     fontSize: 14,
     fontFamily: "Uto-Medium",
   },
@@ -197,5 +194,14 @@ export const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: "Uto-Medium",
     textAlign: "center",
+  },
+
+  assetConversionContainerSecondColumn: {
+    flex: 1,
+    width: "70%",
+    marginLeft: 120,
+  },
+  assetConversionContainerThirdColumn: {
+    width: "30%",
   },
 });

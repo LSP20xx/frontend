@@ -11,7 +11,6 @@ export const fetchBlockchains = () => async (dispatch) => {
   try {
     const response = await fetch(`${FETCH_BLOCKCHAINS_URL}`);
     const data = await response.json();
-    console.log("data **********************************************: ", data);
     dispatch({ type: FETCH_BLOCKCHAINS_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ type: FETCH_BLOCKCHAINS_FAILURE, error: error.toString() });

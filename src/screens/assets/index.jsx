@@ -47,7 +47,7 @@ const Assets = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header showBackButton={false} />
+      <Header navigation={navigation} showBackButton={false} isHome={true} />
       <Text style={styles.balanceTitle}>BALANCE TOTAL</Text>
       <View style={styles.balanceDetails}>
         <Text style={styles.fiatSymbol}>$</Text>

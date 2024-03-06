@@ -1,25 +1,38 @@
+import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
-import Place from "../../screens/place";
-import Places from "../../screens/market-asset";
-
 import { COLORS } from "../../constants";
 import AssetsList from "../../screens/assets-list";
+import { MarketAsset } from "../../screens";
+import UserConfig from "../../screens/user-config";
+
+const MarketsAssetsListWrapper = ({ navigation }) => {
+  return (
+    <AssetsList
+      navigation={navigation}
+      route={{ params: { mode: "markets" } }}
+      showBackButton={false}
+    />
+  );
+};
 
 const Stack = createNativeStackNavigator();
 
 const MarketsNavigator = () => {
   return (
     <Stack.Navigator
-      initialRouteName="AssetsList"
+      initialRouteName="MarketsAssetsListWrapper"
       screenOptions={{
-        headerStyle: {
-          backgroundColor: COLORS.primaryLight,
-        },
-        headerTintColor: COLORS.white,
+        headerShown: false,
+        headerTintColor: COLORS.primaryLight,
+        animation: "slide_from_right",
       }}
     >
-      <Stack.Screen name="AssetsList" component={AssetsList} />
+      <Stack.Screen
+        name="MarketsAssetsListWrapper"
+        component={MarketsAssetsListWrapper}
+      />
+      <Stack.Screen name="MarketAsset" component={MarketAsset} />
+      <Stack.Screen name="UserConfig" component={UserConfig} />
     </Stack.Navigator>
   );
 };

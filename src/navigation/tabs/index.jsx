@@ -155,7 +155,6 @@ const TabsNavigator = () => {
               fill={COLORS.white}
             />
           ),
-          tabBarButton: (props) => <View {...props} enabled={true} />,
         }}
       />
 

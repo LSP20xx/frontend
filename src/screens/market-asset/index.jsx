@@ -4,10 +4,25 @@ import { useSelector } from "react-redux";
 import { Header } from "../../components/index";
 import { styles } from "./styles";
 import BigLineChart from "../../components/big-line-chart";
+import { formatBalance, formatFiatValue } from "../../utils/prices";
 
 const MarketAsset = ({ navigation }) => {
-  const { selectedAsset } = useSelector((state) => state.assets);
-
+  const { assets, selectedAsset, balances } = useSelector(
+    (state) => state.assets
+  );
+  const { blockchains } = useSelector((state) => state.blockchains);
+  const assetBalance = balances.find(
+    (balance) => balance.symbol === selectedAsset.symbol
+  );
+  const asset = assets.find((asset) => asset.symbol === selectedAsset.symbol);
+  const assetFiatValue = asset ? asset.fiatValue : 0;
+  const balance = assetBalance ? assetBalance.balance : 0;
+  const description = blockchains.find(
+    (blockchain) => blockchain.tokenSymbol === selectedAsset.symbol
+  )?.description;
+  useEffect(() => {
+    console.log("blockchains ***************", blockchains);
+  }, [blockchains]);
   return (
     <SafeAreaView style={styles.container}>
       <Header navigation={navigation} showBackButton={true} />
@@ -16,7 +31,7 @@ const MarketAsset = ({ navigation }) => {
         <View style={styles.priceContainer}>
           <Text style={styles.symbolText}>{selectedAsset.symbol}</Text>
           <Text style={styles.nameText}>{selectedAsset.name}</Text>
-          <Text style={styles.priceText}>$44,062.80</Text>
+          <Text style={styles.priceText}>${assetFiatValue}</Text>
           <Text style={styles.changeText}>+740.73 (1.68%)</Text>
         </View>
       </View>
@@ -30,11 +45,15 @@ const MarketAsset = ({ navigation }) => {
       <View style={styles.balanceContainer}>
         <View style={styles.column}>
           <Text style={styles.text}>Balance</Text>
-          <Text style={styles.value}>0.00024665 BTC</Text>
+          <Text style={styles.value}>
+            {formatBalance(balance, asset.assetDecimals)} {selectedAsset.symbol}
+          </Text>
         </View>
         <View style={styles.column}>
           <Text style={styles.text}>Valor</Text>
-          <Text style={styles.value}>$10.86</Text>
+          <Text style={styles.value}>
+            ${formatFiatValue(assetBalance?.calculatedBalance)}
+          </Text>
         </View>
       </View>
       <View style={styles.actionButtonsContainer}>
@@ -49,11 +68,7 @@ const MarketAsset = ({ navigation }) => {
       <View style={styles.aboutContainer}>
         <Text style={styles.aboutTitle}>Acerca</Text>
         <Text style={styles.aboutText}>
-          Bitcoin, la primera criptomoneda lanzada en 2009, es una moneda
-          digital descentralizada que elimina la necesidad de intermediarios
-          financieros. Con un suministro finito de 21 millones de monedas, su
-          sistema está diseñado para reducir su emisión diaria a la mitad cada
-          cuatro años.
+          {description || "No hay descripción disponible"}
         </Text>
       </View>
     </SafeAreaView>

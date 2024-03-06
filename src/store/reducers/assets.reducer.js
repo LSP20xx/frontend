@@ -4,6 +4,7 @@ const {
   SELECT_ASSET,
   UPDATE_ASSETS_PRICES,
   GET_ASSETS_LITTLE_LINE_CHARTS,
+  GET_ASSETS_BIG_LINE_CHARTS,
   GET_STORED_PRICES,
   UPDATE_BALANCES,
 } = assetsTypes;
@@ -13,6 +14,7 @@ const initialState = {
   balances: [],
   selectedAsset: null,
   assetsLittleLineCharts: [],
+  assetsBigLineCharts: [],
   storedPrices: [],
   totalBalance: 0,
 };
@@ -97,6 +99,11 @@ const assetsReducer = (state = initialState, action) => {
       return {
         ...state,
         assetsLittleLineCharts: action.payload,
+      };
+    case GET_ASSETS_BIG_LINE_CHARTS:
+      return {
+        ...state,
+        assetsBigLineCharts: action.payload,
       };
     case GET_STORED_PRICES:
       return {

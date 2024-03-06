@@ -7,32 +7,40 @@ const socketUrl = "http://192.168.0.92:8000";
 
 class WebSocketService {
   constructor() {
-    if (!WebSocketService.instance) {
-      this.socket = null;
-      WebSocketService.instance = this;
-    }
-    return WebSocketService.instance;
+    this.socket = null;
+    this.dispatch = null;
+    this.userId = null;
   }
 
   connect(dispatch) {
+    this.dispatch = dispatch;
     console.log("Attempting to connect to WebSocket");
     if (!this.socket) {
       this.socket = io(socketUrl);
       this.socket.on("kraken-data", (data) => {
         const processedData = processKrakenData(data);
         if (processedData) {
-          dispatch(updateAssetsPrices(processedData));
+          this.dispatch(updateAssetsPrices(processedData));
         }
       });
       this.socket.on("balance-update", (balances) => {
-        dispatch(updateBalances(balances));
+        this.dispatch(updateBalances(balances));
       });
     }
   }
 
-  requestBalanceUpdate(userId) {
-    if (this.socket) {
-      this.socket.emit("requestBalanceUpdate", { userId });
+  subscribeToBalanceUpdates(userId) {
+    this.userId = userId;
+    if (this.socket && this.userId) {
+      this.socket.emit("subscribeToBalanceUpdates", { userId: this.userId });
+      this.requestBalanceUpdate();
+    }
+  }
+
+  requestBalanceUpdate() {
+    if (this.socket && this.userId) {
+      console.log("Requesting balance update for userId:", this.userId);
+      this.socket.emit("requestBalanceUpdate", { userId: this.userId });
     }
   }
 

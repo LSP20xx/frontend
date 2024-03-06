@@ -1,9 +1,4 @@
-import {
-  REALTIME_DB_URL,
-  SEND_EMAIL_URL,
-  SEND_SMS_URL,
-  VERIFY_SMS_URL,
-} from "../../constants";
+import { REALTIME_DB_URL, SEND_EMAIL_URL, SEND_SMS_URL } from "../../constants";
 import { userTypes } from "../types/user.types";
 const { GET_USER, ADD_USER, SET_USER_IMAGE, SEND_EMAIL, SEND_SMS } = userTypes;
 

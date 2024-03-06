@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { COLORS } from "../../constants";
 import Card from "../../screens/card";
+import UserConfig from "../../screens/user-config";
 
 const Stack = createNativeStackNavigator();
 
@@ -15,6 +16,7 @@ const CardNavigator = () => {
       }}
     >
       <Stack.Screen name="Tarjeta" component={Card} />
+      <Stack.Screen name="UserConfig" component={UserConfig} />
     </Stack.Navigator>
   );
 };

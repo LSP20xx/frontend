@@ -1,16 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { styles } from "./styles";
 import { useSelector } from "react-redux";
 import { formatFiatValue } from "../../utils/prices";
 
-const Header = ({ navigation, showBackButton }) => {
+const Header = ({ navigation, showBackButton, isHome }) => {
   const { totalBalance } = useSelector((state) => state.assets);
   const handleOnBackPress = () => {
     navigation.goBack();
   };
-  const handleMenuPress = () => {};
+  const handleMenuPress = () => {
+    navigation.navigate("UserConfig");
+  };
 
   const qrCodeIconSvg = (color) => `
   <svg id="Capa_2" data-name="Capa 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 47.36 47.37">
@@ -272,7 +274,7 @@ const Header = ({ navigation, showBackButton }) => {
         </TouchableOpacity>
       </View>
       <View style={styles.centerContainer}>
-        {showBackButton ? (
+        {!isHome ? (
           <View>
             <Text style={styles.totalBalance}>BALANCE TOTAL</Text>
             <Text style={styles.balance}>

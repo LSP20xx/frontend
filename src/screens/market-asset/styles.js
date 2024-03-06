@@ -262,4 +262,18 @@ export const styles = StyleSheet.create({
     color: COLORS.black,
     fontFamily: "Uto-Light",
   },
+  scrollView: {
+    marginRight: 10,
+    marginLeft: 32,
+  },
+  scrollIndicator: {
+    position: "absolute",
+    right: 0,
+    top: 0,
+    bottom: 0,
+    width: 6,
+    marginLeft: 4,
+    backgroundColor: "rgba(227, 128, 44, 0.5)",
+    borderRadius: 3,
+  },
 });

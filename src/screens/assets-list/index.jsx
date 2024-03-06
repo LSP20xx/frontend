@@ -20,20 +20,29 @@ import {
 } from "../../utils/prices";
 import { selectAsset } from "../../store/actions";
 
-const AssetsList = ({ navigation, route }) => {
+const AssetsList = ({ navigation, route, showBackButton }) => {
   const dispatch = useDispatch();
   const { assets, storedPrices, balances } = useSelector(
     (state) => state.assets
   );
 
-  const { mode } = route.params;
+  const { mode } = route.params || { mode: "defaultMode" };
 
-  const title = mode === "recibir" ? "Recibir" : "Enviar";
-  const subtitle =
-    mode === "recibir"
-      ? "Selecciona un activo para depositar"
-      : "Selecciona un activo para retirar";
-
+  // Modificar título y subtítulo basado en el nuevo modo "markets"
+  let title, subtitle;
+  if (mode === "recibir") {
+    title = "Recibir";
+    subtitle = "Selecciona un activo para depositar";
+  } else if (mode === "enviar") {
+    title = "Enviar";
+    subtitle = "Selecciona un activo para retirar";
+  } else if (mode === "markets") {
+    title = "Mercados";
+    subtitle = "Selecciona un activo para ver más detalles";
+  } else {
+    title = "Activos";
+    subtitle = "Selecciona un activo";
+  }
   const symbolImages = {
     btc: require("../../../assets/crypto-logos/btc.png"),
     eth: require("../../../assets/crypto-logos/eth.png"),
@@ -48,12 +57,17 @@ const AssetsList = ({ navigation, route }) => {
       return navigation.navigate("Receive");
     } else if (mode === "enviar") {
       return navigation.navigate("Send");
+    } else if (mode === "markets") {
+      return navigation.navigate("MarketAsset");
     }
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header navigation={navigation} showBackButton={true} />
+      <Header
+        navigation={navigation}
+        showBackButton={showBackButton !== undefined ? showBackButton : true}
+      />
       <View style={styles.sectionContainer}>
         <View style={styles.titleContainer}>
           <Text style={styles.sectionTitle}>{title}</Text>
