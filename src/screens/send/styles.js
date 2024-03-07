@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
   },
 
   assetConversionContainer: {
-    marginTop: 25,
+    marginTop: 40,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
@@ -20,13 +20,14 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-end",
+    height: "50%",
   },
   assetAmount: {
     fontSize: 52,
     fontFamily: "Uto-Light",
     color: COLORS.black,
-    textAlign: "center",
-    minWidth: 76,
+    width: "100%",
+    textAlign: "right",
   },
   selectedAssetSymbol: {
     fontSize: 16,
@@ -40,6 +41,8 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    paddingLeft: 20,
+    height: "50%",
   },
   calculatedAssetAmount: {
     fontSize: 14,
@@ -80,7 +83,6 @@ export const styles = StyleSheet.create({
     marginLeft: 20,
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 16,
   },
   selectedAssetImage: {
     width: 30,
@@ -143,7 +145,7 @@ export const styles = StyleSheet.create({
     color: COLORS.black,
     textAlign: "left",
     marginHorizontal: 23,
-    marginTop: 50,
+    marginTop: 30,
     marginBottom: 20,
     backgroundColor: COLORS.white,
     fontFamily: "Uto-Medium",
@@ -196,12 +198,13 @@ export const styles = StyleSheet.create({
     textAlign: "center",
   },
 
-  assetConversionContainerSecondColumn: {
+  assetConversionContainerFirstColumn: {
     flex: 1,
     width: "70%",
-    marginLeft: 120,
+    marginLeft: 20,
   },
-  assetConversionContainerThirdColumn: {
+  assetConversionContainerSecondColumn: {
     width: "30%",
+    height: "85%",
   },
 });

@@ -22,9 +22,15 @@ import { styles } from "./styles";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Image } from "react-native";
 import formReducer from "../../store/reducers/form.reducer";
+import { createSelector } from "reselect";
+
 import { formatBalance, formatFiatValue } from "../../utils/prices";
 import BigNumber from "bignumber.js";
 import { fetchBlockchains } from "../../store/actions/blockchains.action";
+import {
+  getAssetBalance,
+  getAssetFiatValue,
+} from "../../store/selectors/assets.selector";
 
 BigNumber.config({ DECIMAL_PLACES: 18 });
 
@@ -42,9 +48,17 @@ const symbolImages = {
 };
 
 const Send = ({ navigation }) => {
-  const dispatch = useDispatch();
+  const { assets, selectedAsset, balances } = useSelector(
+    (state) => state.assets
+  );
+  const balance = useSelector((state) =>
+    getAssetBalance(state, selectedAsset.symbol)
+  );
+  const assetFiatValue = useSelector((state) =>
+    getAssetFiatValue(state, selectedAsset.symbol)
+  );
+
   const fiatSymbol = "USD";
-  const [formState, dispatchFormState] = useReducer(formReducer, initialState);
   const [toAddress, setToAddress] = useState("");
   const [fromAddress, setFromAddress] = useState("");
   const [amount, setAmount] = useState("");
@@ -52,31 +66,17 @@ const Send = ({ navigation }) => {
   const [calculatedAmount, setCalculatedAmount] = useState("");
   const [fontSize, setFontSize] = useState(52);
   const [margin, setMargin] = useState({ top: 16, left: 8 });
-  const [recommendedFeePerByte, setRecommendedFeePerByte] = useState(0);
   const [isValidAddress, setIsValidAddress] = useState(true);
   const [isValidAmount, setIsValidAmount] = useState(true);
   const [withdrawFee, setWithdrawFee] = useState(0);
-  const [isAmountPrimary, setIsAmountPrimary] = useState(true);
+  const [isFiatPrimary, setIsAmountPrimary] = useState(true);
   const [errorMessages, setErrorMessages] = useState([]);
   const assetAmountInputRef = useRef(null);
   const rotateValueHolder = useRef(new Animated.Value(0)).current;
   const { blockchains } = useSelector((state) => state.blockchains);
   const [selectedBlockchain, setSelectedBlockchain] = useState();
-  const [selectedBlockchainName, setSelectedBlockchainName] = useState();
-  const { assets, selectedAsset, balances } = useSelector(
-    (state) => state.assets
-  );
-  const amountSymbol = !isAmountPrimary ? selectedAsset.symbol : fiatSymbol;
-  const calculatedAmountSymbol = !isAmountPrimary
-    ? fiatSymbol
-    : selectedAsset.symbol;
+
   // const { blockchains } = useSelector((state) => state.blockchains);
-  const assetBalance = balances.find(
-    (balance) => balance.symbol === selectedAsset.symbol
-  );
-  const asset = assets.find((asset) => asset.symbol === selectedAsset.symbol);
-  const assetFiatValue = asset ? asset.fiatValue : 0;
-  const balance = assetBalance ? assetBalance.balance : 0;
   const supportedBlockchains = blockchains.filter(
     (blockchain) => blockchain.tokenSymbol === selectedAsset.symbol
   );
@@ -107,8 +107,8 @@ const Send = ({ navigation }) => {
       error = "El monto no puede estar vacío.";
     } else {
       const amountBN = new BigNumber(amount || 0);
+      const balanceBN = new BigNumber(balance || 0);
       const withdrawFeeBN = new BigNumber(withdrawFee || 0);
-      const balanceBN = new BigNumber(balance);
       const totalDeduction = amountBN.plus(withdrawFeeBN);
       if (!totalDeduction.isLessThanOrEqualTo(balanceBN)) {
         error =
@@ -151,6 +151,23 @@ const Send = ({ navigation }) => {
     }).start();
   };
 
+  const handleAdjustFontSizeAndMargin = useCallback((text) => {
+    let newFontSize = 52;
+    let newMargin = { top: 16, left: 8 };
+    if (text.length >= 10) {
+      newFontSize = 22;
+      newMargin = { top: 16, left: 14 };
+    } else if (text.length >= 8) {
+      newFontSize = 32;
+      newMargin = { top: 16, left: 12 };
+    } else if (text.length >= 6) {
+      newFontSize = 42;
+      newMargin = { top: 16, left: 10 };
+    }
+    setFontSize(newFontSize);
+    setMargin(newMargin);
+  }, []);
+
   const rotateData = rotateValueHolder.interpolate({
     inputRange: [0, 1],
     outputRange: ["0deg", "180deg"],
@@ -175,20 +192,18 @@ const Send = ({ navigation }) => {
 
   useEffect(() => {
     const amountBN = new BigNumber(amount || 0);
-    const assetFiatValueBN = new BigNumber(assetFiatValue || 0);
-    const calculatedValue = isAmountPrimary
-      ? amountBN.times(assetFiatValueBN).toFixed(2, BigNumber.ROUND_HALF_DOWN)
-      : amountBN
-          .div(assetFiatValueBN)
-          .toFixed(selectedAsset.assetDecimals, BigNumber.ROUND_HALF_UP);
+    const calculatedValue = !isFiatPrimary
+      ? amountBN.times(assetFiatValue).toFixed(2)
+      : amountBN.div(assetFiatValue).toFixed(selectedAsset.assetDecimals);
     setCalculatedAmount(calculatedValue);
-  }, [amount, isAmountPrimary, assetFiatValue, selectedAsset.assetDecimals]);
+  }, [amount, isFiatPrimary, assetFiatValue, selectedAsset.assetDecimals]);
 
   const handleSwapValues = () => {
     setIsAmountPrimary((current) => !current);
     setAmount((prevAmount) => {
       const tempAmount = calculatedAmount;
       setCalculatedAmount(prevAmount);
+      // adjustFontSizeAndMargin(tempAmount);
       return tempAmount;
     });
   };
@@ -220,46 +235,50 @@ const Send = ({ navigation }) => {
     <View style={styles.container}>
       <Header navigation={navigation} showBackButton={true} />
       <View style={styles.assetConversionContainer}>
-        <View style={styles.assetConversionContainerSecondColumn}>
-          <View style={styles.assetAmountContainer}>
-            <View style={styles.assetAmountContainerTop}>
-              <TextInput
-                ref={assetAmountInputRef}
-                style={[styles.assetAmount, { fontSize: fontSize }]}
-                selectionColor={COLORS.primaryDark}
-                autoFocus={true}
-                keyboardType="decimal-pad"
-                value={amount}
-                onChangeText={handleAmountChange}
-              />
-              <Text style={styles.selectedAssetSymbol}>
-                {amountSymbol.toUpperCase()}
-              </Text>
-            </View>
+        <View style={styles.assetConversionContainerFirstColumn}>
+          <View style={styles.assetAmountContainerTop}>
+            <TextInput
+              ref={assetAmountInputRef}
+              style={[styles.assetAmount, { fontSize: fontSize }]}
+              selectionColor={COLORS.primaryDark}
+              autoFocus={true}
+              keyboardType="decimal-pad"
+              value={amount}
+              onChangeText={handleAmountChange}
+            />
+            <Text style={styles.selectedAssetSymbol}>
+              {isFiatPrimary
+                ? fiatSymbol.toUpperCase()
+                : selectedAsset.symbol.toUpperCase()}
+            </Text>
+          </View>
 
-            <View style={styles.calculatedAssetAmountContainer}>
-              <TouchableOpacity
-                onPress={() => {
-                  handleIconAnimation();
-                  handleSwapValues();
-                }}
-              >
-                <Animated.View style={{ transform: [{ rotate: rotateData }] }}>
-                  <Ionicons
-                    name="sync"
-                    size={24}
-                    color={COLORS.greyLight}
-                    style={styles.changeAssetIcon}
-                  />
-                </Animated.View>
-              </TouchableOpacity>
-              <Text style={styles.calculatedAssetAmount}>
-                {calculatedAmount} {calculatedAmountSymbol.toUpperCase()}
-              </Text>
-            </View>
+          <View style={styles.calculatedAssetAmountContainer}>
+            <TouchableOpacity
+              onPress={() => {
+                handleIconAnimation();
+                handleSwapValues();
+                adjustFontSizeAndMargin(calculatedAmount);
+              }}
+            >
+              <Animated.View style={{ transform: [{ rotate: rotateData }] }}>
+                <Ionicons
+                  name="sync"
+                  size={48}
+                  color={COLORS.greyLight}
+                  style={styles.changeAssetIcon}
+                />
+              </Animated.View>
+            </TouchableOpacity>
+            <Text style={styles.calculatedAssetAmount}>
+              {calculatedAmount}{" "}
+              {isFiatPrimary
+                ? selectedAsset.symbol.toUpperCase()
+                : fiatSymbol.toUpperCase()}
+            </Text>
           </View>
         </View>
-        <View style={styles.assetConversionContainerThirdColumn}>
+        <View style={styles.assetConversionContainerSecondColumn}>
           <TouchableOpacity
             style={styles.selectedAssetImageContainer}
             onPress={() =>

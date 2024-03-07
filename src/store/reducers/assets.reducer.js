@@ -1,5 +1,6 @@
 import { assetsTypes } from "../types";
 import { ASSETS } from "../../constants/data/assets";
+import BigNumber from "bignumber.js";
 const {
   SELECT_ASSET,
   UPDATE_ASSETS_PRICES,
@@ -19,6 +20,26 @@ const initialState = {
   totalBalance: 0,
 };
 
+const calculateBalanceValue = (balanceAmount, fiatValue) => {
+  const safeFiatValue = fiatValue || "0";
+  const safeBalanceAmount = balanceAmount || "0";
+  return new BigNumber(safeBalanceAmount.toString())
+    .multipliedBy(new BigNumber(safeFiatValue.toString()))
+    .toString();
+};
+
+const calculateTotalBalance = (balances) => {
+  const total = balances.reduce((accumulator, balance) => {
+    const result = accumulator.plus(new BigNumber(balance.calculatedBalance));
+    console.log(
+      `Summing balance: ${balance.calculatedBalance}, current total: ${result}`
+    );
+    return result;
+  }, new BigNumber(0));
+  console.log(`Total balance calculated: ${total.toString()}`);
+  return total.toString();
+};
+
 const assetsReducer = (state = initialState, action) => {
   switch (action.type) {
     case SELECT_ASSET:
@@ -34,42 +55,73 @@ const assetsReducer = (state = initialState, action) => {
         selectedAsset: state.assets[indexAsset],
       };
     case UPDATE_ASSETS_PRICES:
-      const updatedAssets = state.assets?.map((asset) => {
+      let pricesChanged = false;
+      const updatedAssets = state.assets.map((asset) => {
         if (action.payload.symbol === `${asset.symbol}/USD`) {
-          return {
-            ...asset,
-            fiatValue: action.payload.fiatValue,
-            highest24h: action.payload.highest24h,
-            lowest24h: action.payload.lowest24h,
-            opening24h: action.payload.opening24h,
-          };
+          const { fiatValue, highest24h, lowest24h, opening24h } =
+            action.payload;
+          if (
+            asset.fiatValue !== fiatValue ||
+            asset.highest24h !== highest24h ||
+            asset.lowest24h !== lowest24h ||
+            asset.opening24h !== opening24h
+          ) {
+            pricesChanged = true;
+            return { ...asset, fiatValue, highest24h, lowest24h, opening24h };
+          }
         }
         return asset;
       });
-      return { ...state, assets: updatedAssets };
-    case UPDATE_BALANCES:
-      const updatedBalances = action.payload.map((balance) => {
-        const asset = state.assets.find((a) => a.symbol === balance.symbol);
-        const price = asset ? parseFloat(asset.fiatValue) : 1;
-        const balanceAmount = parseFloat(balance.balance);
-        const calculatedBalanceValue = balanceAmount * price;
+
+      if (!pricesChanged) return state;
+
+      const updatedBalances = state.balances.map((balance) => {
+        const asset = updatedAssets.find((a) => a.symbol === balance.symbol);
         return {
           ...balance,
-          balance: balanceAmount,
-          calculatedBalance: calculatedBalanceValue,
+          calculatedBalance: calculateBalanceValue(
+            balance.balance,
+            asset ? asset.fiatValue : "1"
+          ),
         };
       });
 
-      const totalBalance = updatedBalances.reduce(
-        (acc, balance) => acc + balance.calculatedBalance,
-        0
-      );
+      return {
+        ...state,
+        assets: updatedAssets,
+        balances: updatedBalances,
+        totalBalance: calculateTotalBalance(updatedBalances),
+      };
+    case UPDATE_BALANCES: {
+      // Mapear cada balance para calcular su valor.
+      const updatedBalances = action.payload.map((balance) => {
+        const asset = state.assets.find((a) => a.symbol === balance.symbol);
+        const fiatValue = asset ? asset.fiatValue : "1";
+        const calculatedBalance = calculateBalanceValue(
+          balance.balance,
+          fiatValue
+        );
+        if (isNaN(calculatedBalance)) {
+          console.error(
+            `NaN detected in calculated balance for balance: ${balance.balance}, fiatValue: ${fiatValue}`
+          );
+        }
+        return { ...balance, calculatedBalance };
+      });
+
+      // Calcular el balance total utilizando la función correcta.
+      const totalBalance = calculateTotalBalance(updatedBalances);
+      if (isNaN(totalBalance)) {
+        console.error(`NaN detected in total balance`);
+      }
 
       return {
         ...state,
         balances: updatedBalances,
-        totalBalance: totalBalance,
+        totalBalance,
       };
+    }
+
     // case UPDATE_ASSETS_PRICES:
     //   const assetIndexToUpdate = state.assets.findIndex(
     //     (asset) => asset.id === action.payload.id

@@ -11,7 +11,6 @@ import { AppState } from "react-native";
 const Navigation = () => {
   const userId = useSelector((state) => state.auth.userId);
   const dispatch = useDispatch();
-  const [appState, setAppState] = useState(AppState.currentState);
 
   // const useIntervalEffect = (callback, delay) => {
   //   const savedCallback = useRef();
