@@ -70,7 +70,7 @@ const Navigation = () => {
 
   useEffect(() => {
     if (userId) {
-      webSocketService.subscribeToBalanceUpdates(userId);
+      webSocketService.subscribeToBalanceUpdate(userId);
     }
   }, [userId]);
 

@@ -29,10 +29,10 @@ class WebSocketService {
     }
   }
 
-  subscribeToBalanceUpdates(userId) {
+  subscribeToBalanceUpdate(userId) {
     this.userId = userId;
     if (this.socket && this.userId) {
-      this.socket.emit("subscribeToBalanceUpdates", { userId: this.userId });
+      this.socket.emit("subscribeToBalanceUpdate", { userId: this.userId });
       this.requestBalanceUpdate();
     }
   }
