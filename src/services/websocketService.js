@@ -10,6 +10,16 @@ class WebSocketService {
     this.socket = null;
     this.dispatch = null;
     this.userId = null;
+    this.lastProcessedData = null;
+  }
+
+  processIncomingData(data) {
+    const newData = JSON.stringify(data);
+    if (this.lastProcessedData !== newData) {
+      this.lastProcessedData = newData;
+      return true;
+    }
+    return false;
   }
 
   connect(dispatch) {
@@ -18,13 +28,17 @@ class WebSocketService {
     if (!this.socket) {
       this.socket = io(socketUrl);
       this.socket.on("kraken-data", (data) => {
-        const processedData = processKrakenData(data);
-        if (processedData) {
-          this.dispatch(updateAssetsPrices(processedData));
+        if (this.processIncomingData(data)) {
+          const processedData = processKrakenData(data);
+          if (processedData) {
+            this.dispatch(updateAssetsPrices(processedData));
+          }
         }
       });
       this.socket.on("balance-update", (balances) => {
-        this.dispatch(updateBalances(balances));
+        if (this.processIncomingData(balances)) {
+          this.dispatch(updateBalances(balances));
+        }
       });
     }
   }

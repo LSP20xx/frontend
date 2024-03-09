@@ -75,25 +75,24 @@ const assetsReducer = (state = initialState, action) => {
 
       if (!pricesChanged) return state;
 
-      const updatedBalances = state.balances.map((balance) => {
-        const asset = updatedAssets.find((a) => a.symbol === balance.symbol);
-        return {
-          ...balance,
-          calculatedBalance: calculateBalanceValue(
-            balance.balance,
-            asset ? asset.fiatValue : "1"
-          ),
-        };
-      });
+      // const updatedBalances = state.balances.map((balance) => {
+      //   const asset = updatedAssets.find((a) => a.symbol === balance.symbol);
+      //   return {
+      //     ...balance,
+      //     calculatedBalance: calculateBalanceValue(
+      //       balance.balance,
+      //       asset ? asset.fiatValue : "1"
+      //     ),
+      //   };
+      // });
 
       return {
         ...state,
         assets: updatedAssets,
-        balances: updatedBalances,
-        totalBalance: calculateTotalBalance(updatedBalances),
+        // balances: updatedBalances,
+        // totalBalance: calculateTotalBalance(updatedBalances),
       };
     case UPDATE_BALANCES: {
-      // Mapear cada balance para calcular su valor.
       const updatedBalances = action.payload.map((balance) => {
         const asset = state.assets.find((a) => a.symbol === balance.symbol);
         const fiatValue = asset ? asset.fiatValue : "1";

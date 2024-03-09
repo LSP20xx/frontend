@@ -30,6 +30,7 @@ import { fetchBlockchains } from "../../store/actions/blockchains.action";
 import {
   getAssetBalance,
   getAssetFiatValue,
+  getCalculatedBalance,
 } from "../../store/selectors/assets.selector";
 
 BigNumber.config({ DECIMAL_PLACES: 18 });
@@ -54,9 +55,18 @@ const Send = ({ navigation }) => {
   const balance = useSelector((state) =>
     getAssetBalance(state, selectedAsset.symbol)
   );
+
+  const calculatedBalance = useSelector((state) =>
+    getCalculatedBalance(state, selectedAsset.symbol)
+  );
+
   const assetFiatValue = useSelector((state) =>
     getAssetFiatValue(state, selectedAsset.symbol)
   );
+
+  useEffect(() => {
+    console.log("balance", balance);
+  }, [balance]);
 
   const fiatSymbol = "USD";
   const [toAddress, setToAddress] = useState("");
@@ -68,6 +78,7 @@ const Send = ({ navigation }) => {
   const [margin, setMargin] = useState({ top: 16, left: 8 });
   const [isValidAddress, setIsValidAddress] = useState(true);
   const [isValidAmount, setIsValidAmount] = useState(true);
+  const [onMaxPress, setOnMaxPress] = useState(true);
   const [withdrawFee, setWithdrawFee] = useState(0);
   const [isFiatPrimary, setIsAmountPrimary] = useState(true);
   const [errorMessages, setErrorMessages] = useState([]);
@@ -151,23 +162,6 @@ const Send = ({ navigation }) => {
     }).start();
   };
 
-  const handleAdjustFontSizeAndMargin = useCallback((text) => {
-    let newFontSize = 52;
-    let newMargin = { top: 16, left: 8 };
-    if (text.length >= 10) {
-      newFontSize = 22;
-      newMargin = { top: 16, left: 14 };
-    } else if (text.length >= 8) {
-      newFontSize = 32;
-      newMargin = { top: 16, left: 12 };
-    } else if (text.length >= 6) {
-      newFontSize = 42;
-      newMargin = { top: 16, left: 10 };
-    }
-    setFontSize(newFontSize);
-    setMargin(newMargin);
-  }, []);
-
   const rotateData = rotateValueHolder.interpolate({
     inputRange: [0, 1],
     outputRange: ["0deg", "180deg"],
@@ -203,7 +197,6 @@ const Send = ({ navigation }) => {
     setAmount((prevAmount) => {
       const tempAmount = calculatedAmount;
       setCalculatedAmount(prevAmount);
-      // adjustFontSizeAndMargin(tempAmount);
       return tempAmount;
     });
   };
@@ -221,6 +214,10 @@ const Send = ({ navigation }) => {
   }, [selectedBlockchain]);
 
   useEffect(() => {
+    console.log("blockchains", blockchains);
+  }, [blockchains]);
+
+  useEffect(() => {
     validateFields();
   }, [
     toAddress,
@@ -231,84 +228,15 @@ const Send = ({ navigation }) => {
     validateFields,
   ]);
 
+  // useEffect(() => {
+  //   const calculatedBalanceBN = new BigNumber(calculatedBalance).toFixed(2);
+  //   setAmount(calculatedBalanceBN);
+  //   adjustFontSizeAndMargin(calculatedBalanceBN);
+  // }, [selectedAsset.assetDecimals]);
+
   return (
     <View style={styles.container}>
       <Header navigation={navigation} showBackButton={true} />
-      <View style={styles.assetConversionContainer}>
-        <View style={styles.assetConversionContainerFirstColumn}>
-          <View style={styles.assetAmountContainerTop}>
-            <TextInput
-              ref={assetAmountInputRef}
-              style={[styles.assetAmount, { fontSize: fontSize }]}
-              selectionColor={COLORS.primaryDark}
-              autoFocus={true}
-              keyboardType="decimal-pad"
-              value={amount}
-              onChangeText={handleAmountChange}
-            />
-            <Text style={styles.selectedAssetSymbol}>
-              {isFiatPrimary
-                ? fiatSymbol.toUpperCase()
-                : selectedAsset.symbol.toUpperCase()}
-            </Text>
-          </View>
-
-          <View style={styles.calculatedAssetAmountContainer}>
-            <TouchableOpacity
-              onPress={() => {
-                handleIconAnimation();
-                handleSwapValues();
-                adjustFontSizeAndMargin(calculatedAmount);
-              }}
-            >
-              <Animated.View style={{ transform: [{ rotate: rotateData }] }}>
-                <Ionicons
-                  name="sync"
-                  size={48}
-                  color={COLORS.greyLight}
-                  style={styles.changeAssetIcon}
-                />
-              </Animated.View>
-            </TouchableOpacity>
-            <Text style={styles.calculatedAssetAmount}>
-              {calculatedAmount}{" "}
-              {isFiatPrimary
-                ? selectedAsset.symbol.toUpperCase()
-                : fiatSymbol.toUpperCase()}
-            </Text>
-          </View>
-        </View>
-        <View style={styles.assetConversionContainerSecondColumn}>
-          <TouchableOpacity
-            style={styles.selectedAssetImageContainer}
-            onPress={() =>
-              navigation.navigate("SendList", {
-                mode: "enviar",
-              })
-            }
-          >
-            <Image
-              source={symbolImages[selectedAsset.symbol.toLowerCase()]}
-              style={styles.selectedAssetImage}
-            />
-            <Ionicons name="chevron-down" size={24} color={COLORS.greyLight} />
-          </TouchableOpacity>
-        </View>
-      </View>
-      <View style={styles.feeContainer}>
-        <TouchableOpacity style={styles.maxButton}>
-          <Text style={styles.maxButtonText}>Max</Text>
-        </TouchableOpacity>
-        {selectedBlockchain && (
-          <>
-            {/* <Text style={styles.feeTitle}>Comisión de retiro:</Text> */}
-            {/* <Text style={styles.feeValue}>
-              {withdrawFee} {selectedAsset.symbol}
-            </Text> */}
-          </>
-        )}
-      </View>
-
       <View style={styles.screenTitleContainer}>
         <Text style={styles.screenTitle}>Enviar {selectedAsset.symbol}</Text>
       </View>
@@ -335,7 +263,7 @@ const Send = ({ navigation }) => {
                   .charAt(0)
                   .toUpperCase() +
                 blockchain.blockchainName.split("-")[0].slice(1)
-              })`}
+              }) - Comisión: ${blockchain.withdrawFee} ${selectedAsset.symbol}`}
               value={`${blockchain.blockchainSymbol} (${
                 blockchain.blockchainName
                   .split("-")[0]
@@ -357,6 +285,113 @@ const Send = ({ navigation }) => {
         style={styles.input}
       />
       {!isValidAddress && <Text style={styles.errorText}>Invalid address</Text>}
+
+      <View style={styles.assetConversionContainer}>
+        {selectedBlockchain && toAddress && (
+          <>
+            <View style={styles.assetConversionContainerFirstColumn}>
+              <View style={styles.assetAmountContainerTop}>
+                <TextInput
+                  ref={assetAmountInputRef}
+                  style={[styles.assetAmount, { fontSize: fontSize }]}
+                  selectionColor={COLORS.primaryDark}
+                  autoFocus={true}
+                  keyboardType="decimal-pad"
+                  value={amount}
+                  onChangeText={handleAmountChange}
+                />
+                <Text style={styles.selectedAssetSymbol}>
+                  {isFiatPrimary
+                    ? fiatSymbol.toUpperCase()
+                    : selectedAsset.symbol.toUpperCase()}
+                </Text>
+              </View>
+
+              <View style={styles.calculatedAssetAmountContainer}>
+                <TouchableOpacity
+                  onPress={() => {
+                    handleIconAnimation();
+                    handleSwapValues();
+                    adjustFontSizeAndMargin(calculatedAmount);
+                  }}
+                >
+                  <Animated.View
+                    style={{ transform: [{ rotate: rotateData }] }}
+                  >
+                    <Ionicons
+                      name="sync"
+                      size={48}
+                      color={COLORS.greyLight}
+                      style={styles.changeAssetIcon}
+                    />
+                  </Animated.View>
+                </TouchableOpacity>
+                <View style={styles.calculatedAssetAmountColumn}>
+                  <Text style={styles.calculatedAssetAmount}>
+                    {calculatedAmount}{" "}
+                    {isFiatPrimary
+                      ? selectedAsset.symbol.toUpperCase()
+                      : fiatSymbol.toUpperCase()}
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View style={styles.assetConversionContainerSecondColumn}>
+              <TouchableOpacity
+                style={styles.selectedAssetImageContainer}
+                onPress={() =>
+                  navigation.navigate("SendList", {
+                    mode: "enviar",
+                  })
+                }
+              >
+                <Image
+                  source={symbolImages[selectedAsset.symbol.toLowerCase()]}
+                  style={styles.selectedAssetImage}
+                />
+                <Ionicons
+                  name="chevron-down"
+                  size={24}
+                  color={COLORS.greyLight}
+                />
+              </TouchableOpacity>
+              {onMaxPress ? (
+                <TouchableOpacity
+                  style={styles.maxButtonPressed}
+                  onPress={() => {
+                    setAmount(calculatedBalance);
+                    adjustFontSizeAndMargin(calculatedBalance);
+                  }}
+                >
+                  <Text style={styles.maxButtonText}>Max</Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  style={styles.maxButton}
+                  onPress={() => {
+                    setAmount(calculatedBalance);
+                    adjustFontSizeAndMargin(calculatedBalance);
+                  }}
+                >
+                  <Text style={styles.maxButtonText}>Max</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          </>
+        )}
+      </View>
+
+      <View style={styles.feeContainer}>
+        {selectedBlockchain && (
+          <>
+            {/* <Text style={styles.feeTitle}>Comisión de retiro:</Text> */}
+            {/* <Text style={styles.feeValue}>
+              {withdrawFee} {selectedAsset.symbol}
+            </Text> */}
+          </>
+        )}
+      </View>
+
       {/* <TextInput
               placeholder="Cantidad a enviar"
               placeholderTextColor={COLORS.greyLight}
