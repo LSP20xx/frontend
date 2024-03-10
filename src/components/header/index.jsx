@@ -4,6 +4,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { styles } from "./styles";
 import { useSelector } from "react-redux";
 import { formatFiatValue } from "../../utils/prices";
+import BigNumber from "bignumber.js";
 
 const Header = ({ navigation, showBackButton, isHome }) => {
   const { totalBalance } = useSelector((state) => state.assets);
@@ -278,7 +279,7 @@ const Header = ({ navigation, showBackButton, isHome }) => {
           <View>
             <Text style={styles.totalBalance}>BALANCE TOTAL</Text>
             <Text style={styles.balance}>
-              ${formatFiatValue(totalBalance)} USD
+              ${new BigNumber(totalBalance).toFixed(2)} USD
             </Text>
           </View>
         ) : (

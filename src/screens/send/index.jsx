@@ -32,6 +32,7 @@ import {
   getAssetFiatValue,
   getCalculatedBalance,
 } from "../../store/selectors/assets.selector";
+import { set } from "date-fns";
 
 BigNumber.config({ DECIMAL_PLACES: 18 });
 
@@ -46,6 +47,41 @@ const symbolImages = {
   doge: require("../../../assets/crypto-logos/doge.png"),
   usdt: require("../../../assets/crypto-logos/usdt.png"),
   ltc: require("../../../assets/crypto-logos/ltc.png"),
+};
+
+const OdometerAnimation = ({ value }) => {
+  const digits = value.toString().split("");
+
+  const animatedValues = digits.map(
+    () => useRef(new Animated.Value(1)).current
+  );
+
+  useEffect(() => {
+    const animations = animatedValues.map((animatedValue) =>
+      Animated.timing(animatedValue, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      })
+    );
+
+    Animated.parallel(animations).start();
+  }, [value, animatedValues]);
+
+  return (
+    <View style={{ flexDirection: "row" }}>
+      {digits.map((digit, index) => (
+        <Animated.Text
+          key={index}
+          style={{
+            opacity: animatedValues[index],
+          }}
+        >
+          {digit}
+        </Animated.Text>
+      ))}
+    </View>
+  );
 };
 
 const Send = ({ navigation }) => {
@@ -68,6 +104,8 @@ const Send = ({ navigation }) => {
     console.log("balance", balance);
   }, [balance]);
 
+  useEffect(() => {}, [assetFiatValue]);
+
   const fiatSymbol = "USD";
   const [toAddress, setToAddress] = useState("");
   const [fromAddress, setFromAddress] = useState("");
@@ -78,19 +116,35 @@ const Send = ({ navigation }) => {
   const [margin, setMargin] = useState({ top: 16, left: 8 });
   const [isValidAddress, setIsValidAddress] = useState(true);
   const [isValidAmount, setIsValidAmount] = useState(true);
-  const [onMaxPress, setOnMaxPress] = useState(true);
+  const [onMaxPress, setOnMaxPress] = useState(false);
   const [withdrawFee, setWithdrawFee] = useState(0);
+  const [calculatedWithdrawFees, setCalculatedWithdrawFees] = useState([]);
+  const [availableBalance, setAvailableBalance] = useState(0);
+  const [calculatedAvailableBalance, setCalculatedAvailableBalance] =
+    useState(0);
   const [isFiatPrimary, setIsAmountPrimary] = useState(true);
   const [errorMessages, setErrorMessages] = useState([]);
   const assetAmountInputRef = useRef(null);
   const rotateValueHolder = useRef(new Animated.Value(0)).current;
   const { blockchains } = useSelector((state) => state.blockchains);
   const [selectedBlockchain, setSelectedBlockchain] = useState();
-
+  const [blockchainsWithFees, setBlockchainsWithFees] = useState([]);
   // const { blockchains } = useSelector((state) => state.blockchains);
   const supportedBlockchains = blockchains.filter(
     (blockchain) => blockchain.tokenSymbol === selectedAsset.symbol
   );
+  useEffect(() => {
+    const blockchainsWithCalculatedFees = blockchains
+      .filter((blockchain) => blockchain.tokenSymbol === selectedAsset.symbol)
+      .map((blockchain) => ({
+        ...blockchain,
+        calculatedWithdrawFee: new BigNumber(blockchain.withdrawFee)
+          .times(assetFiatValue)
+          .toFixed(2),
+      }));
+
+    setBlockchainsWithFees(blockchainsWithCalculatedFees);
+  }, [blockchains, selectedAsset, assetFiatValue]);
 
   const handleSendPress = () => {
     if (!errorMessages[0]) {
@@ -117,7 +171,12 @@ const Send = ({ navigation }) => {
     } else if (amount.trim() === "") {
       error = "El monto no puede estar vacío.";
     } else {
-      const amountBN = new BigNumber(amount || 0);
+      let amountBN;
+      if (isFiatPrimary) {
+        amountBN = new BigNumber(calculatedAmount);
+      } else {
+        amountBN = new BigNumber(amount || 0);
+      }
       const balanceBN = new BigNumber(balance || 0);
       const withdrawFeeBN = new BigNumber(withdrawFee || 0);
       const totalDeduction = amountBN.plus(withdrawFeeBN);
@@ -125,6 +184,14 @@ const Send = ({ navigation }) => {
         error =
           "El monto más la comisión de retiro excede el saldo disponible.";
       }
+      console.log("amount", amountBN.toString());
+      console.log("balance", balanceBN.toString());
+      console.log("withdrawFee", withdrawFeeBN.toString());
+      console.log("totalDeduction", totalDeduction.toString());
+      console.log(
+        "isLessThanOrEqualTo",
+        totalDeduction.isLessThanOrEqualTo(balanceBN)
+      );
     }
     setErrorMessages([error]);
     return error === "";
@@ -185,11 +252,13 @@ const Send = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    const amountBN = new BigNumber(amount || 0);
-    const calculatedValue = !isFiatPrimary
-      ? amountBN.times(assetFiatValue).toFixed(2)
-      : amountBN.div(assetFiatValue).toFixed(selectedAsset.assetDecimals);
-    setCalculatedAmount(calculatedValue);
+    if (!onMaxPress) {
+      const amountBN = new BigNumber(amount || 0);
+      const calculatedValue = !isFiatPrimary
+        ? amountBN.times(assetFiatValue).toFixed(2)
+        : amountBN.div(assetFiatValue).toFixed(selectedAsset.assetDecimals);
+      setCalculatedAmount(calculatedValue);
+    }
   }, [amount, isFiatPrimary, assetFiatValue, selectedAsset.assetDecimals]);
 
   const handleSwapValues = () => {
@@ -228,6 +297,12 @@ const Send = ({ navigation }) => {
     validateFields,
   ]);
 
+  useEffect(() => {
+    setCalculatedWithdrawFees(
+      new BigNumber(withdrawFee).times(assetFiatValue).toFixed(2)
+    );
+  }, [withdrawFee, assetFiatValue]);
+
   // useEffect(() => {
   //   const calculatedBalanceBN = new BigNumber(calculatedBalance).toFixed(2);
   //   setAmount(calculatedBalanceBN);
@@ -254,7 +329,7 @@ const Send = ({ navigation }) => {
             value={null}
             style={styles.pickerItemNull}
           />
-          {supportedBlockchains.map((blockchain) => (
+          {blockchainsWithFees.map((blockchain) => (
             <Picker.Item
               key={blockchain.blockchainId}
               label={`${blockchain.blockchainSymbol} (${
@@ -263,14 +338,10 @@ const Send = ({ navigation }) => {
                   .charAt(0)
                   .toUpperCase() +
                 blockchain.blockchainName.split("-")[0].slice(1)
-              }) - Comisión: ${blockchain.withdrawFee} ${selectedAsset.symbol}`}
-              value={`${blockchain.blockchainSymbol} (${
-                blockchain.blockchainName
-                  .split("-")[0]
-                  .charAt(0)
-                  .toUpperCase() +
-                blockchain.blockchainName.split("-")[0].slice(1)
-              })`}
+              })                             ${
+                blockchain.calculatedWithdrawFee
+              } ${fiatSymbol}`}
+              value={blockchain.blockchainSymbol}
               style={styles.pickerItemNotNull}
             />
           ))}
@@ -291,15 +362,43 @@ const Send = ({ navigation }) => {
           <>
             <View style={styles.assetConversionContainerFirstColumn}>
               <View style={styles.assetAmountContainerTop}>
-                <TextInput
-                  ref={assetAmountInputRef}
-                  style={[styles.assetAmount, { fontSize: fontSize }]}
-                  selectionColor={COLORS.primaryDark}
-                  autoFocus={true}
-                  keyboardType="decimal-pad"
-                  value={amount}
-                  onChangeText={handleAmountChange}
-                />
+                {onMaxPress ? (
+                  <TextInput
+                    ref={assetAmountInputRef}
+                    style={[styles.assetAmount, { fontSize: fontSize }]}
+                    selectionColor={COLORS.primaryDark}
+                    autoFocus={true}
+                    keyboardType="decimal-pad"
+                    value={
+                      isFiatPrimary
+                        ? new BigNumber(balance)
+                            .minus(withdrawFee)
+                            .times(assetFiatValue)
+                            .toFixed(2)
+                        : new BigNumber(balance)
+                            .minus(withdrawFee)
+                            .toFixed(selectedAsset.assetDecimals)
+                    }
+                    onFocus={(text) => {
+                      setAmount(text);
+                    }}
+                    onChangeText={(text) => {
+                      setOnMaxPress(!onMaxPress);
+                      setAmount(text);
+                    }}
+                  />
+                ) : (
+                  <TextInput
+                    ref={assetAmountInputRef}
+                    style={[styles.assetAmount, { fontSize: fontSize }]}
+                    selectionColor={COLORS.primaryDark}
+                    autoFocus={true}
+                    keyboardType="decimal-pad"
+                    value={amount}
+                    onChangeText={handleAmountChange}
+                  />
+                )}
+
                 <Text style={styles.selectedAssetSymbol}>
                   {isFiatPrimary
                     ? fiatSymbol.toUpperCase()
@@ -327,12 +426,28 @@ const Send = ({ navigation }) => {
                   </Animated.View>
                 </TouchableOpacity>
                 <View style={styles.calculatedAssetAmountColumn}>
-                  <Text style={styles.calculatedAssetAmount}>
-                    {calculatedAmount}{" "}
-                    {isFiatPrimary
-                      ? selectedAsset.symbol.toUpperCase()
-                      : fiatSymbol.toUpperCase()}
-                  </Text>
+                  {onMaxPress ? (
+                    <Text style={styles.calculatedAssetAmount}>
+                      {isFiatPrimary
+                        ? new BigNumber(balance)
+                            .minus(withdrawFee)
+                            .toFixed(selectedAsset.assetDecimals)
+                        : new BigNumber(balance)
+                            .minus(withdrawFee)
+                            .times(assetFiatValue)
+                            .toFixed(2)}{" "}
+                      {isFiatPrimary
+                        ? selectedAsset.symbol.toUpperCase()
+                        : fiatSymbol.toUpperCase()}
+                    </Text>
+                  ) : (
+                    <Text style={styles.calculatedAssetAmount}>
+                      {calculatedAmount}{" "}
+                      {isFiatPrimary
+                        ? selectedAsset.symbol.toUpperCase()
+                        : fiatSymbol.toUpperCase()}
+                    </Text>
+                  )}
                 </View>
               </View>
             </View>
@@ -359,8 +474,9 @@ const Send = ({ navigation }) => {
                 <TouchableOpacity
                   style={styles.maxButtonPressed}
                   onPress={() => {
-                    setAmount(calculatedBalance);
-                    adjustFontSizeAndMargin(calculatedBalance);
+                    setOnMaxPress(!onMaxPress);
+                    // setAmount(calculatedBalance);
+                    // adjustFontSizeAndMargin(calculatedBalance);
                   }}
                 >
                   <Text style={styles.maxButtonText}>Max</Text>
@@ -369,8 +485,11 @@ const Send = ({ navigation }) => {
                 <TouchableOpacity
                   style={styles.maxButton}
                   onPress={() => {
-                    setAmount(calculatedBalance);
-                    adjustFontSizeAndMargin(calculatedBalance);
+                    setOnMaxPress(!onMaxPress);
+
+                    // setOnMaxPress(!onMaxPress);
+                    // setAmount(calculatedBalance);
+                    // adjustFontSizeAndMargin(calculatedBalance);
                   }}
                 >
                   <Text style={styles.maxButtonText}>Max</Text>
@@ -379,6 +498,37 @@ const Send = ({ navigation }) => {
             </View>
           </>
         )}
+      </View>
+
+      <View style={styles.availableBalanceContainer}>
+        <Text style={styles.availableBalanceText}>
+          Balance:{" "}
+          {isFiatPrimary
+            ? new BigNumber(calculatedBalance).toFixed(2)
+            : new BigNumber(balance).toFixed(selectedAsset.assetDecimals)}{" "}
+          {isFiatPrimary ? fiatSymbol : selectedAsset.symbol}{" "}
+        </Text>
+        <Text style={styles.feeText}>
+          Comisión: -
+          {isFiatPrimary
+            ? new BigNumber(withdrawFee).times(assetFiatValue).toFixed(2)
+            : new BigNumber(withdrawFee).toFixed(
+                selectedAsset.assetDecimals
+              )}{" "}
+          {isFiatPrimary ? fiatSymbol : selectedAsset.symbol}{" "}
+        </Text>
+        <View style={styles.separator} />
+        <Text style={styles.totalText}>
+          Disponible:{" "}
+          {isFiatPrimary
+            ? new BigNumber(calculatedBalance)
+                .minus(new BigNumber(withdrawFee).times(assetFiatValue))
+                .toFixed(2)
+            : new BigNumber(balance)
+                .minus(withdrawFee)
+                .toFixed(selectedAsset.assetDecimals)}{" "}
+          {isFiatPrimary ? fiatSymbol : selectedAsset.symbol}
+        </Text>
       </View>
 
       <View style={styles.feeContainer}>

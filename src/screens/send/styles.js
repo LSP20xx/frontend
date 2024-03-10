@@ -10,11 +10,11 @@ export const styles = StyleSheet.create({
   },
 
   assetConversionContainer: {
-    marginTop: 40,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     height: 140,
+    marginVertical: 20,
   },
   assetAmountContainerTop: {
     flexDirection: "row",
@@ -111,7 +111,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 15,
     width: "90%",
     height: 50,
-    marginBottom: 50,
+    marginBottom: 25,
     color: COLORS.black,
   },
   button: {
@@ -130,9 +130,9 @@ export const styles = StyleSheet.create({
   separator: {
     height: 1,
     backgroundColor: COLORS.grey,
-    marginTop: 16,
     marginBottom: 8,
-    width: "80%",
+    marginHorizontal: 20,
+    width: "50%",
   },
   recentTransfersContainer: {
     width: "90%",
@@ -231,5 +231,35 @@ export const styles = StyleSheet.create({
   assetConversionContainerSecondColumn: {
     width: "30%",
     height: "85%",
+  },
+  availableBalanceContainer: {
+    width: "100%",
+    backgroundColor: COLORS.white,
+    paddingVertical: 0,
+    marginBottom: 20,
+  },
+  availableBalanceText: {
+    fontSize: 14,
+    color: COLORS.black,
+    textAlign: "left",
+    marginHorizontal: 23,
+    marginBottom: 20,
+    backgroundColor: COLORS.white,
+    fontFamily: "Uto-Light",
+  },
+  feeText: {
+    fontSize: 14,
+    color: COLORS.error,
+    textAlign: "left",
+    marginHorizontal: 23,
+    marginBottom: 20,
+    fontFamily: "Uto-Light",
+  },
+  totalText: {
+    fontSize: 14,
+    color: COLORS.black,
+    textAlign: "left",
+    marginHorizontal: 23,
+    fontFamily: "Uto-Light",
   },
 });

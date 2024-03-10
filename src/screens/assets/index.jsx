@@ -20,6 +20,7 @@ import { styles } from "./styles";
 import LittleLineChart from "../../components/little-line-chart";
 import webSocketService from "../../services/websocketService";
 import { calculatePriceVariation, formatFiatValue } from "../../utils/prices";
+import BigNumber from "bignumber.js";
 
 const Assets = ({ navigation }) => {
   const { assets, assetsLittleLineCharts, storedPrices, totalBalance } =
@@ -52,7 +53,7 @@ const Assets = ({ navigation }) => {
       <View style={styles.balanceDetails}>
         <Text style={styles.fiatSymbol}>$</Text>
         <Text style={styles.fiatConvertedAmount}>
-          {totalBalance ? formatFiatValue(totalBalance, 2) : "0.00"}
+          {totalBalance ? new BigNumber(totalBalance).toFixed(2) : "0.00"}
         </Text>
         <Text style={styles.fiatTicker}> USD</Text>
       </View>
