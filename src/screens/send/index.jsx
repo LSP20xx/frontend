@@ -147,11 +147,23 @@ const Send = ({ navigation }) => {
   }, [blockchains, selectedAsset, assetFiatValue]);
 
   const handleSendPress = () => {
+    let result;
+    if (isFiatPrimary && onMaxPress) {
+      result = new BigNumber(balance).toFixed(selectedAsset.assetDecimals);
+    } else if (isFiatPrimary && !onMaxPress) {
+      result = new BigNumber(calculatedAmount).toFixed(
+        selectedAsset.assetDecimals
+      );
+    } else if (!isFiatPrimary && onMaxPress) {
+      result = new BigNumber(balance).toFixed(selectedAsset.assetDecimals);
+    } else if (!isFiatPrimary && !onMaxPress) {
+      result = new BigNumber(amount).toFixed(selectedAsset.assetDecimals);
+    }
     if (!errorMessages[0]) {
       navigation.navigate("Verification", {
         toAddress,
         fromAddress,
-        amount,
+        amount: result,
         coin: selectedAsset.symbol,
         selectedBlockchain,
         verificationType: "send",
@@ -475,7 +487,6 @@ const Send = ({ navigation }) => {
                   style={styles.maxButtonPressed}
                   onPress={() => {
                     setOnMaxPress(!onMaxPress);
-                    // setAmount(calculatedBalance);
                     // adjustFontSizeAndMargin(calculatedBalance);
                   }}
                 >
@@ -486,6 +497,26 @@ const Send = ({ navigation }) => {
                   style={styles.maxButton}
                   onPress={() => {
                     setOnMaxPress(!onMaxPress);
+                    setAmount(
+                      isFiatPrimary
+                        ? new BigNumber(balance)
+                            .minus(withdrawFee)
+                            .times(assetFiatValue)
+                            .toFixed(2)
+                        : new BigNumber(balance)
+                            .minus(withdrawFee)
+                            .toFixed(selectedAsset.assetDecimals)
+                    );
+                    adjustFontSizeAndMargin(
+                      isFiatPrimary
+                        ? new BigNumber(balance)
+                            .minus(withdrawFee)
+                            .times(assetFiatValue)
+                            .toFixed(2)
+                        : new BigNumber(balance)
+                            .minus(withdrawFee)
+                            .toFixed(selectedAsset.assetDecimals)
+                    );
 
                     // setOnMaxPress(!onMaxPress);
                     // setAmount(calculatedBalance);
