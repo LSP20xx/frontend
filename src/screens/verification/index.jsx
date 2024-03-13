@@ -17,6 +17,7 @@ import {
   clearState,
   sendEmail,
   sendSMS,
+  verifyEmailCode,
   verifySmsCode,
   verifySmsCodeOnWithdraw,
 } from "../../store/actions";
@@ -92,6 +93,8 @@ export const Verification = ({ navigation, route }) => {
       );
     } else {
       if (selectedVerificationMethod === "EMAIL") {
+        console.log("llega antes de verificar email");
+        dispatch(verifyEmailCode(email, code.join(""), tempId, isLogin));
       } else if (selectedVerificationMethod === "SMS") {
         console.log("llega antes de verificar sms");
         dispatch(verifySmsCode(phoneNumber, code.join(""), tempId, isLogin));
@@ -155,13 +158,15 @@ export const Verification = ({ navigation, route }) => {
 
   useEffect(() => {
     console.log("llega antes de enviar email o sms");
+    console.log("selectedVerificationMethod: ", selectedVerificationMethod);
     if (selectedVerificationMethod === "EMAIL") {
-      dispatch(sendEmail(email, "prueba", "hola mundo"));
+      console.log("llega antes de enviar email");
+      dispatch(sendEmail(email, "Verificación de seguridad", "verification"));
     } else {
       console.log("llega antes de enviar sms");
       dispatch(sendSMS(phoneNumber));
     }
-  }, []);
+  }, [selectedVerificationMethod]);
 
   useEffect(() => {
     const isCodeComplete = code.every((digit) => digit.trim() !== "");

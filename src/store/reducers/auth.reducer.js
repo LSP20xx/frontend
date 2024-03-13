@@ -16,6 +16,10 @@ const {
   VERIFY_SMS_CODE_SUCCESS,
   VERIFY_SMS_CODE_ON_WITHDRAW_SUCCESS,
   VERIFY_SMS_CODE_FAILURE,
+  VERIFY_EMAIL_CODE,
+  VERIFY_EMAIL_CODE_SUCCESS,
+  VERIFY_EMAIL_CODE_FAILURE,
+  VERIFY_EMAIL_CODE_ON_WITHDRAW_SUCCESS,
 } = authTypes;
 
 const initialState = {
@@ -23,10 +27,12 @@ const initialState = {
   error: null,
   userId: null,
   tempId: null,
+  sessionTempId: null,
   isLogin: true,
   email: null,
   token: null,
   phoneNumber: null,
+  verified: false,
   verificationMethods: [],
   hasError: false,
 };
@@ -69,8 +75,13 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         userId: action.userId,
+        sessionTempId: action.sessionTempId,
+        firstName: action.firstName,
+        lastName: action.lastName,
         email: action.email,
         phoneNumber: action.phoneNumber,
+        verified: action.verified,
+        verificationMethods: action.verificationMethods,
         isLoading: false,
         error: null,
         hasError: false,
@@ -94,11 +105,22 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         userId: action.userId,
+        sessionTempId: action.sessionTempId,
+        firstName: action.firstName,
+        lastName: action.lastName,
+        email: action.email,
+        phoneNumber: action.phoneNumber,
+        verified: action.verified,
+        verificationMethods: action.verificationMethods,
+        isLoading: false,
+        error: null,
+        hasError: false,
       };
     case SIGN_IN_FAILURE:
       return {
         ...state,
         userId: null,
+        sessionTempId: null,
         email: null,
         phoneNumber: null,
         isLoading: false,
@@ -137,6 +159,27 @@ const authReducer = (state = initialState, action) => {
         isLoading: false,
       };
     case VERIFY_SMS_CODE_FAILURE:
+      return {
+        ...state,
+        isLoading: false,
+      };
+    case VERIFY_EMAIL_CODE:
+      return {
+        ...state,
+        isLoading: true,
+      };
+    case VERIFY_EMAIL_CODE_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        userId: action.userId,
+      };
+    case VERIFY_EMAIL_CODE_ON_WITHDRAW_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+      };
+    case VERIFY_EMAIL_CODE_FAILURE:
       return {
         ...state,
         isLoading: false,

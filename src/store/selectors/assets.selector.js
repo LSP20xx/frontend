@@ -7,6 +7,13 @@ export const getAssetBalance = (state, assetSymbol) => {
   return assetBalance.balance;
 };
 
+export const getAssetAddress = (state, assetSymbol) => {
+  const assetBalance = state.assets.balances.find(
+    (balance) => balance.symbol === assetSymbol
+  );
+  return assetBalance.address;
+};
+
 export const getCalculatedBalance = (state, assetSymbol) => {
   const assetBalance = state.assets.balances.find(
     (balance) => balance.symbol === assetSymbol

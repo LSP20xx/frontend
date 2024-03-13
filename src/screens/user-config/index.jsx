@@ -1,4 +1,5 @@
 import React from "react";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 import {
   Image,
@@ -23,7 +24,7 @@ import { selectAsset } from "../../store/actions";
 const options = [
   {
     id: 1,
-    name: "Soporte",
+    name: "Mi información",
     disabled: true,
   },
   {
@@ -33,17 +34,17 @@ const options = [
   },
   {
     id: 3,
-    name: "Moneda local",
+    name: "Notificaciones",
     disabled: true,
   },
   {
     id: 4,
-    name: "Idioma",
+    name: "Moneda local",
     disabled: true,
   },
   {
     id: 5,
-    name: "Notificaciones",
+    name: "Idioma",
     disabled: true,
   },
 ];
@@ -53,16 +54,9 @@ const UserConfig = ({ navigation, showBackButton }) => {
   const { assets, storedPrices, balances } = useSelector(
     (state) => state.assets
   );
-
-  // Modificar título y subtítulo basado en el nuevo modo "markets"
-
-  const symbolImages = {
-    btc: require("../../../assets/crypto-logos/btc.png"),
-    eth: require("../../../assets/crypto-logos/eth.png"),
-    doge: require("../../../assets/crypto-logos/doge.png"),
-    usdt: require("../../../assets/crypto-logos/usdt.png"),
-    ltc: require("../../../assets/crypto-logos/ltc.png"),
-  };
+  const { firstName, lastName, verified, verificationMethods } = useSelector(
+    (state) => state.auth
+  );
 
   const handleAssetPress = (id) => {
     dispatch(selectAsset(id));
@@ -83,12 +77,36 @@ const UserConfig = ({ navigation, showBackButton }) => {
       />
       <View style={styles.sectionContainer}>
         <View style={styles.titleContainer}>
-          <Text style={styles.sectionTitle}>Configuración de usuario</Text>
+          {verified ? (
+            <Text style={styles.sectionTitle}>
+              {firstName} {lastName}
+            </Text>
+          ) : (
+            <Text style={styles.sectionTitle}>Verificación pendiente</Text>
+          )}
         </View>
         <View style={styles.subtitleContainer}>
-          <Text style={styles.sectionSubtitle}>
-            Selecciona una opción para configurar
-          </Text>
+          {verified ? (
+            <View style={styles.subtitleContainer}>
+              <Text style={styles.sectionSubtitle}>Usuario verificado</Text>
+              <Ionicons
+                name="shield-checkmark"
+                size={32}
+                color={COLORS.green}
+                style={styles.verifiedIcon}
+              />
+            </View>
+          ) : (
+            <View style={styles.subtitleContainer}>
+              <Text style={styles.sectionSubtitle}>Usuario no verificado</Text>
+              <Ionicons
+                name="close-circle"
+                size={32}
+                color={COLORS.error}
+                style={styles.unverifiedIcon}
+              />
+            </View>
+          )}
         </View>
         <ScrollView style={styles.listScrolLView}>
           {options.map((item) => {

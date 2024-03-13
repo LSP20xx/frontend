@@ -9,7 +9,7 @@ import { fetchBlockchains } from "../store/actions";
 import { AppState } from "react-native";
 
 const Navigation = () => {
-  const userId = useSelector((state) => state.auth.userId);
+  const { userId } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   // const useIntervalEffect = (callback, delay) => {

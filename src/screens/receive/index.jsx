@@ -22,10 +22,6 @@ const Receive = ({ navigation }) => {
     ]);
   };
 
-  useEffect(() => {
-    console.log("balances", balances);
-  }, [balances]);
-
   return (
     <SafeAreaView style={styles.container}>
       <Header navigation={navigation} showBackButton={true} />

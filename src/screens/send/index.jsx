@@ -28,6 +28,7 @@ import { formatBalance, formatFiatValue } from "../../utils/prices";
 import BigNumber from "bignumber.js";
 import { fetchBlockchains } from "../../store/actions/blockchains.action";
 import {
+  getAssetAddress,
   getAssetBalance,
   getAssetFiatValue,
   getCalculatedBalance,
@@ -92,6 +93,10 @@ const Send = ({ navigation }) => {
     getAssetBalance(state, selectedAsset.symbol)
   );
 
+  const fromAddress = useSelector((state) =>
+    getAssetAddress(state, selectedAsset.symbol)
+  );
+
   const calculatedBalance = useSelector((state) =>
     getCalculatedBalance(state, selectedAsset.symbol)
   );
@@ -108,20 +113,15 @@ const Send = ({ navigation }) => {
 
   const fiatSymbol = "USD";
   const [toAddress, setToAddress] = useState("");
-  const [fromAddress, setFromAddress] = useState("");
   const [amount, setAmount] = useState("");
   const [blockchainId, setBlockchainId] = useState("");
   const [calculatedAmount, setCalculatedAmount] = useState("");
   const [fontSize, setFontSize] = useState(52);
   const [margin, setMargin] = useState({ top: 16, left: 8 });
   const [isValidAddress, setIsValidAddress] = useState(true);
-  const [isValidAmount, setIsValidAmount] = useState(true);
   const [onMaxPress, setOnMaxPress] = useState(false);
   const [withdrawFee, setWithdrawFee] = useState(0);
   const [calculatedWithdrawFees, setCalculatedWithdrawFees] = useState([]);
-  const [availableBalance, setAvailableBalance] = useState(0);
-  const [calculatedAvailableBalance, setCalculatedAvailableBalance] =
-    useState(0);
   const [isFiatPrimary, setIsAmountPrimary] = useState(true);
   const [errorMessages, setErrorMessages] = useState([]);
   const assetAmountInputRef = useRef(null);
@@ -289,14 +289,13 @@ const Send = ({ navigation }) => {
           blockchain.blockchainSymbol === selectedBlockchain.split(" ")[0]
       );
       setWithdrawFee(blockchain.withdrawFee);
-      setFromAddress(blockchain.walletAddress);
       setBlockchainId(blockchain.blockchainId);
     }
   }, [selectedBlockchain]);
 
   useEffect(() => {
-    console.log("blockchains", blockchains);
-  }, [blockchains]);
+    console.log("fromAddress", fromAddress);
+  }, [balance]);
 
   useEffect(() => {
     validateFields();

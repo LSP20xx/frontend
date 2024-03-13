@@ -3,6 +3,7 @@ import {
   AUTH_SIGN_UP_URL,
   AUTH_CHECK_DATA,
   VERIFY_SMS_URL,
+  VERIFY_EMAIL_URL,
 } from "../../constants";
 import { authTypes } from "../types";
 import { withdrawFromEvmWallet } from "./transactions.action";
@@ -23,6 +24,10 @@ const {
   VERIFY_SMS_CODE_SUCCESS,
   VERIFY_SMS_CODE_ON_WITHDRAW_SUCCESS,
   VERIFY_SMS_CODE_FAILURE,
+  VERIFY_EMAIL_CODE,
+  VERIFY_EMAIL_CODE_SUCCESS,
+  VERIFY_EMAIL_CODE_FAILURE,
+  VERIFY_EMAIL_CODE_ON_WITHDRAW_SUCCESS,
 } = authTypes;
 
 export const signUpWithEmail = ({ email, password }) => {
@@ -49,7 +54,13 @@ export const signUpWithEmail = ({ email, password }) => {
       dispatch({
         type: SIGN_UP_SUCCESS,
         userId: data.userId,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        sessionTempId: data.sessionTempId,
+        phoneNumber: data.phoneNumber,
         email: data.email,
+        verified: data.verified,
+        verificationMethods: data.verificationMethods,
       });
     } catch (error) {
       dispatch({
@@ -85,7 +96,13 @@ export const signUpWithPhoneNumber = ({ phoneNumber, tempId }) => {
       dispatch({
         type: SIGN_UP_SUCCESS,
         userId: data.userId,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        sessionTempId: data.sessionTempId,
         phoneNumber: data.phoneNumber,
+        email: data.email,
+        verified: data.verified,
+        verificationMethods: data.verificationMethods,
       });
     } catch (error) {
       dispatch({
@@ -122,7 +139,13 @@ export const signInWithEmail = ({ email, password }) => {
         dispatch({
           type: SIGN_IN_SUCCESS,
           userId: data.userId,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          sessionTempId: data.sessionTempId,
+          phoneNumber: data.phoneNumber,
           email: data.email,
+          verified: data.verified,
+          verificationMethods: data.verificationMethods,
         });
       }
     } catch (error) {
@@ -156,9 +179,17 @@ export const signInWithPhoneNumber = ({ phoneNumber, tempId }) => {
       }
 
       const data = await response.json();
+      console.log("DATA: ", data);
       dispatch({
         type: SIGN_IN_SUCCESS,
         userId: data.userId,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        sessionTempId: data.sessionTempId,
+        phoneNumber: data.phoneNumber,
+        email: data.email,
+        verified: data.verified,
+        verificationMethods: data.verificationMethods,
       });
     } catch (error) {
       dispatch({
@@ -291,7 +322,7 @@ export const verifySmsCodeOnWithdraw = (
         console.log("llega a verificarse CORRECTAMENTE");
         dispatch({ type: VERIFY_SMS_CODE_ON_WITHDRAW_SUCCESS });
         console.log("blockchainId: ", blockchainId, typeof blockchainId);
-        if (["1", "5"].includes(blockchainId)) {
+        if (["1", "11155111"].includes(blockchainId)) {
           console.log("llega a dispatchear withdrawFromEvmWallet");
           dispatch(
             withdrawFromEvmWallet(
@@ -356,6 +387,40 @@ export const verifySmsCode = (to, code, tempId, isLogin) => {
     } catch (error) {
       console.error(error);
       dispatch({ type: VERIFY_SMS_CODE_FAILURE });
+    }
+  };
+};
+
+export const verifyEmailCode = (email, code, tempId, isLogin) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: VERIFY_EMAIL_CODE,
+      });
+      const response = await fetch(VERIFY_EMAIL_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ to: email, code }),
+      });
+      if (!response.ok) {
+        throw new Error("Error verifying email code");
+      }
+      const result = await response.json();
+      if (result.isVerified) {
+        dispatch({ type: VERIFY_EMAIL_CODE_SUCCESS });
+        if (isLogin) {
+          dispatch(signInWithEmail({ email, tempId }));
+        } else {
+          dispatch(signUpWithEmail({ email, tempId }));
+        }
+      } else {
+        dispatch({ type: VERIFY_EMAIL_CODE_FAILURE });
+      }
+    } catch (error) {
+      console.error(error);
+      dispatch({ type: VERIFY_EMAIL_CODE_FAILURE });
     }
   };
 };

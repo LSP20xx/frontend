@@ -67,7 +67,7 @@ export const setUserImage = (userId, image) => {
   };
 };
 
-export const sendEmail = (to, subject, message) => {
+export const sendEmail = (to, subject, template) => {
   return async (dispatch) => {
     try {
       const response = await fetch(SEND_EMAIL_URL, {
@@ -75,7 +75,7 @@ export const sendEmail = (to, subject, message) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ to, subject, message }),
+        body: JSON.stringify({ to, subject, template }),
       });
       if (!response.ok) {
         throw new Error("Error sending email");

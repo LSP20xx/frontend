@@ -29,6 +29,7 @@ export const styles = StyleSheet.create({
   },
   subtitleContainer: {
     alignItems: "flex-start",
+    flexDirection: "row",
   },
   titleStyle: {
     fontSize: 24,
@@ -39,7 +40,7 @@ export const styles = StyleSheet.create({
     marginVertical: 16,
   },
   sectionSubtitle: {
-    fontSize: 14,
+    fontSize: 16,
     color: COLORS.black,
     fontFamily: "Uto-Regular",
     textAlign: "left",
@@ -269,5 +270,11 @@ export const styles = StyleSheet.create({
     fontFamily: "Uto-Light",
     color: COLORS.interest,
     marginRight: 4,
+  },
+  verifiedIcon: {
+    marginLeft: 8,
+  },
+  unverifiedIcon: {
+    marginLeft: 8,
   },
 });
