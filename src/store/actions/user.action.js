@@ -70,6 +70,10 @@ export const setUserImage = (userId, image) => {
 export const sendEmail = (to, subject, template) => {
   return async (dispatch) => {
     try {
+      console.log(to);
+      console.log(subject);
+      console.log(template);
+      console.log(SEND_EMAIL_URL);
       const response = await fetch(SEND_EMAIL_URL, {
         method: "POST",
         headers: {
@@ -77,16 +81,27 @@ export const sendEmail = (to, subject, template) => {
         },
         body: JSON.stringify({ to, subject, template }),
       });
+      console.log("response: ", response.ok);
       if (!response.ok) {
+        console.log("Error sending email before throw");
         throw new Error("Error sending email");
       }
-      const result = await response.json();
-      console.log(result);
+
+      let result;
+      if (response.headers.get("content-length") !== "0") {
+        result = await response.json();
+        console.log(result);
+      } else {
+        console.log(
+          "Email sent successfully, but no content returned from server."
+        );
+      }
+
       dispatch({
         type: SEND_EMAIL,
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 };
@@ -104,7 +119,7 @@ export const sendSMS = (to) => {
       });
       console.log(response);
       if (!response.ok) {
-        throw new Error("Error sending email");
+        throw new Error("Error sending sms");
       }
       console.log(response);
       const result = await response.json();

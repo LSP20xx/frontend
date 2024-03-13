@@ -120,8 +120,12 @@ export const Verification = ({ navigation, route }) => {
     console.log("updateSelectedVerificationMethod: ", method);
     setSelectedVerificationMethod(method);
   };
-
   const obfuscateEmail = (email) => {
+    if (!email) {
+      console.error("El email es null o undefined.");
+      return "";
+    }
+
     const [localPart, domain] = email.split("@");
     const obfuscatedLocal =
       localPart?.length > 2
@@ -155,18 +159,25 @@ export const Verification = ({ navigation, route }) => {
 
     return () => clearInterval(interval);
   }, [timer]);
-
   useEffect(() => {
-    console.log("llega antes de enviar email o sms");
-    console.log("selectedVerificationMethod: ", selectedVerificationMethod);
+    console.log(
+      "Intento de envío basado en el método seleccionado:",
+      selectedVerificationMethod
+    );
+
     if (selectedVerificationMethod === "EMAIL") {
-      console.log("llega antes de enviar email");
+      console.log("Enviando email a:", email);
       dispatch(sendEmail(email, "Verificación de seguridad", "verification"));
-    } else {
-      console.log("llega antes de enviar sms");
+    } else if (selectedVerificationMethod === "SMS") {
+      console.log("Enviando SMS a:", phoneNumber);
       dispatch(sendSMS(phoneNumber));
+    } else {
+      console.log(
+        "Método de verificación no reconocido:",
+        selectedVerificationMethod
+      );
     }
-  }, [selectedVerificationMethod]);
+  }, [selectedVerificationMethod, dispatch, email, phoneNumber]);
 
   useEffect(() => {
     const isCodeComplete = code.every((digit) => digit.trim() !== "");
