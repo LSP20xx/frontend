@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 import {
+  Alert,
   Image,
   SafeAreaView,
   ScrollView,
@@ -26,26 +27,31 @@ const options = [
     id: 1,
     name: "Mi información",
     disabled: true,
+    screen: "MyInformation",
   },
   {
     id: 2,
     name: "Seguridad",
     disabled: true,
+    screen: "Security",
   },
   {
     id: 3,
     name: "Notificaciones",
     disabled: true,
+    screen: "Notifications",
   },
   {
     id: 4,
     name: "Moneda local",
     disabled: true,
+    screen: "LocalCurrency",
   },
   {
     id: 5,
     name: "Idioma",
     disabled: true,
+    screen: "Language",
   },
 ];
 
@@ -69,6 +75,30 @@ const UserConfig = ({ navigation, showBackButton }) => {
     // }
   };
 
+  useEffect(() => {
+    checkVerificationStatus();
+  }, []);
+
+  const checkVerificationStatus = () => {
+    // Assume a function that checks if the user is verified
+    if (!verified) {
+      Alert.alert(
+        "Verificación KYC necesaria",
+        'Por favor, completa la verificación en "Mi información".',
+        [
+          {
+            text: "Ir a verificar",
+            onPress: () => navigation.navigate("VerificationScreen"), // Assuming 'VerificationScreen' is the screen name where users can get verified
+          },
+          {
+            text: "Cancelar",
+            style: "cancel",
+          },
+        ]
+      );
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Header
@@ -82,7 +112,7 @@ const UserConfig = ({ navigation, showBackButton }) => {
               {firstName} {lastName}
             </Text>
           ) : (
-            <Text style={styles.sectionTitle}>Verificación pendiente</Text>
+            <Text style={styles.sectionTitle}>Verificación KYC pendiente</Text>
           )}
         </View>
         <View style={styles.subtitleContainer}>

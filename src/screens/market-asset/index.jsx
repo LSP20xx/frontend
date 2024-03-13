@@ -10,6 +10,7 @@ const MarketAsset = ({ navigation }) => {
   const { assets, selectedAsset, balances } = useSelector(
     (state) => state.assets
   );
+  const { verified } = useSelector((state) => state.auth);
   const { blockchains } = useSelector((state) => state.blockchains);
   const assetBalance = balances.find(
     (balance) => balance.symbol === selectedAsset.symbol
@@ -57,10 +58,14 @@ const MarketAsset = ({ navigation }) => {
         </View>
       </View>
       <View style={styles.actionButtonsContainer}>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          style={verified ? styles.button : styles.buttonDisabled}
+        >
           <Text style={styles.buttonText}>Comprar</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          style={verified ? styles.button : styles.buttonDisabled}
+        >
           <Text style={styles.buttonText}>Vender</Text>
         </TouchableOpacity>
       </View>

@@ -23,6 +23,16 @@ export const styles = StyleSheet.create({
     marginBottom: 5,
     marginHorizontal: 17,
   },
+  navItemDisabled: {
+    width: 76,
+    height: 76,
+    borderRadius: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: COLORS.disabled,
+    marginBottom: 5,
+    marginHorizontal: 17,
+  },
   navText: {
     marginTop: 5,
     color: COLORS.black,

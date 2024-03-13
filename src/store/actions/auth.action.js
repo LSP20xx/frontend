@@ -30,9 +30,10 @@ const {
   VERIFY_EMAIL_CODE_ON_WITHDRAW_SUCCESS,
 } = authTypes;
 
-export const signUpWithEmail = ({ email, password }) => {
+export const signUpWithEmail = ({ email, tempId }) => {
   return async (dispatch) => {
     try {
+      console.log("llega a signUpWithEmail");
       dispatch({ type: SIGN_UP_REQUEST });
       const response = await fetch(AUTH_SIGN_UP_URL, {
         method: "POST",
@@ -41,10 +42,10 @@ export const signUpWithEmail = ({ email, password }) => {
         },
         body: JSON.stringify({
           email,
-          password,
+          tempId,
         }),
       });
-
+      console.log("response: ", response);
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "Something went wrong!");
@@ -113,7 +114,7 @@ export const signUpWithPhoneNumber = ({ phoneNumber, tempId }) => {
   };
 };
 
-export const signInWithEmail = ({ email, password }) => {
+export const signInWithEmail = ({ email, tempId }) => {
   return async (dispatch) => {
     try {
       dispatch({ type: SIGN_IN_REQUEST });
@@ -124,7 +125,7 @@ export const signInWithEmail = ({ email, password }) => {
         },
         body: JSON.stringify({
           login: email,
-          password,
+          tempId,
         }),
       });
 
@@ -429,10 +430,12 @@ export const verifyEmailCode = (email, code, tempId, isLogin) => {
       console.log("Resultado de la verificación:", result);
 
       if (result.isVerified) {
+        console.log("Email verificado exitosamente");
         dispatch({ type: VERIFY_EMAIL_CODE_SUCCESS });
         if (isLogin) {
           dispatch(signInWithEmail({ email, tempId }));
         } else {
+          console.log("llega a dispatchear signUpWithEmail");
           dispatch(signUpWithEmail({ email, tempId }));
         }
       } else {

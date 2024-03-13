@@ -1,9 +1,12 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import React from "react";
+import React, { useEffect } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles";
+import { useSelector } from "react-redux";
 
 const Navbar = ({ navigation }) => {
+  const { verified } = useSelector((state) => state.auth);
+
   const navItems = [
     {
       text: "Recibir",
@@ -25,16 +28,20 @@ const Navbar = ({ navigation }) => {
     },
   ];
 
+  useEffect(() => {
+    console.log("verified", verified);
+  }, [verified]);
+
   return (
     <View style={styles.navbar}>
       {navItems.map((item, index) => (
         <View style={styles.navItemContainer} key={index}>
           <TouchableOpacity
-            style={styles.navItem}
+            style={verified ? styles.navItem : styles.navItemDisabled}
             onPress={() =>
               navigation.navigate(item.route, { mode: item.text.toLowerCase() })
             }
-            disabled={item.disabled}
+            disabled={!verified}
           >
             <Ionicons name={item.icon} style={styles.icon} />
           </TouchableOpacity>

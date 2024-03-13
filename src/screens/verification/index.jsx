@@ -171,18 +171,22 @@ export const Verification = ({ navigation, route }) => {
   }, [timer]);
 
   useEffect(() => {
-    console.log(
-      "Intentando enviar código. Método seleccionado:",
-      selectedVerificationMethod,
-      "Email:",
-      email,
-      "PhoneNumber:",
-      phoneNumber
-    );
-    if (selectedVerificationMethod === "EMAIL") {
-      dispatch(sendEmail(email, "Verificación de seguridad", "verification"));
-    } else if (selectedVerificationMethod === "SMS") {
-      dispatch(sendSMS(phoneNumber));
+    console.log("email: ", email, "phoneNumber: ", phoneNumber);
+    console.log("selectedVerificationMethod: ", selectedVerificationMethod);
+    if ((email || phoneNumber) && selectedVerificationMethod) {
+      console.log(
+        "Intentando enviar código. Método seleccionado:",
+        selectedVerificationMethod,
+        "Email:",
+        email,
+        "PhoneNumber:",
+        phoneNumber
+      );
+      if (selectedVerificationMethod === "EMAIL") {
+        dispatch(sendEmail(email, "Verificación de seguridad", "verification"));
+      } else if (selectedVerificationMethod === "SMS") {
+        dispatch(sendSMS(phoneNumber));
+      }
     }
   }, [selectedVerificationMethod, email, phoneNumber]);
 

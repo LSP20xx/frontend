@@ -189,6 +189,15 @@ export const styles = StyleSheet.create({
       },
     }),
   },
+  buttonDisabled: {
+    paddingHorizontal: 40,
+    paddingVertical: 10,
+    borderRadius: 20,
+    backgroundColor: COLORS.disabled,
+    minWidth: 120,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   buttonText: {
     color: COLORS.grey,
     fontFamily: "Uto-ExtraBold",
