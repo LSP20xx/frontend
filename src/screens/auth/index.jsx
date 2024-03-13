@@ -135,7 +135,7 @@ const Auth = ({ navigation }) => {
   };
 
   useEffect(() => {
-    clearState();
+    // clearState();
   }, []);
 
   useEffect(() => {

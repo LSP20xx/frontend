@@ -350,15 +350,17 @@ export const verifySmsCodeOnWithdraw = (
 export const verifySmsCode = (to, code, tempId, isLogin) => {
   return async (dispatch) => {
     console.log(
-      "to: ",
+      "Despachando acción para verificar código SMS",
+      "PhoneNumber:",
       to,
-      "code: ",
+      "Código:",
       code,
-      "tempId: ",
+      "tempId:",
       tempId,
-      "isLogin: ",
+      "isLogin:",
       isLogin
     );
+
     try {
       dispatch({
         type: VERIFY_SMS_CODE,
@@ -394,17 +396,18 @@ export const verifySmsCode = (to, code, tempId, isLogin) => {
 };
 
 export const verifyEmailCode = (email, code, tempId, isLogin) => {
-  console.log("llega a verifyEmailCode");
   console.log(
-    "tempId: ",
-    tempId,
-    "isLogin: ",
-    isLogin,
-    "email: ",
+    "Despachando acción para verificar código de email",
+    "Email:",
     email,
-    "code: ",
-    code
+    "Código:",
+    code,
+    "tempId:",
+    tempId,
+    "isLogin:",
+    isLogin
   );
+
   return async (dispatch) => {
     try {
       dispatch({
@@ -418,9 +421,13 @@ export const verifyEmailCode = (email, code, tempId, isLogin) => {
         body: JSON.stringify({ to: email, code }),
       });
       if (!response.ok) {
+        console.log("Error en verificación. Respuesta:", await response.text());
+
         throw new Error("Error verifying email code");
       }
       const result = await response.json();
+      console.log("Resultado de la verificación:", result);
+
       if (result.isVerified) {
         dispatch({ type: VERIFY_EMAIL_CODE_SUCCESS });
         if (isLogin) {

@@ -79,7 +79,6 @@ export const Verification = ({ navigation, route }) => {
   const onHandleChangeAuth = () => {};
   const onHandleVerification = () => {
     if (verificationType === "send") {
-      console.log("llega antes de verificar sms con withdraw");
       dispatch(
         verifySmsCodeOnWithdraw(
           phoneNumber,
@@ -94,14 +93,25 @@ export const Verification = ({ navigation, route }) => {
       );
     } else {
       if (selectedVerificationMethod === "EMAIL") {
-        console.log("llega antes de verificar email");
         dispatch(verifyEmailCode(email, code.join(""), tempId, isLogin));
       } else if (selectedVerificationMethod === "SMS") {
-        console.log("llega antes de verificar sms");
         dispatch(verifySmsCode(phoneNumber, code.join(""), tempId, isLogin));
-        console.log("llega después de verificar sms");
       }
     }
+    console.log(
+      "Inicio de verificación. Método:",
+      selectedVerificationMethod,
+      "Código:",
+      code.join(""),
+      "Email:",
+      email,
+      "PhoneNumber:",
+      phoneNumber,
+      "tempId:",
+      tempId,
+      "isLogin:",
+      isLogin
+    );
   };
 
   const onHandleButtonModal = () => {
@@ -118,12 +128,11 @@ export const Verification = ({ navigation, route }) => {
   };
 
   const updateSelectedVerificationMethod = (method) => {
-    console.log("updateSelectedVerificationMethod: ", method);
     setSelectedVerificationMethod(method);
   };
+
   const obfuscateEmail = (email) => {
     if (!email) {
-      console.error("El email es null o undefined.");
       return "";
     }
 
@@ -160,23 +169,20 @@ export const Verification = ({ navigation, route }) => {
 
     return () => clearInterval(interval);
   }, [timer]);
+
   useEffect(() => {
     console.log(
-      "Intento de envío basado en el método seleccionado:",
-      selectedVerificationMethod
+      "Intentando enviar código. Método seleccionado:",
+      selectedVerificationMethod,
+      "Email:",
+      email,
+      "PhoneNumber:",
+      phoneNumber
     );
-
     if (selectedVerificationMethod === "EMAIL") {
-      console.log("Enviando email a:", email);
       dispatch(sendEmail(email, "Verificación de seguridad", "verification"));
     } else if (selectedVerificationMethod === "SMS") {
-      console.log("Enviando SMS a:", phoneNumber);
       dispatch(sendSMS(phoneNumber));
-    } else {
-      console.log(
-        "Método de verificación no reconocido:",
-        selectedVerificationMethod
-      );
     }
   }, [selectedVerificationMethod, email, phoneNumber]);
 
@@ -189,7 +195,6 @@ export const Verification = ({ navigation, route }) => {
   }, [code]);
 
   useEffect(() => {
-    console.log("verificationMethods: ", verificationMethods);
     if (verificationMethods && verificationMethods?.length > 0) {
       updateSelectedVerificationMethod(verificationMethods[0]);
     }

@@ -164,11 +164,22 @@ const authReducer = (state = initialState, action) => {
         isLoading: false,
       };
     case VERIFY_EMAIL_CODE:
+      console.log(
+        "Verificando email. Actualizando estado.",
+        "Payload:",
+        action
+      );
       return {
         ...state,
         isLoading: true,
       };
     case VERIFY_EMAIL_CODE_SUCCESS:
+      console.log(
+        "Email verificado exitosamente. Actualizando estado.",
+        "Payload:",
+        action
+      );
+
       return {
         ...state,
         isLoading: false,
