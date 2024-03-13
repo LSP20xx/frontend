@@ -199,6 +199,11 @@ export const Verification = ({ navigation, route }) => {
       ? `Se enviará un código a ${obfuscateEmail(email)}`
       : `Se enviará un código a ${obfuscatePhoneNumber(phoneNumber)}`;
 
+  useEffect(() => {
+    console.log("tempId: ", tempId);
+    console.log("isLogin: ", isLogin);
+  }, [tempId, isLogin]);
+
   return (
     <View style={styles.container}>
       {canResend ? (

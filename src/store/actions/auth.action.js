@@ -223,6 +223,8 @@ export const checkEmailAuthData = ({ email, password, isLogin }) => {
       } else {
         dispatch({
           type: VERIFICATION_TOKEN_SUCCESS,
+          tempId: data.tempId,
+          isLogin: isLogin,
           token: data.token,
           verificationMethods: data.verificationMethods,
           phoneNumber: data.phoneNumber,
@@ -392,6 +394,17 @@ export const verifySmsCode = (to, code, tempId, isLogin) => {
 };
 
 export const verifyEmailCode = (email, code, tempId, isLogin) => {
+  console.log("llega a verifyEmailCode");
+  console.log(
+    "tempId: ",
+    tempId,
+    "isLogin: ",
+    isLogin,
+    "email: ",
+    email,
+    "code: ",
+    code
+  );
   return async (dispatch) => {
     try {
       dispatch({
