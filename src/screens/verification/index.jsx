@@ -52,6 +52,7 @@ export const Verification = ({ navigation, route }) => {
   const [canResend, setCanResend] = useState(false);
   const inputsRef = useRef([]);
   const isCodeComplete = code.every((digit) => digit.trim() !== "");
+  const [requestResend, setRequestResend] = useState(false);
 
   const handleInput = (text, index) => {
     const newCode = [...code];
@@ -177,7 +178,7 @@ export const Verification = ({ navigation, route }) => {
         selectedVerificationMethod
       );
     }
-  }, [selectedVerificationMethod, dispatch, email, phoneNumber]);
+  }, [selectedVerificationMethod, email, phoneNumber]);
 
   useEffect(() => {
     const isCodeComplete = code.every((digit) => digit.trim() !== "");
