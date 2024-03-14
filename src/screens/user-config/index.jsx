@@ -15,43 +15,37 @@ import { Header } from "../../components/index";
 
 import { styles } from "./styles";
 import { COLORS } from "../../constants";
-import {
-  calculatePriceVariation,
-  formatFiatValue,
-  formatBalance,
-} from "../../utils/prices";
-import { selectAsset } from "../../store/actions";
 
 const options = [
   {
     id: 1,
     name: "Mi información",
-    disabled: true,
-    screen: "MyInformation",
+    disabled: false,
+    screen: "UserMyInformation",
   },
   {
     id: 2,
     name: "Seguridad",
-    disabled: true,
-    screen: "Security",
+    disabled: false,
+    screen: "UserSecurity",
   },
   {
     id: 3,
     name: "Notificaciones",
-    disabled: true,
-    screen: "Notifications",
+    disabled: false,
+    screen: "UserNotifications",
   },
   {
     id: 4,
     name: "Moneda local",
-    disabled: true,
-    screen: "LocalCurrency",
+    disabled: false,
+    screen: "UserLocalCurrency",
   },
   {
     id: 5,
     name: "Idioma",
-    disabled: true,
-    screen: "Language",
+    disabled: false,
+    screen: "UserLanguage",
   },
 ];
 
@@ -64,15 +58,8 @@ const UserConfig = ({ navigation, showBackButton }) => {
     (state) => state.auth
   );
 
-  const handleAssetPress = (id) => {
-    dispatch(selectAsset(id));
-    // if (mode === "recibir") {
-    //   return navigation.navigate("Receive");
-    // } else if (mode === "enviar") {
-    //   return navigation.navigate("Send");
-    // } else if (mode === "markets") {
-    //   return navigation.navigate("MarketAsset");
-    // }
+  const handleNavigation = (screen) => {
+    navigation.navigate(screen);
   };
 
   useEffect(() => {
@@ -80,7 +67,6 @@ const UserConfig = ({ navigation, showBackButton }) => {
   }, []);
 
   const checkVerificationStatus = () => {
-    // Assume a function that checks if the user is verified
     if (!verified) {
       Alert.alert(
         "Verificación KYC necesaria",
@@ -88,7 +74,7 @@ const UserConfig = ({ navigation, showBackButton }) => {
         [
           {
             text: "Ir a verificar",
-            onPress: () => navigation.navigate("VerificationScreen"), // Assuming 'VerificationScreen' is the screen name where users can get verified
+            onPress: () => navigation.navigate("UserMyInformation"),
           },
           {
             text: "Cancelar",
@@ -149,7 +135,7 @@ const UserConfig = ({ navigation, showBackButton }) => {
               <TouchableOpacity
                 key={item.id}
                 style={styles.optionItem}
-                onPress={() => handleAssetPress(item.id)}
+                onPress={() => handleNavigation(item.screen)}
                 disabled={item.disabled}
               >
                 <View style={styles.leftContainer}>
