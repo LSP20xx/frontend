@@ -1,12 +1,14 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import React, { useEffect } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import { styles } from "./styles";
+import { getStyles, styles } from "./styles";
 import { useSelector } from "react-redux";
+import { useTheme } from "../../context/ThemeContext";
 
 const Navbar = ({ navigation }) => {
   const { verified } = useSelector((state) => state.auth);
-
+  const { theme } = useTheme();
+  const styles = getStyles(theme);
   const navItems = [
     {
       text: "Recibir",

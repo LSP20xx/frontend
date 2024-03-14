@@ -1,12 +1,12 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import { COLORS } from "../../constants";
 import WalletNavigator from "../wallet";
 import MarketsNavigator from "../markets";
 import ProfileNavigator from "../profile";
 import CardNavigator from "../card";
 import { View } from "react-native";
 import { SvgXml } from "react-native-svg";
+import { useTheme } from "../../context/ThemeContext";
 
 const getMarketsIconSvg = (isFocused, primaryColor) => {
   const strokeColor = isFocused ? "#FFFFFF" : primaryColor;
@@ -102,22 +102,24 @@ const getWalletIconSvg = (color) => {
 const BottomTab = createBottomTabNavigator();
 
 const TabsNavigator = () => {
+  const { theme, toggleTheme } = useTheme();
+
   return (
     <BottomTab.Navigator
       initialRouteName="Home"
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: COLORS.white,
+          backgroundColor: theme.background,
           fontSize: 20,
           height: 60,
         },
-        tabBarActiveTintColor: COLORS.primaryLight,
-        tabBarInactiveTintColor: COLORS.primary,
-        tabBarInactiveBackgroundColor: COLORS.white,
+        tabBarActiveTintColor: theme.primaryLight,
+        tabBarInactiveTintColor: theme.primary,
+        tabBarInactiveBackgroundColor: theme.background,
         tabBarLabelStyle: {
           fontSize: 12,
-          color: COLORS.black,
+          color: theme.black,
           fontFamily: "Uto-Medium",
           marginBottom: 2,
         },
@@ -128,14 +130,20 @@ const TabsNavigator = () => {
         component={WalletNavigator}
         options={{
           tabBarLabel: "Home",
+          tabBarLabelStyle: {
+            color: theme.text,
+            fontSize: 12,
+            fontFamily: "Uto-Medium",
+            marginBottom: 2,
+          },
           tabBarIcon: ({ focused, color, size }) => (
             <SvgXml
               xml={getHomeIconSvg(color)}
               width={45}
               height={35}
-              stroke={COLORS.primaryLight}
+              stroke={theme.primaryLight}
               strokeWidth={6}
-              fill={COLORS.white}
+              fill={theme.background}
             />
           ),
         }}
@@ -145,14 +153,20 @@ const TabsNavigator = () => {
         component={MarketsNavigator}
         options={{
           tabBarLabel: "Mercado",
+          tabBarLabelStyle: {
+            color: theme.text,
+            fontSize: 12,
+            fontFamily: "Uto-Medium",
+            marginBottom: 2,
+          },
           tabBarIcon: ({ focused, color, size }) => (
             <SvgXml
               xml={getMarketsIconSvg(color)}
               width={45}
               height={45}
-              stroke={COLORS.primaryLight}
+              stroke={theme.primaryLight}
               strokeWidth={6}
-              fill={COLORS.white}
+              fill={theme.background}
             />
           ),
         }}
@@ -163,14 +177,20 @@ const TabsNavigator = () => {
         component={ProfileNavigator}
         options={{
           tabBarLabel: "Wallet",
+          tabBarLabelStyle: {
+            color: theme.text,
+            fontSize: 12,
+            fontFamily: "Uto-Medium",
+            marginBottom: 2,
+          },
           tabBarIcon: ({ focused, color, size }) => (
             <SvgXml
               xml={getWalletIconSvg(color)}
               width={40}
               height={40}
-              stroke={COLORS.white}
+              stroke={theme.white}
               strokeWidth={4}
-              fill={COLORS.primaryLight}
+              fill={theme.primaryLight}
             />
           ),
           tabBarButton: (props) => <View {...props} enabled={true} />,
@@ -182,14 +202,20 @@ const TabsNavigator = () => {
         component={CardNavigator}
         options={{
           tabBarLabel: "Tarjeta",
+          tabBarLabelStyle: {
+            color: theme.text,
+            fontSize: 12,
+            fontFamily: "Uto-Medium",
+            marginBottom: 2,
+          },
           tabBarIcon: ({ focused, color }) => (
             <SvgXml
               xml={getCardIconSvg(color)}
               width={45}
               height={45}
-              stroke={COLORS.primaryLight}
+              stroke={theme.primaryLight}
               strokeWidth={6}
-              fill={COLORS.white}
+              fill={theme.background}
             />
           ),
         }}

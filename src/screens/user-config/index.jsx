@@ -13,8 +13,9 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { Header } from "../../components/index";
 
-import { styles } from "./styles";
+import { getStyles, styles } from "./styles";
 import { COLORS } from "../../constants";
+import { useTheme } from "../../context/ThemeContext";
 
 const options = [
   {
@@ -57,6 +58,8 @@ const UserConfig = ({ navigation, showBackButton }) => {
   const { firstName, lastName, verified, verificationMethods } = useSelector(
     (state) => state.auth
   );
+  const { theme } = useTheme();
+  const styles = getStyles(theme);
 
   const handleNavigation = (screen) => {
     navigation.navigate(screen);
@@ -90,6 +93,7 @@ const UserConfig = ({ navigation, showBackButton }) => {
       <Header
         navigation={navigation}
         showBackButton={showBackButton !== undefined ? showBackButton : true}
+        isUserConfig={true}
       />
       <View style={styles.sectionContainer}>
         <View style={styles.titleContainer}>

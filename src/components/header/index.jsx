@@ -1,13 +1,18 @@
 import React, { useEffect } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { styles } from "./styles";
+import { getStyles, styles } from "./styles";
 import { useSelector } from "react-redux";
-import { formatFiatValue } from "../../utils/prices";
 import BigNumber from "bignumber.js";
+import ThemeToggleButton from "../theme-toggle-button";
+import { useTheme } from "../../context/ThemeContext";
 
-const Header = ({ navigation, showBackButton, isHome }) => {
+const Header = ({ navigation, showBackButton, isHome, isUserConfig }) => {
   const { totalBalance } = useSelector((state) => state.assets);
+  const { verified } = useSelector((state) => state.auth);
+  const { theme } = useTheme();
+  const styles = getStyles(theme);
+
   const handleOnBackPress = () => {
     navigation.goBack();
   };
@@ -257,6 +262,7 @@ const Header = ({ navigation, showBackButton, isHome }) => {
 </svg>`;
 
   const handleNotificationPress = () => {};
+
   return (
     <View style={styles.headerContainer}>
       <View style={styles.leftContainer}>
@@ -270,9 +276,20 @@ const Header = ({ navigation, showBackButton, isHome }) => {
             />
           )}
         </TouchableOpacity>
-        <TouchableOpacity onPress={handleMenuPress}>
-          <Ionicons name="person" style={styles.userIcon} />
-        </TouchableOpacity>
+        {isUserConfig ? (
+          <TouchableOpacity style={{ marginLeft: 20 }}>
+            <ThemeToggleButton />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity onPress={handleMenuPress}>
+            <Ionicons name="person" style={styles.userIcon} />
+            {!verified && (
+              <View style={styles.alertIndicator}>
+                <Text style={styles.alertIndicatorText}>1</Text>
+              </View>
+            )}
+          </TouchableOpacity>
+        )}
       </View>
       <View style={styles.centerContainer}>
         {!isHome ? (

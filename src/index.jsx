@@ -5,6 +5,7 @@ import { init } from "./db";
 import { useFonts } from "expo-font";
 import { ActivityIndicator } from "react-native";
 import { COLORS } from "./constants";
+import { ThemeProvider } from "./context/ThemeContext";
 
 init()
   .then(() => {
@@ -37,7 +38,9 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <Navigator />
+      <ThemeProvider>
+        <Navigator />
+      </ThemeProvider>
     </Provider>
   );
 }

@@ -10,21 +10,24 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { Header } from "../../components";
 import Navbar from "../../components/navbar";
+import { getStyles } from "./styles";
 import { COLORS } from "../../constants";
 import {
   getAssetsLittleLineCharts,
   getStoredPrices,
   selectAsset,
 } from "../../store/actions";
-import { styles } from "./styles";
 import LittleLineChart from "../../components/little-line-chart";
 import webSocketService from "../../services/websocketService";
 import { calculatePriceVariation, formatFiatValue } from "../../utils/prices";
 import BigNumber from "bignumber.js";
+import { useTheme } from "../../context/ThemeContext";
 
 const Assets = ({ navigation }) => {
   const { assets, assetsLittleLineCharts, storedPrices, totalBalance } =
     useSelector((state) => state.assets);
+  const { theme } = useTheme();
+  const styles = getStyles(theme);
 
   const dispatch = useDispatch();
 
