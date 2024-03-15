@@ -21,7 +21,8 @@ import {
   verifySmsCode,
   verifySmsCodeOnWithdraw,
 } from "../../store/actions";
-import { styles } from "./styles";
+import { useTheme } from "../../context/ThemeContext";
+import { getStyles } from "./styles";
 
 export const Verification = ({ navigation, route }) => {
   const {
@@ -52,7 +53,8 @@ export const Verification = ({ navigation, route }) => {
   const [canResend, setCanResend] = useState(false);
   const inputsRef = useRef([]);
   const isCodeComplete = code.every((digit) => digit.trim() !== "");
-  const [requestResend, setRequestResend] = useState(false);
+  const { theme } = useTheme();
+  const styles = getStyles(theme);
 
   const handleInput = (text, index) => {
     const newCode = [...code];

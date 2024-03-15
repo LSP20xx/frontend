@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
-import { styles } from "./styles";
+import { getStyles, styles } from "./styles";
 import { Input } from "../../components";
 import { COLORS } from "../../constants";
 import {
@@ -21,6 +21,7 @@ import {
 } from "../../store/actions";
 import { UPDATE_FORM, onInputChange } from "../../utils/forms";
 import CountryPicker from "react-native-country-picker-modal";
+import { useTheme } from "../../context/ThemeContext";
 
 const initialState = {
   email: { value: "", error: "", touched: false, hasError: true },
@@ -72,6 +73,9 @@ const Auth = ({ navigation }) => {
   const [inputType, setInputType] = useState("unknown");
   const [countryCode, setCountryCode] = useState("AR");
   const [callingCode, setCallingCode] = useState("54");
+
+  const { theme } = useTheme();
+  const styles = getStyles(theme);
 
   const title = isLogin ? "Iniciar sesión" : "Registrarse";
   const buttonTitle = isLogin ? "Iniciar sesión" : "Registrarse";
