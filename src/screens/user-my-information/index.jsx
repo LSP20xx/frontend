@@ -12,6 +12,7 @@ import { getStyles } from "./styles";
 import { Header } from "../../components";
 import { useTheme } from "../../context/ThemeContext";
 import { useSelector } from "react-redux";
+import KYCVerification from "../../components/kyc-verification";
 
 const MyInformation = ({ navigation, showBackButton }) => {
   const { verified } = useSelector((state) => state.auth);
@@ -50,23 +51,7 @@ const MyInformation = ({ navigation, showBackButton }) => {
           </View>
         )}
         <ScrollView style={styles.listScrolLView}>
-          {options.map((item) => {
-            // const assetChartData = assetsLittleLineCharts.find(
-            //   (chartData) =>
-            //     chartData.assetName.toLowerCase() === item.name.toLowerCase()
-            // );
-
-            return (
-              <View key={item.id} style={styles.optionItem}>
-                <View style={styles.leftContainer}>
-                  <Text style={styles.textContainer}>
-                    <Text style={styles.cryptoName}>{item.name}</Text>
-                  </Text>
-                </View>
-                <View style={styles.rightContainer}>{item.rightComponent}</View>
-              </View>
-            );
-          })}
+          <KYCVerification />
         </ScrollView>
       </View>
     </SafeAreaView>

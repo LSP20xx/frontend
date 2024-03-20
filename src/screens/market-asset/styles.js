@@ -91,7 +91,7 @@ export const getStyles = (theme) =>
     fiatConvertedAmount: {
       fontSize: 36,
       fontWeight: "bold",
-      color: COLORS.white,
+      color: theme.text,
       textAlign: "center",
       marginVertical: 50,
     },
@@ -112,7 +112,7 @@ export const getStyles = (theme) =>
     cryptoAmount: {
       fontSize: 18,
       fontWeight: "bold",
-      color: COLORS.white,
+      color: theme.text,
       marginRight: 10,
     },
     fiatValue: {
@@ -124,7 +124,7 @@ export const getStyles = (theme) =>
       margin: 16,
       fontSize: 18,
       fontWeight: "light",
-      color: COLORS.white,
+      color: theme.text,
     },
     logo: {
       height: 40,
@@ -180,7 +180,7 @@ export const getStyles = (theme) =>
       alignItems: "center",
       ...Platform.select({
         ios: {
-          shadowColor: COLORS.black,
+          shadowColor: theme.text,
           shadowOffset: { width: 10, height: 10 },
           shadowOpacity: 0.5,
           shadowRadius: 5,
@@ -218,7 +218,7 @@ export const getStyles = (theme) =>
     },
     aboutTitle: {
       fontSize: 18,
-      color: COLORS.black,
+      color: theme.text,
       fontFamily: "Uto-Bold",
       marginLeft: 10,
       marginBottom: 6,
@@ -226,7 +226,7 @@ export const getStyles = (theme) =>
     },
     aboutText: {
       fontSize: 13,
-      color: COLORS.grey,
+      color: theme.text,
       marginLeft: 20,
       fontFamily: "Uto-Regular",
       lineHeight: 14,
@@ -263,13 +263,13 @@ export const getStyles = (theme) =>
     },
     text: {
       fontSize: 12,
-      color: COLORS.black,
+      color: theme.text,
       fontFamily: "Uto-ExtraBold",
       marginRight: 70,
     },
     value: {
       fontSize: 11,
-      color: COLORS.black,
+      color: theme.text,
       fontFamily: "Uto-Light",
     },
     scrollView: {
