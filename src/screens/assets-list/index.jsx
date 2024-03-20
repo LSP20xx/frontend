@@ -11,7 +11,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { Header } from "../../components/index";
 
-import { styles } from "./styles";
+import { getStyles, styles } from "./styles";
 import { COLORS } from "../../constants";
 import {
   calculatePriceVariation,
@@ -19,12 +19,15 @@ import {
   formatBalance,
 } from "../../utils/prices";
 import { selectAsset } from "../../store/actions";
+import { useTheme } from "../../context/ThemeContext";
 
 const AssetsList = ({ navigation, route, showBackButton }) => {
   const dispatch = useDispatch();
   const { assets, storedPrices, balances } = useSelector(
     (state) => state.assets
   );
+  const { theme } = useTheme();
+  const styles = getStyles(theme);
 
   const { mode } = route.params || { mode: "defaultMode" };
 

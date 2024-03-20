@@ -22,17 +22,7 @@ const MyInformation = ({ navigation, showBackButton }) => {
   const options = [
     {
       id: 1,
-      name: "Nombre completo",
-      rightComponent: null,
-    },
-    {
-      id: 2,
-      name: "Email",
-      rightComponent: null,
-    },
-    {
-      id: 3,
-      name: "Teléfono",
+      name: "Paso 1/4",
       rightComponent: null,
     },
   ];

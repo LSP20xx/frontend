@@ -239,7 +239,7 @@ export const getStyles = (theme) =>
       marginTop: 16,
       marginHorizontal: 16,
       fontSize: 16,
-      fontFamily: "Uto-Medium",
+      fontFamily: "Uto-Light",
       color: theme.text,
     },
     cryptoSymbol: {

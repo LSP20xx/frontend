@@ -2,9 +2,10 @@ import React, { useEffect } from "react";
 import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
 import { Header } from "../../components/index";
-import { styles } from "./styles";
+import { getStyles, styles } from "./styles";
 import BigLineChart from "../../components/big-line-chart";
 import { formatBalance, formatFiatValue } from "../../utils/prices";
+import { useTheme } from "../../context/ThemeContext";
 
 const MarketAsset = ({ navigation }) => {
   const { assets, selectedAsset, balances } = useSelector(
@@ -24,6 +25,8 @@ const MarketAsset = ({ navigation }) => {
   useEffect(() => {
     console.log("blockchains ***************", blockchains);
   }, [blockchains]);
+  const { theme } = useTheme();
+  const styles = getStyles(theme);
   return (
     <SafeAreaView style={styles.container}>
       <Header navigation={navigation} showBackButton={true} />
