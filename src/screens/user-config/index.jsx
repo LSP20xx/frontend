@@ -13,57 +13,75 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { Header } from "../../components/index";
 
-import { getStyles, styles } from "./styles";
+import { getStyles } from "./styles";
 import { COLORS } from "../../constants";
 import { useTheme } from "../../context/ThemeContext";
 
-const options = [
-  {
-    id: 1,
-    name: "Mi información",
-    disabled: false,
-    screen: "UserMyInformation",
-  },
-  {
-    id: 2,
-    name: "Seguridad",
-    disabled: false,
-    screen: "UserSecurity",
-  },
-  {
-    id: 3,
-    name: "Notificaciones",
-    disabled: false,
-    screen: "UserNotifications",
-  },
-  {
-    id: 4,
-    name: "Moneda local",
-    disabled: false,
-    screen: "UserLocalCurrency",
-  },
-  {
-    id: 5,
-    name: "Idioma",
-    disabled: false,
-    screen: "UserLanguage",
-  },
-];
-
 const UserConfig = ({ navigation, showBackButton }) => {
-  const dispatch = useDispatch();
-  const { assets, storedPrices, balances } = useSelector(
-    (state) => state.assets
-  );
   const { firstName, lastName, verified, verificationMethods } = useSelector(
     (state) => state.auth
   );
+  const { user } = useSelector((state) => state.user);
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
   const handleNavigation = (screen) => {
     navigation.navigate(screen);
   };
+
+  const options = [
+    {
+      id: 1,
+      name: "Mi información",
+      disabled: false,
+      screen: "UserMyInformation",
+      rightComponent: (
+        <TouchableOpacity
+          onPress={() => navigation.navigate("UserMyInformation")}
+        >
+          <Text style={styles.verifyButton}>Verificar</Text>
+        </TouchableOpacity>
+      ),
+    },
+    {
+      id: 2,
+      name: "Seguridad",
+      disabled: false,
+      screen: "UserSecurity",
+      rightComponent: null,
+    },
+    {
+      id: 3,
+      name: "Notificaciones",
+      disabled: false,
+      screen: "UserNotifications",
+      rightComponent: null,
+    },
+    {
+      id: 4,
+      name: "Moneda local",
+      disabled: false,
+      screen: "UserLocalCurrency",
+      rightComponent: (
+        <TouchableOpacity
+          onPress={() => navigation.navigate("UserLocalCurrency")}
+        >
+          <Text style={styles.localCurrency}>{user.localCurrency}</Text>
+        </TouchableOpacity>
+      ),
+    },
+    {
+      id: 5,
+      name: "Idioma",
+      disabled: false,
+      screen: "UserLanguage",
+      rightComponent: (
+        <TouchableOpacity onPress={() => navigation.navigate("UserLanguage")}>
+          <Text style={styles.language}>{user.language}</Text>
+        </TouchableOpacity>
+      ),
+    },
+  ];
 
   useEffect(() => {
     checkVerificationStatus();
@@ -107,7 +125,7 @@ const UserConfig = ({ navigation, showBackButton }) => {
         </View>
         <View style={styles.subtitleContainer}>
           {verified ? (
-            <View style={styles.subtitleContainer}>
+            <>
               <Text style={styles.sectionSubtitle}>Usuario verificado</Text>
               <Ionicons
                 name="shield-checkmark"
@@ -115,9 +133,9 @@ const UserConfig = ({ navigation, showBackButton }) => {
                 color={COLORS.green}
                 style={styles.verifiedIcon}
               />
-            </View>
+            </>
           ) : (
-            <View style={styles.subtitleContainer}>
+            <>
               <Text style={styles.sectionSubtitle}>Usuario no verificado</Text>
               <Ionicons
                 name="close-circle"
@@ -125,7 +143,7 @@ const UserConfig = ({ navigation, showBackButton }) => {
                 color={COLORS.error}
                 style={styles.unverifiedIcon}
               />
-            </View>
+            </>
           )}
         </View>
         <ScrollView style={styles.listScrolLView}>
@@ -136,20 +154,19 @@ const UserConfig = ({ navigation, showBackButton }) => {
             // );
 
             return (
-              <TouchableOpacity
-                key={item.id}
-                style={styles.optionItem}
-                onPress={() => handleNavigation(item.screen)}
-                disabled={item.disabled}
-              >
+              <View key={item.id} style={styles.optionItem}>
                 <View style={styles.leftContainer}>
-                  <View style={styles.textContainer}>
+                  <TouchableOpacity
+                    style={styles.textContainer}
+                    onPress={() => handleNavigation(item.screen)}
+                    disabled={item.disabled}
+                  >
                     <Text style={styles.cryptoName}>{item.name}</Text>
-                  </View>
+                  </TouchableOpacity>
                 </View>
 
-                <View style={styles.rightContainer}></View>
-              </TouchableOpacity>
+                <View style={styles.rightContainer}>{item.rightComponent}</View>
+              </View>
             );
           })}
         </ScrollView>

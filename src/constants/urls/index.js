@@ -1,9 +1,9 @@
-export const REALTIME_DB_URL = "";
 export const API_KEY = "";
 export const AUTH_SIGN_IN_URL = `http://192.168.0.92:8000/api/auth/sign-in`;
 export const AUTH_SIGN_UP_URL = `http://192.168.0.92:8000/api/auth/sign-up`;
 export const AUTH_CHECK_DATA = `http://192.168.0.92:8000/api/auth/check-auth-data`;
 export const AUTH_CHECK_PASSWORD_URL = `http://192.168.0.92:8000/api/auth/check-password`;
+export const USER_INFO_URL = "http://192.168.0.92:8000/api/users/user-info";
 export const SEND_SMS_URL = `http://192.168.0.92:8000/api/verification/send-sms-code`;
 export const SEND_EMAIL_URL = `http://192.168.0.92:8000/api/verification/send-email-code`;
 export const VERIFY_SMS_URL = `http://192.168.0.92:8000/api/verification/verify-sms-code`;

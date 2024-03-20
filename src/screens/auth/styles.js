@@ -34,15 +34,17 @@ export const getStyles = (theme) =>
     linkText: {
       fontFamily: "Uto-Regular",
       fontSize: 14,
+      color: theme.text,
     },
     linkTextBold: {
       fontFamily: "Uto-Bold",
       fontSize: 14,
+      color: theme.text,
     },
     linkForgetPassword: {
       fontFamily: "Uto-Bold",
       fontSize: 14,
-      color: COLORS.secondary,
+      color: theme.text,
       justifyContent: "center",
       alignItems: "flex-end",
       marginBottom: 16,

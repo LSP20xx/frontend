@@ -236,7 +236,6 @@ export const getStyles = (theme) =>
       marginRight: 4,
     },
     cryptoName: {
-      marginTop: 16,
       marginHorizontal: 16,
       fontSize: 16,
       fontFamily: "Uto-Medium",
@@ -277,5 +276,27 @@ export const getStyles = (theme) =>
     },
     unverifiedIcon: {
       marginLeft: 8,
+    },
+    verifyButton: {
+      color: COLORS.error,
+      fontFamily: "Uto-Medium",
+      borderColor: COLORS.error,
+      borderRadius: 8,
+      borderWidth: 1,
+      paddingTop: 4,
+      paddingBottom: 2,
+      paddingHorizontal: 6,
+    },
+    localCurrency: {
+      fontSize: 14,
+      fontFamily: "Uto-Light",
+      color: theme.text,
+      marginBottom: 8,
+    },
+    language: {
+      fontSize: 14,
+      fontFamily: "Uto-Light",
+      color: theme.text,
+      marginBottom: 8,
     },
   });

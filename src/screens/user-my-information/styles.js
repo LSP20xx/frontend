@@ -35,14 +35,14 @@ export const getStyles = (theme) =>
     titleStyle: {
       fontSize: 24,
       fontFamily: "Uto-Medium",
-      color: COLORS.black,
+      color: theme.text,
       textAlign: "left",
       marginHorizontal: 8,
       marginVertical: 16,
     },
     sectionSubtitle: {
       fontSize: 16,
-      color: COLORS.black,
+      color: theme.text,
       fontFamily: "Uto-Regular",
       textAlign: "left",
       paddingTop: 10,
@@ -82,7 +82,7 @@ export const getStyles = (theme) =>
       borderRadius: 16,
       ...Platform.select({
         ios: {
-          shadowColor: COLORS.black,
+          shadowColor: theme.text,
           shadowOffset: { width: 10, height: 10 },
           shadowOpacity: 0.5,
           shadowRadius: 5,
@@ -94,7 +94,7 @@ export const getStyles = (theme) =>
     },
     sectionContainer: {
       width: "98%",
-      backgroundColor: COLORS.white,
+      backgroundColor: theme.background,
       flex: 1,
       marginTop: 16,
     },
@@ -116,7 +116,7 @@ export const getStyles = (theme) =>
     },
     sectionTitle: {
       fontSize: 20,
-      color: COLORS.black,
+      color: theme.text,
       fontFamily: "Uto-Bold",
       textAlign: "left",
       marginTop: 20,
@@ -169,7 +169,7 @@ export const getStyles = (theme) =>
     fiatSymbol: {
       fontSize: 60,
       fontFamily: "Uto-Light",
-      color: COLORS.black,
+      color: theme.text,
       textAlign: "center",
       bottom: 10,
     },
@@ -184,7 +184,7 @@ export const getStyles = (theme) =>
     fiatConvertedAmount: {
       fontSize: 52,
       fontFamily: "Uto-Medium",
-      color: COLORS.black,
+      color: theme.text,
       textAlign: "center",
       marginTop: 0,
       paddingBottom: 10,
@@ -214,14 +214,14 @@ export const getStyles = (theme) =>
     priceFiatAmount: {
       fontSize: 16,
       fontFamily: "Uto-Light",
-      color: COLORS.black,
+      color: theme.text,
       marginRight: 1,
       marginTop: 10,
     },
     amount: {
       fontSize: 16,
       fontFamily: "Uto-Light",
-      color: COLORS.black,
+      color: theme.text,
       marginVertical: 0,
     },
     fiatValue: {
@@ -232,7 +232,7 @@ export const getStyles = (theme) =>
     amountStyle: {
       fontSize: 24,
       fontFamily: "Uto-Light",
-      color: COLORS.black,
+      color: theme.text,
       marginRight: 4,
     },
     cryptoName: {
@@ -240,7 +240,7 @@ export const getStyles = (theme) =>
       marginHorizontal: 16,
       fontSize: 16,
       fontFamily: "Uto-Medium",
-      color: COLORS.black,
+      color: theme.text,
     },
     cryptoSymbol: {
       marginTop: 2,

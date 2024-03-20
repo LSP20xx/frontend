@@ -1,14 +1,6 @@
 import { userTypes } from "../types/user.types";
-const {
-  GET_USER,
-  ADD_USER,
-  SET_USER_IMAGE,
-  SEND_EMAIL,
-  SEND_SMS,
-  VERIFY_SMS_CODE,
-  VERIFY_SMS_CODE_SUCCESS,
-  VERIFY_SMS_CODE_FAILURE,
-} = userTypes;
+const { GET_USER_INFO_BY_ID, ADD_USER, SET_USER_IMAGE, SEND_EMAIL, SEND_SMS } =
+  userTypes;
 
 const initialState = {
   user: null,
@@ -19,7 +11,7 @@ const initialState = {
 
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
-    case GET_USER:
+    case GET_USER_INFO_BY_ID:
       return {
         ...state,
         user: action.item,

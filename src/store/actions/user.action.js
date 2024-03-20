@@ -1,14 +1,15 @@
-import { REALTIME_DB_URL, SEND_EMAIL_URL, SEND_SMS_URL } from "../../constants";
+import { USER_INFO_URL, SEND_EMAIL_URL, SEND_SMS_URL } from "../../constants";
 import { userTypes } from "../types/user.types";
-const { GET_USER, ADD_USER, SET_USER_IMAGE, SEND_EMAIL, SEND_SMS } = userTypes;
+const { GET_USER_INFO_BY_ID, ADD_USER, SET_USER_IMAGE, SEND_EMAIL, SEND_SMS } =
+  userTypes;
 
-export const getUser = (userId) => {
+export const getUserInfoById = (userId) => {
   return async (dispatch) => {
     try {
-      const response = await fetch(`${REALTIME_DB_URL}/users/${userId}.json`);
+      const response = await fetch(`${USER_INFO_URL}/${userId}`);
       const result = await response.json();
       dispatch({
-        type: GET_USER,
+        type: GET_USER_INFO_BY_ID,
         item: result,
       });
     } catch (error) {

@@ -5,11 +5,11 @@ import { useEffect, useState } from "react";
 import webSocketService from "../services/websocketService";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { fetchBlockchains } from "../store/actions";
-import { AppState } from "react-native";
+import { fetchBlockchains, getUserInfoById } from "../store/actions";
 
 const Navigation = () => {
   const { userId } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   // const useIntervalEffect = (callback, delay) => {
@@ -70,8 +70,15 @@ const Navigation = () => {
   useEffect(() => {
     if (userId) {
       webSocketService.subscribeToBalanceUpdate(userId);
+      dispatch(getUserInfoById(userId));
     }
   }, [userId]);
+
+  useEffect(() => {
+    if (user) {
+      console.log("user: ", user);
+    }
+  }, [user]);
 
   // useEffect(() => {
   //   webSocketService.connect(dispatch);
@@ -133,7 +140,6 @@ const Navigation = () => {
   // }, [userId]);
 
   useEffect(() => {
-    console.log("userId: ", userId);
     if (userId) {
       fetchBlockchains()(dispatch);
 

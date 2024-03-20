@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "billete",
+    "name": "Billete",
     "slug": "billete",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -27,7 +27,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "f53b87e4-9af5-4fd6-9320-14782198ef11"
+        "projectId": "98ae8962-0eb7-492a-9dcd-444a1abf0979"
       }
     }
   }

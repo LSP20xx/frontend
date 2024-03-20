@@ -1,4 +1,4 @@
-// src/services/websocketService.js
+// Importaciones necesarias
 import io from "socket.io-client";
 import { processKrakenData } from "../workers/kraken";
 import { updateAssetsPrices, updateBalances } from "../store/actions";
@@ -26,26 +26,48 @@ class WebSocketService {
     this.dispatch = dispatch;
     console.log("Attempting to connect to WebSocket");
     if (!this.socket) {
-      this.socket = io(socketUrl);
-      this.socket.on("kraken-data", (data) => {
-        if (this.processIncomingData(data)) {
-          const processedData = processKrakenData(data);
-          if (processedData) {
-            this.dispatch(updateAssetsPrices(processedData));
-          }
-        }
+      this.socket = io(socketUrl, {
+        reconnectionAttempts: 5,
+        reconnectionDelay: 2000,
       });
-      this.socket.on("balance-update", (balances) => {
-        if (this.processIncomingData(balances)) {
-          this.dispatch(updateBalances(balances));
-        }
-      });
+
+      if (this.socket) {
+        this.setupListeners();
+      } else {
+        console.error("Failed to initialize socket connection.");
+      }
     }
+  }
+
+  setupListeners() {
+    this.socket.on("connect", () => {
+      console.log("WebSocket Connected");
+    });
+
+    this.socket.on("disconnect", () => {
+      console.log("WebSocket Disconnected. Attempting to reconnect...");
+    });
+
+    this.socket.on("kraken-data", (data) => {
+      if (this.processIncomingData(data)) {
+        const processedData = processKrakenData(data);
+        if (processedData) {
+          this.dispatch(updateAssetsPrices(processedData));
+        }
+      }
+    });
+
+    this.socket.on("balance-update", (balances) => {
+      if (this.processIncomingData(balances)) {
+        this.dispatch(updateBalances(balances));
+      }
+    });
   }
 
   subscribeToBalanceUpdate(userId) {
     this.userId = userId;
     if (this.socket && this.userId) {
+      console.log("Subscribing to balance updates for userId:", this.userId);
       this.socket.emit("subscribeToBalanceUpdate", { userId: this.userId });
       this.requestBalanceUpdate();
     }
@@ -60,6 +82,7 @@ class WebSocketService {
 
   disconnect() {
     if (this.socket) {
+      console.log("Disconnecting from WebSocket");
       this.socket.disconnect();
       this.socket = null;
     }
