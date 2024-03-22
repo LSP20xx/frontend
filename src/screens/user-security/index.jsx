@@ -13,6 +13,7 @@ const Security = ({ navigation, showBackButton }) => {
       <Header
         navigation={navigation}
         showBackButton={showBackButton !== undefined ? showBackButton : true}
+        isUserConfig={true}
       />
       <View style={styles.sectionContainer}>
         <View style={styles.titleContainer}>

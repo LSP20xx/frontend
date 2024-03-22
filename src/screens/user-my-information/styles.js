@@ -43,7 +43,7 @@ export const getStyles = (theme) =>
     sectionSubtitle: {
       fontSize: 16,
       color: theme.text,
-      fontFamily: "Uto-Regular",
+      fontFamily: "Uto-Light",
       textAlign: "left",
       paddingTop: 10,
       marginLeft: 8,
@@ -54,8 +54,7 @@ export const getStyles = (theme) =>
     },
     listScrolLView: {
       flex: 1,
-      marginRight: 10,
-      marginLeft: 32,
+      marginHorizontal: 8,
     },
     scrollIndicator: {
       position: "absolute",

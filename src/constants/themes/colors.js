@@ -49,6 +49,7 @@ export const LightTheme = {
   white: "#f8f8f8",
   black: "#080808",
   disabled: "#E5A3A3",
+  disabledText: "rgba(0, 0, 0, 0.5)",
   correct: "#0A861E",
   error: "#EE4141",
   text: "#050505",
@@ -57,7 +58,9 @@ export const LightTheme = {
   green: "#0A8956",
   red: "#FF0000",
   input: "#f2f2f2",
+  placeholder: "#606060",
   shadow: "#000000",
+  modal: "#ECECEC",
 };
 
 export const DarkTheme = {
@@ -81,6 +84,7 @@ export const DarkTheme = {
   white: "#E1E1E1",
   black: "#000000",
   disabled: "#555555",
+  disabledText: "rgba(255, 255, 255, 0.5)",
   correct: "#0A861E",
   error: "#EE4141",
   text: "#F8F8F8",
@@ -89,5 +93,7 @@ export const DarkTheme = {
   green: "#0A8956",
   red: "#FF0000",
   input: "#333333",
+  placeholder: "#B3B3B3",
   shadow: "#ffffff",
+  modal: "#202020",
 };

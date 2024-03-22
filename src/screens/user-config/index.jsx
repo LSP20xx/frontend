@@ -33,12 +33,10 @@ const UserConfig = ({ navigation, showBackButton }) => {
     {
       id: 1,
       name: "Mi información",
-      disabled: false,
+      disabled: verified ? false : true,
       screen: "UserMyInformation",
       rightComponent: (
-        <TouchableOpacity
-          onPress={() => navigation.navigate("UserMyInformation")}
-        >
+        <TouchableOpacity onPress={() => {}}>
           <Text style={styles.verifyButton}>Verificar</Text>
         </TouchableOpacity>
       ),
@@ -83,28 +81,28 @@ const UserConfig = ({ navigation, showBackButton }) => {
     },
   ];
 
-  useEffect(() => {
-    checkVerificationStatus();
-  }, []);
+  // useEffect(() => {
+  //   checkVerificationStatus();
+  // }, []);
 
-  const checkVerificationStatus = () => {
-    if (!verified) {
-      Alert.alert(
-        "Verificación KYC necesaria",
-        'Por favor, completa la verificación en "Mi información".',
-        [
-          {
-            text: "Ir a verificar",
-            onPress: () => navigation.navigate("UserMyInformation"),
-          },
-          {
-            text: "Cancelar",
-            style: "cancel",
-          },
-        ]
-      );
-    }
-  };
+  // const checkVerificationStatus = () => {
+  //   if (!verified) {
+  //     Alert.alert(
+  //       "Verificación KYC necesaria",
+  //       'Por favor, completa la verificación en "Mi información".',
+  //       [
+  //         {
+  //           text: "Ir a verificar",
+  //           onPress: () => navigation.navigate("UserMyInformation"),
+  //         },
+  //         {
+  //           text: "Cancelar",
+  //           style: "cancel",
+  //         },
+  //       ]
+  //     );
+  //   }
+  // };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -120,7 +118,7 @@ const UserConfig = ({ navigation, showBackButton }) => {
               {firstName} {lastName}
             </Text>
           ) : (
-            <Text style={styles.sectionTitle}>Verificación KYC pendiente</Text>
+            <Text style={styles.sectionTitle}>Usuario no verificado</Text>
           )}
         </View>
         <View style={styles.subtitleContainer}>
@@ -136,7 +134,9 @@ const UserConfig = ({ navigation, showBackButton }) => {
             </>
           ) : (
             <>
-              <Text style={styles.sectionSubtitle}>Usuario no verificado</Text>
+              <Text style={styles.sectionSubtitle}>
+                Verificación KYC pendiente
+              </Text>
               <Ionicons
                 name="close-circle"
                 size={32}
@@ -161,7 +161,15 @@ const UserConfig = ({ navigation, showBackButton }) => {
                     onPress={() => handleNavigation(item.screen)}
                     disabled={item.disabled}
                   >
-                    <Text style={styles.cryptoName}>{item.name}</Text>
+                    <Text
+                      style={
+                        item.disabled
+                          ? [styles.optionText, { color: theme.disabledText }]
+                          : styles.optionText
+                      }
+                    >
+                      {item.name}
+                    </Text>
                   </TouchableOpacity>
                 </View>
 

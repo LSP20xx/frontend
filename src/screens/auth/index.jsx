@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Image,
+  StyleSheet,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -73,6 +74,7 @@ const Auth = ({ navigation }) => {
   const [inputType, setInputType] = useState("unknown");
   const [countryCode, setCountryCode] = useState("AR");
   const [callingCode, setCallingCode] = useState("54");
+  const [isLogoVisible, setIsLogoVisible] = useState(true);
 
   const { theme } = useTheme();
   const styles = getStyles(theme);
@@ -148,99 +150,129 @@ const Auth = ({ navigation }) => {
     }
   }, [token, navigation]);
 
+  const overlayStyle = {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    zIndex: 100,
+  };
+
   return (
-    <View style={styles.container}>
-      <View style={styles.centerContainer}>
-        <Image
-          source={require("../../../assets/icons/billete-logo.png")}
-          style={styles.categoryImage}
-          resizeMode="stretch"
-        />
-        <Text style={styles.logo}>Billete</Text>
-      </View>
-      <View style={styles.content}>
-        <Text style={styles.title}>{title}</Text>
-        <Input
-          placeholder="Email/Número de teléfono"
-          placeholderTextColor={COLORS.darkGray}
-          autoCapitalize="none"
-          autoCorrect={false}
-          onChangeText={(text) =>
-            onHandlerInputChange({ value: text, name: "email" })
-          }
-          onFocus={onEmailInputFocus}
-          value={formState.email.value}
-          error={formState.email.error}
-          touched={formState.email.touched}
-          hasError={formState.email.hasError}
-          leftIcon={
-            inputType === "phoneNumber" && (
-              <CountryPicker
-                withFilter
-                withFlag
-                withCallingCode
-                withCallingCodeButton
-                withEmoji
-                countryCode={countryCode}
-                onSelect={onSelectCountry}
-              />
-            )
-          }
-        />
-        <Input
-          placeholder="Contraseña"
-          placeholderTextColor={COLORS.darkGray}
-          secureTextEntry
-          autoCapitalize="none"
-          autoCorrect={false}
-          onChangeText={(text) =>
-            onHandlerInputChange({ value: text, name: "password" })
-          }
-          value={formState.password.value}
-          error={formState.password.error}
-          touched={formState.password.touched}
-          hasError={formState.password.hasError}
-        />
-        <View style={styles.linkForgetPassword}>
-          <TouchableOpacity
-            style={styles.link}
-            onPress={onHandleForgetPassword}
-          >
-            <Text style={styles.linkText}>¿Olvidaste tu contraseña?</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.submitContainer}>
-          <TouchableOpacity
-            disabled={!formState.isFormValid}
-            onPress={onHandleAuth}
-            style={[styles.button]}
-          >
-            <Text style={styles.buttonText}>{buttonTitle}</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      <View style={styles.linkContainer}>
-        <TouchableOpacity style={styles.link} onPress={onHandleChangeAuth}>
-          <Text style={styles.linkTextBold}>{messageText}</Text>
-        </TouchableOpacity>
-      </View>
-      <Modal visible={hasError || isLoading} transparent animationType="fade">
-        <View style={styles.containerStyle}>
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>{error ? error : "Cargando"}</Text>
-            {error ? (
-              <Button
-                title="OK"
-                color={COLORS.primary}
-                onPress={onHandleButtonModal}
-              />
-            ) : (
-              <ActivityIndicator size="small" color={COLORS.primary} />
-            )}
+    <>
+      {isLoading && <View style={overlayStyle} />}
+      <View style={styles.container}>
+        {isLogoVisible && (
+          <View style={styles.centerContainer}>
+            <Image
+              source={require("../../../assets/icons/billete-logo.png")}
+              style={styles.categoryImage}
+              resizeMode="stretch"
+            />
+            <Text style={styles.logo}>Billete</Text>
+          </View>
+        )}
+        <View style={styles.content}>
+          <Text style={styles.title}>{title}</Text>
+          <Input
+            placeholder="Email/Número de teléfono"
+            placeholderTextColor={COLORS.darkGray}
+            autoCapitalize="none"
+            autoCorrect={false}
+            onChangeText={(text) =>
+              onHandlerInputChange({ value: text, name: "email" })
+            }
+            onFocus={onEmailInputFocus}
+            value={formState.email.value}
+            error={formState.email.error}
+            touched={formState.email.touched}
+            hasError={formState.email.hasError}
+            leftIcon={
+              inputType === "phoneNumber" && (
+                <CountryPicker
+                  withFilter
+                  withFlag
+                  withCallingCode
+                  withCallingCodeButton
+                  withEmoji
+                  countryCode={countryCode}
+                  onSelect={onSelectCountry}
+                  onClose={() => {
+                    setIsLogoVisible(true);
+                  }}
+                  onOpen={() => {
+                    setIsLogoVisible(false);
+                  }}
+                  containerButtonStyle={{
+                    paddingTop: 0,
+                  }}
+                  theme={{
+                    fontFamily: "Uto-Light",
+                    backgroundColor: theme.background,
+                    filterPlaceholderTextColor: theme.placeholder,
+                    primaryColorVariant: theme.text,
+                    onBackgroundTextColor: theme.text,
+                  }}
+                />
+              )
+            }
+          />
+          <Input
+            placeholder="Contraseña"
+            placeholderTextColor={COLORS.darkGray}
+            secureTextEntry
+            autoCapitalize="none"
+            autoCorrect={false}
+            onChangeText={(text) =>
+              onHandlerInputChange({ value: text, name: "password" })
+            }
+            value={formState.password.value}
+            error={formState.password.error}
+            touched={formState.password.touched}
+            hasError={formState.password.hasError}
+          />
+          <View style={styles.linkForgetPassword}>
+            <TouchableOpacity
+              style={styles.link}
+              onPress={onHandleForgetPassword}
+            >
+              <Text style={styles.linkText}>¿Olvidaste tu contraseña?</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.submitContainer}>
+            <TouchableOpacity
+              disabled={!formState.isFormValid}
+              onPress={onHandleAuth}
+              style={[styles.button]}
+            >
+              <Text style={styles.buttonText}>{buttonTitle}</Text>
+            </TouchableOpacity>
           </View>
         </View>
-      </Modal>
-    </View>
+        <View style={styles.linkContainer}>
+          <TouchableOpacity style={styles.link} onPress={onHandleChangeAuth}>
+            <Text style={styles.linkTextBold}>{messageText}</Text>
+          </TouchableOpacity>
+        </View>
+        <Modal visible={hasError || isLoading} transparent animationType="fade">
+          <View style={styles.containerStyle}>
+            <View style={styles.modalContainer}>
+              <Text style={styles.modalTitle}>
+                {error ? error : "Cargando"}
+              </Text>
+              {error ? (
+                <TouchableOpacity
+                  onPress={onHandleButtonModal}
+                  style={[styles.modalButton]}
+                >
+                  <Text style={styles.buttonText}>Ok</Text>
+                </TouchableOpacity>
+              ) : (
+                <ActivityIndicator size="small" color={COLORS.primary} />
+              )}
+            </View>
+          </View>
+        </Modal>
+      </View>
+    </>
   );
 };
 

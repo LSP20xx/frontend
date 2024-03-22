@@ -30,7 +30,7 @@ export const getStyles = (theme) =>
       borderRadius: 50,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: COLORS.disabled,
+      backgroundColor: theme.disabledText,
       marginBottom: 5,
       marginHorizontal: 17,
     },

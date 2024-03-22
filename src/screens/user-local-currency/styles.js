@@ -6,7 +6,7 @@ export const getStyles = (theme) =>
   StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: COLORS.white,
+      backgroundColor: theme.background,
       paddingTop: 20,
       alignItems: "center",
       position: "relative",
@@ -94,7 +94,7 @@ export const getStyles = (theme) =>
     },
     sectionContainer: {
       width: "98%",
-      backgroundColor: COLORS.white,
+      backgroundColor: theme.background,
       flex: 1,
       marginTop: 16,
     },
@@ -116,7 +116,7 @@ export const getStyles = (theme) =>
     },
     sectionTitle: {
       fontSize: 20,
-      color: COLORS.black,
+      color: theme.text,
       fontFamily: "Uto-Bold",
       textAlign: "left",
       marginTop: 20,

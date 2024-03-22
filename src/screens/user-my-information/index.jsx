@@ -37,22 +37,20 @@ const MyInformation = ({ navigation, showBackButton }) => {
       <Header
         navigation={navigation}
         showBackButton={showBackButton !== undefined ? showBackButton : true}
+        isUserConfig={true}
       />
       <View style={styles.sectionContainer}>
         <View style={styles.titleContainer}>
           <Text style={styles.sectionTitle}>Mi información</Text>
         </View>
-        {!verified && (
+        {/* {!verified && (
           <View style={styles.subtitleContainer}>
             <Text style={styles.sectionSubtitle}>
-              Realiza la verificación KYC para acceder a todas las funciones.
+              Paso 1/4: Información personal
             </Text>
-            <Button title="Verificar ahora" onPress={handleVerify} />
           </View>
         )}
-        <ScrollView style={styles.listScrolLView}>
-          <KYCVerification />
-        </ScrollView>
+        <KYCVerification /> */}
       </View>
     </SafeAreaView>
   );

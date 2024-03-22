@@ -3,7 +3,7 @@ import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
 // import { RNCamera } from "react-native-camera";
 
-const IDVerificationCamera = ({ onCapture }) => {
+const KYCStep2 = ({ onCapture }) => {
   const [camera, setCamera] = useState(null);
 
   const { theme } = useTheme();
@@ -67,4 +67,4 @@ const getStyles = (theme) =>
     },
   });
 
-export default IDVerificationCamera;
+export default KYCStep2;

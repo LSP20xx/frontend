@@ -64,13 +64,13 @@ export const getStyles = (theme) =>
       alignItems: "center",
       padding: 20,
       borderRadius: 10,
-      borderWidth: 1,
-      borderColor: COLORS.secondary,
-      backgroundColor: theme.background,
+      backgroundColor: theme.modal,
     },
     modalTitle: {
       fontSize: 14,
       textAlign: "center",
+      color: theme.text,
+      fontFamily: "Uto-Medium",
     },
     inputField: {
       fontSize: 14,
@@ -83,6 +83,13 @@ export const getStyles = (theme) =>
       backgroundColor: COLORS.primaryMedium,
       paddingVertical: 15,
       paddingHorizontal: 20,
+      borderRadius: 8,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    modalButton: {
+      backgroundColor: COLORS.primaryMedium,
+      paddingVertical: 10,
       borderRadius: 8,
       alignItems: "center",
       justifyContent: "center",
@@ -137,7 +144,7 @@ export const getStyles = (theme) =>
     verificationTitle: {
       fontFamily: "Uto-Light",
       fontSize: 14,
-      color: COLORS.grey,
+      color: theme.text,
       marginBottom: 10,
     },
     timerText: {

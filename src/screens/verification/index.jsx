@@ -7,6 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  StyleSheet,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -216,103 +217,115 @@ export const Verification = ({ navigation, route }) => {
     console.log("isLogin: ", isLogin);
   }, [tempId, isLogin]);
 
+  const overlayStyle = {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    zIndex: 100,
+  };
+
   return (
-    <View style={styles.container}>
-      {canResend ? (
-        <TouchableOpacity onPress={resendCode} style={styles.resendButton}>
-          <Text style={styles.resendButtonText}>Reenviar código</Text>
-        </TouchableOpacity>
-      ) : (
-        <Text style={styles.timerText}>
-          Puede reenviarlo en: {timer} {timer === 1 ? "segundo" : "segundos"}
-        </Text>
-      )}
-      <View style={styles.headerContainer}>
-        <TouchableOpacity
-          onPress={onHandleOnBackPress}
-          style={styles.backButton}
-        >
-          <Ionicons name="arrow-back-outline" style={styles.backIcon} />
-        </TouchableOpacity>
-        <Text style={styles.title}>{title}</Text>
-      </View>
-      <View style={styles.content}>
-        <Text style={styles.verificationTitle}>{verificationMessage}</Text>
-        <View style={styles.inputContainer}>
-          {code.map((digit, index) => (
-            <TextInput
-              key={index}
-              style={styles.codeInput}
-              maxLength={1}
-              keyboardType="number-pad"
-              onChangeText={(text) => handleInput(text, index)}
-              onKeyPress={(e) => handleKeyPress(e, index)}
-              value={digit}
-              ref={(el) => (inputsRef.current[index] = el)}
-            />
-          ))}
-        </View>
-
-        <View style={styles.linkForgetPassword}>
-          <TouchableOpacity
-            style={styles.link}
-            onPress={onHandleForgetPassword}
-          >
-            <Text style={styles.linkText}>
-              ¿Método de verificación no disponible?
-            </Text>
+    <>
+      {isLoading && <View style={overlayStyle} />}
+      <View style={styles.container}>
+        {canResend ? (
+          <TouchableOpacity onPress={resendCode} style={styles.resendButton}>
+            <Text style={styles.resendButtonText}>Reenviar código</Text>
           </TouchableOpacity>
-        </View>
-        <View style={styles.submitContainer}>
-          <TouchableOpacity
-            disabled={!isCodeComplete}
-            onPress={onHandleVerification}
-            style={[styles.button]}
-          >
-            <Text style={styles.buttonText}>{buttonTitle}</Text>
-          </TouchableOpacity>
-        </View>
-        {verificationType === "send" && (
-          <View style={styles.withdrawContainer}>
-            <Text style={styles.withdrawTitle}>
-              Envío de {amount} {coin}
-            </Text>
-            <Text style={styles.withdrawSubtitle}>
-              Dirección de destino
-              <View style={styles.separator}></View>
-            </Text>
-
-            <Text style={styles.withdrawDetails}>{toAddress}</Text>
-
-            <Text style={styles.withdrawSubtitle}>
-              Red
-              <View style={styles.separator}></View>
-            </Text>
-            <Text style={styles.withdrawDetails}>{selectedBlockchain}</Text>
-          </View>
+        ) : (
+          <Text style={styles.timerText}>
+            Puede reenviarlo en: {timer} {timer === 1 ? "segundo" : "segundos"}
+          </Text>
         )}
-      </View>
-      <View style={styles.linkContainer}>
-        <TouchableOpacity style={styles.link} onPress={onHandleChangeAuth}>
-          <Text style={styles.linkTextBold}>{messageText}</Text>
-        </TouchableOpacity>
-      </View>
-      <Modal visible={hasError} transparent animationType="fade">
-        <View style={styles.containerStyle}>
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>{error ? error : "Cargando"}</Text>
-            {error ? (
-              <Button
-                title="OK"
-                color={COLORS.primary}
-                onPress={onHandleButtonModal}
-              />
-            ) : (
-              <ActivityIndicator size="small" color={COLORS.primary} />
-            )}
-          </View>
+        <View style={styles.headerContainer}>
+          <TouchableOpacity
+            onPress={onHandleOnBackPress}
+            style={styles.backButton}
+          >
+            <Ionicons name="arrow-back-outline" style={styles.backIcon} />
+          </TouchableOpacity>
+          <Text style={styles.title}>{title}</Text>
         </View>
-      </Modal>
-    </View>
+        <View style={styles.content}>
+          <Text style={styles.verificationTitle}>{verificationMessage}</Text>
+          <View style={styles.inputContainer}>
+            {code.map((digit, index) => (
+              <TextInput
+                key={index}
+                style={styles.codeInput}
+                maxLength={1}
+                keyboardType="number-pad"
+                onChangeText={(text) => handleInput(text, index)}
+                onKeyPress={(e) => handleKeyPress(e, index)}
+                value={digit}
+                ref={(el) => (inputsRef.current[index] = el)}
+              />
+            ))}
+          </View>
+
+          <View style={styles.linkForgetPassword}>
+            <TouchableOpacity
+              style={styles.link}
+              onPress={onHandleForgetPassword}
+            >
+              <Text style={styles.linkText}>
+                ¿Método de verificación no disponible?
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.submitContainer}>
+            <TouchableOpacity
+              disabled={!isCodeComplete}
+              onPress={onHandleVerification}
+              style={[styles.button]}
+            >
+              <Text style={styles.buttonText}>{buttonTitle}</Text>
+            </TouchableOpacity>
+          </View>
+          {verificationType === "send" && (
+            <View style={styles.withdrawContainer}>
+              <Text style={styles.withdrawTitle}>
+                Envío de {amount} {coin}
+              </Text>
+              <Text style={styles.withdrawSubtitle}>
+                Dirección de destino
+                <View style={styles.separator}></View>
+              </Text>
+
+              <Text style={styles.withdrawDetails}>{toAddress}</Text>
+
+              <Text style={styles.withdrawSubtitle}>
+                Red
+                <View style={styles.separator}></View>
+              </Text>
+              <Text style={styles.withdrawDetails}>{selectedBlockchain}</Text>
+            </View>
+          )}
+        </View>
+        <View style={styles.linkContainer}>
+          <TouchableOpacity style={styles.link} onPress={onHandleChangeAuth}>
+            <Text style={styles.linkTextBold}>{messageText}</Text>
+          </TouchableOpacity>
+        </View>
+        <Modal visible={hasError} transparent animationType="fade">
+          <View style={styles.containerStyle}>
+            <View style={styles.modalContainer}>
+              <Text style={styles.modalTitle}>
+                {error ? error : "Cargando"}
+              </Text>
+              {error ? (
+                <TouchableOpacity
+                  onPress={onHandleButtonModal}
+                  style={[styles.modalButton]}
+                >
+                  <Text style={styles.buttonText}>Ok</Text>
+                </TouchableOpacity>
+              ) : (
+                <ActivityIndicator size="small" color={COLORS.primary} />
+              )}
+            </View>
+          </View>
+        </Modal>
+      </View>
+    </>
   );
 };

@@ -5,7 +5,7 @@ import { getStyles } from "./styles";
 import { Header } from "../../components";
 import { useTheme } from "../../context/ThemeContext";
 
-const Language = ({ navigation, showBackButton }) => {
+const KYCStep1 = ({ navigation, showBackButton }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   return (
@@ -13,15 +13,19 @@ const Language = ({ navigation, showBackButton }) => {
       <Header
         navigation={navigation}
         showBackButton={showBackButton !== undefined ? showBackButton : true}
-        isUserConfig={true}
       />
       <View style={styles.sectionContainer}>
         <View style={styles.titleContainer}>
-          <Text style={styles.sectionTitle}>Idioma</Text>
+          <Text style={styles.sectionTitle}>Verificación KYC</Text>
         </View>
+      </View>
+      <View style={styles.subtitleContainer}>
+        <Text style={styles.sectionSubtitle}>
+          Paso 1/4: Información personal
+        </Text>
       </View>
     </SafeAreaView>
   );
 };
 
-export default Language;
+export default KYCStep1;

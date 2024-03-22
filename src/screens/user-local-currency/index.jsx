@@ -1,7 +1,7 @@
-// LocalCurrency.jsx
+// Security.jsx
 import React from "react";
 import { View, Text, SafeAreaView } from "react-native";
-import { getStyles, styles } from "./styles";
+import { getStyles } from "./styles";
 import { Header } from "../../components";
 import { useTheme } from "../../context/ThemeContext";
 
@@ -13,6 +13,7 @@ const LocalCurrency = ({ navigation, showBackButton }) => {
       <Header
         navigation={navigation}
         showBackButton={showBackButton !== undefined ? showBackButton : true}
+        isUserConfig={true}
       />
       <View style={styles.sectionContainer}>
         <View style={styles.titleContainer}>

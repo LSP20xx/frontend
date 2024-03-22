@@ -9,7 +9,6 @@ export const getStyles = (theme) =>
     },
     errorContainer: {
       flex: 1,
-      marginTop: 20,
     },
     errorMessage: {
       fontSize: 12,
@@ -33,5 +32,34 @@ export const getStyles = (theme) =>
       paddingVertical: 5,
       color: theme.text,
       fontFamily: "Uto-Light",
+    },
+    dateInputContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "flex-start",
+      backgroundColor: theme.input,
+      borderRadius: 16,
+      paddingVertical: 10,
+      paddingHorizontal: 15,
+      marginTop: 30,
+    },
+    dateInput: {
+      fontSize: 16,
+      color: theme.text,
+      fontFamily: "Uto-Light",
+      minWidth: 46,
+      paddingHorizontal: 0,
+      textAlignVertical: "center",
+    },
+    datePlaceholder: {
+      fontSize: 16,
+      color: theme.text,
+      fontFamily: "Uto-Light",
+      minWidth: 46,
+      paddingVertical: 2.5,
+      color: theme.placeholder,
+    },
+    separator: {
+      paddingRight: 12,
     },
   });
