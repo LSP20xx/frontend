@@ -57,6 +57,10 @@ class WebSocketService {
       }
     });
 
+    this.socket.on("kraken-ohlc", (data) => {
+      console.log("OHLC Data:", data);
+    });
+
     this.socket.on("balance-update", (balances) => {
       if (this.processIncomingData(balances)) {
         this.dispatch(updateBalances(balances));

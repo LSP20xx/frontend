@@ -6,6 +6,7 @@ import { getStyles, styles } from "./styles";
 import BigLineChart from "../../components/big-line-chart";
 import { formatBalance, formatFiatValue } from "../../utils/prices";
 import { useTheme } from "../../context/ThemeContext";
+import webSocketService from "../../services/websocketService";
 
 const MarketAsset = ({ navigation }) => {
   const { assets, selectedAsset, balances } = useSelector(
@@ -22,9 +23,15 @@ const MarketAsset = ({ navigation }) => {
   const description = blockchains.find(
     (blockchain) => blockchain.tokenSymbol === selectedAsset.symbol
   )?.description;
+  const intervals = ["1m", "5m", "15m", "1H", "4H", "1D", "1W", "1M"];
   useEffect(() => {
     console.log("blockchains ***************", blockchains);
   }, [blockchains]);
+
+  useEffect(() => {
+    webSocketService.subscribeToOhlcData(selectedAsset.symbol, "1m");
+  }, [selectedAsset]);
+
   const { theme } = useTheme();
   const styles = getStyles(theme);
   return (
@@ -40,7 +47,7 @@ const MarketAsset = ({ navigation }) => {
         </View>
       </View>
       <View style={styles.temporalitiesContainer}>
-        {["● LIVE", "1D", "1W", "1M", "3M", "1Y", "5Y"].map((temporality) => (
+        {["● LIVE", ...intervals].map((temporality) => (
           <TouchableOpacity key={temporality} style={styles.temporalityButton}>
             <Text style={styles.temporalityText}>{temporality}</Text>
           </TouchableOpacity>
