@@ -28,9 +28,9 @@ const MarketAsset = ({ navigation }) => {
     console.log("blockchains ***************", blockchains);
   }, [blockchains]);
 
-  useEffect(() => {
-    webSocketService.subscribeToOhlcData(selectedAsset.symbol, "1m");
-  }, [selectedAsset]);
+  // useEffect(() => {
+  //   webSocketService.subscribeToOhlcData(selectedAsset.symbol, "1m");
+  // }, [selectedAsset]);
 
   const { theme } = useTheme();
   const styles = getStyles(theme);
