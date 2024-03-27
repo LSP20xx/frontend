@@ -1,19 +1,28 @@
-import React, { useEffect } from "react";
-import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import React from "react";
+import {
+  Alert,
+  Clipboard,
+  SafeAreaView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import QRCode from "react-native-qrcode-svg";
+import { SvgFromUri } from "react-native-svg";
 import { useSelector } from "react-redux";
 import { Header } from "../../components/index";
-import Navbar from "../../components/navbar";
-import { styles } from "./styles";
-import QRCode from "react-native-qrcode-svg";
-import { Clipboard, Alert } from "react-native";
-import { SvgFromUri } from "react-native-svg";
-import { Ionicons } from "@expo/vector-icons";
+import { useTheme } from "../../context/ThemeContext";
+import { getStyles } from "./styles";
 const Receive = ({ navigation }) => {
   const { selectedAsset, balances } = useSelector((state) => state.assets);
   const assetBalance = balances.find(
     (balance) => balance.symbol === selectedAsset.symbol
   );
   const address = assetBalance ? assetBalance.address : "";
+
+  const { theme } = useTheme();
+  const styles = getStyles(theme);
 
   const handlePress = () => {
     Clipboard.setString(address);

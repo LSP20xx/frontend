@@ -33,9 +33,9 @@ const UserConfig = ({ navigation, showBackButton }) => {
     {
       id: 1,
       name: "Mi información",
-      disabled: verified ? false : true,
+      disabled: true,
       screen: "UserMyInformation",
-      rightComponent: (
+      rightComponent: verified ? null : (
         <TouchableOpacity onPress={() => {}}>
           <Text style={styles.verifyButton}>Verificar</Text>
         </TouchableOpacity>
@@ -44,21 +44,21 @@ const UserConfig = ({ navigation, showBackButton }) => {
     {
       id: 2,
       name: "Seguridad",
-      disabled: false,
+      disabled: true,
       screen: "UserSecurity",
       rightComponent: null,
     },
     {
       id: 3,
       name: "Notificaciones",
-      disabled: false,
+      disabled: true,
       screen: "UserNotifications",
       rightComponent: null,
     },
     {
       id: 4,
       name: "Moneda local",
-      disabled: false,
+      disabled: true,
       screen: "UserLocalCurrency",
       rightComponent: (
         <TouchableOpacity
@@ -71,7 +71,7 @@ const UserConfig = ({ navigation, showBackButton }) => {
     {
       id: 5,
       name: "Idioma",
-      disabled: false,
+      disabled: true,
       screen: "UserLanguage",
       rightComponent: (
         <TouchableOpacity onPress={() => navigation.navigate("UserLanguage")}>
@@ -114,9 +114,7 @@ const UserConfig = ({ navigation, showBackButton }) => {
       <View style={styles.sectionContainer}>
         <View style={styles.titleContainer}>
           {verified ? (
-            <Text style={styles.sectionTitle}>
-              {firstName} {lastName}
-            </Text>
+            <Text style={styles.sectionTitle}>Nombre del usuario</Text>
           ) : (
             <Text style={styles.sectionTitle}>Usuario no verificado</Text>
           )}

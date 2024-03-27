@@ -18,7 +18,7 @@ import { Picker } from "@react-native-picker/picker";
 import { useDispatch, useSelector } from "react-redux";
 import { Header } from "../../components";
 import { COLORS } from "../../constants";
-import { styles } from "./styles";
+import { getStyles, styles } from "./styles";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Image } from "react-native";
 import formReducer from "../../store/reducers/form.reducer";
@@ -33,7 +33,7 @@ import {
   getAssetFiatValue,
   getCalculatedBalance,
 } from "../../store/selectors/assets.selector";
-import { set } from "date-fns";
+import { useTheme } from "../../context/ThemeContext";
 
 BigNumber.config({ DECIMAL_PLACES: 18 });
 
@@ -133,6 +133,9 @@ const Send = ({ navigation }) => {
   const supportedBlockchains = blockchains.filter(
     (blockchain) => blockchain.tokenSymbol === selectedAsset.symbol
   );
+  const { theme } = useTheme();
+  const styles = getStyles(theme);
+
   useEffect(() => {
     const blockchainsWithCalculatedFees = blockchains
       .filter((blockchain) => blockchain.tokenSymbol === selectedAsset.symbol)
@@ -333,7 +336,7 @@ const Send = ({ navigation }) => {
             setSelectedBlockchain(itemValue)
           }
           style={styles.pickerStyle}
-          placeholderTextColor={COLORS.greyLight}
+          placeholderTextColor={theme.placeholder}
         >
           <Picker.Item
             label="Selecciona una red"
@@ -361,7 +364,7 @@ const Send = ({ navigation }) => {
 
       <TextInput
         placeholder="Dirección de destino"
-        placeholderTextColor={COLORS.greyLight}
+        placeholderTextColor={theme.placeholder}
         value={toAddress}
         onChangeText={setToAddress}
         style={styles.input}
@@ -531,34 +534,42 @@ const Send = ({ navigation }) => {
       </View>
 
       <View style={styles.availableBalanceContainer}>
-        <Text style={styles.availableBalanceText}>
-          Balance:{" "}
-          {isFiatPrimary
-            ? new BigNumber(calculatedBalance).toFixed(2)
-            : new BigNumber(balance).toFixed(selectedAsset.assetDecimals)}{" "}
-          {isFiatPrimary ? fiatSymbol : selectedAsset.symbol}{" "}
-        </Text>
-        <Text style={styles.feeText}>
-          Comisión: -
-          {isFiatPrimary
-            ? new BigNumber(withdrawFee).times(assetFiatValue).toFixed(2)
-            : new BigNumber(withdrawFee).toFixed(
-                selectedAsset.assetDecimals
-              )}{" "}
-          {isFiatPrimary ? fiatSymbol : selectedAsset.symbol}{" "}
-        </Text>
-        <View style={styles.separator} />
-        <Text style={styles.totalText}>
-          Disponible:{" "}
-          {isFiatPrimary
-            ? new BigNumber(calculatedBalance)
-                .minus(new BigNumber(withdrawFee).times(assetFiatValue))
-                .toFixed(2)
-            : new BigNumber(balance)
-                .minus(withdrawFee)
-                .toFixed(selectedAsset.assetDecimals)}{" "}
-          {isFiatPrimary ? fiatSymbol : selectedAsset.symbol}
-        </Text>
+        <View style={styles.availableBalanceLeftContainer}>
+          <Text style={styles.availableBalanceText}>Balance</Text>
+          <Text style={styles.feeText}>Comisión</Text>
+          <Text style={[styles.totalText, { paddingTop: 8 }]}>Disponible</Text>
+        </View>
+        <View style={styles.availableBalanceRightContainer}>
+          <Text style={styles.availableBalanceText}>
+            {isFiatPrimary
+              ? new BigNumber(calculatedBalance).toFixed(2)
+              : new BigNumber(balance).toFixed(
+                  selectedAsset.assetDecimals
+                )}{" "}
+            {isFiatPrimary ? fiatSymbol : selectedAsset.symbol}{" "}
+          </Text>
+          <Text style={styles.feeText}>
+            -
+            {isFiatPrimary
+              ? new BigNumber(withdrawFee).times(assetFiatValue).toFixed(2)
+              : new BigNumber(withdrawFee).toFixed(
+                  selectedAsset.assetDecimals
+                )}{" "}
+            {isFiatPrimary ? fiatSymbol : selectedAsset.symbol}{" "}
+          </Text>
+          <View style={styles.separator} />
+
+          <Text style={styles.totalText}>
+            {isFiatPrimary
+              ? new BigNumber(calculatedBalance)
+                  .minus(new BigNumber(withdrawFee).times(assetFiatValue))
+                  .toFixed(2)
+              : new BigNumber(balance)
+                  .minus(withdrawFee)
+                  .toFixed(selectedAsset.assetDecimals)}{" "}
+            {isFiatPrimary ? fiatSymbol : selectedAsset.symbol}
+          </Text>
+        </View>
       </View>
 
       <View style={styles.feeContainer}>

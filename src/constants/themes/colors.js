@@ -62,6 +62,7 @@ export const LightTheme = {
   shadow: "#000000",
   modal: "#ECECEC",
   chartLine: "#d0d0d0",
+  iconContent: "#ECECEC",
 };
 
 export const DarkTheme = {
@@ -98,4 +99,5 @@ export const DarkTheme = {
   shadow: "#ffffff",
   modal: "#202020",
   chartLine: "#2a2a2a",
+  iconContent: "#202020",
 };

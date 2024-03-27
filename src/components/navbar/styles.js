@@ -41,7 +41,7 @@ export const getStyles = (theme) =>
       fontSize: 14,
     },
     icon: {
-      color: COLORS.white,
+      color: theme.iconContent,
       fontSize: 72,
     },
   });
