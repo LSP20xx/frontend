@@ -83,7 +83,7 @@ const TradingViewSimpleChart = () => {
     loading && (
       <ActivityIndicator
         size="large"
-        color="#00ff00" // Cambia esto por el color que prefieras
+        color="#00ff00"
         style={{
           position: "absolute",
           left: 0,
@@ -99,10 +99,6 @@ const TradingViewSimpleChart = () => {
 
   let filteredData =
     candlestickChart.length > 0 ? candlestickChart[0].filteredData : null;
-
-  if (filteredData) {
-    filteredData.shift();
-  }
 
   console.log("MODIFIED DATA *************", filteredData);
 
@@ -154,10 +150,10 @@ const TradingViewSimpleChart = () => {
     },
     grid: {
       vertLines: {
-        color: '#404040',
+        color: '${theme.chartLine}',
       },
       horzLines: {
-        color: '#404040',
+        color: '${theme.chartLine}',
       },
     }, });
     const candleSeries = chart.addCandlestickSeries();
@@ -167,7 +163,7 @@ const TradingViewSimpleChart = () => {
 
     if (data.length) {
       const endIndex = data.length - 1;
-      const startIndex = endIndex - 30;
+      const startIndex = endIndex - 20;
       const from = data[startIndex < 0 ? 0 : startIndex].time;
       const to = data[endIndex].time;
 
