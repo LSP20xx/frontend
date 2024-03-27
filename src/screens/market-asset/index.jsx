@@ -1,14 +1,17 @@
 import React, { useEffect } from "react";
 import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Header } from "../../components/index";
 import { getStyles, styles } from "./styles";
 import BigLineChart from "../../components/big-line-chart";
 import { formatBalance, formatFiatValue } from "../../utils/prices";
 import { useTheme } from "../../context/ThemeContext";
 import webSocketService from "../../services/websocketService";
+import TradingViewSimpleChart from "../../components/trading-view-simple-chart";
+import { getCandlestickChart } from "../../store/actions";
 
 const MarketAsset = ({ navigation }) => {
+  const dispatch = useDispatch();
   const { assets, selectedAsset, balances } = useSelector(
     (state) => state.assets
   );
@@ -24,6 +27,7 @@ const MarketAsset = ({ navigation }) => {
     (blockchain) => blockchain.tokenSymbol === selectedAsset.symbol
   )?.description;
   const intervals = ["1m", "5m", "15m", "1H", "4H", "1D", "1W", "1M"];
+
   useEffect(() => {
     console.log("blockchains ***************", blockchains);
   }, [blockchains]);
@@ -34,11 +38,21 @@ const MarketAsset = ({ navigation }) => {
 
   const { theme } = useTheme();
   const styles = getStyles(theme);
+
+  useEffect(() => {
+    dispatch(getCandlestickChart(selectedAsset.name.toLowerCase(), "1m"));
+  }, [selectedAsset]);
+
+  // useEffect(() => {
+  //   console.log("candlestickChart", candlestickChart);
+  // }, [candlestickChart]);
+
   return (
     <SafeAreaView style={styles.container}>
       <Header navigation={navigation} showBackButton={true} />
       <View style={styles.chartContainer}>
-        <BigLineChart symbol={selectedAsset.symbol} />
+        {/* <BigLineChart symbol={selectedAsset.symbol} /> */}
+        <TradingViewSimpleChart />
         <View style={styles.priceContainer}>
           <Text style={styles.symbolText}>{selectedAsset.symbol}</Text>
           <Text style={styles.nameText}>{selectedAsset.name}</Text>

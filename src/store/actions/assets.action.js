@@ -1,7 +1,7 @@
 import { assetsTypes } from "../types";
 import {
   LITTLE_LINE_CHARTS_URL,
-  BIG_LINE_CHARTS_URL,
+  CANDLESTICK_CHART_URL,
   STORED_PRICES_URL,
 } from "../../constants";
 
@@ -10,7 +10,7 @@ const {
   UPDATE_ASSETS_PRICES,
   UPDATE_BALANCES,
   GET_ASSETS_LITTLE_LINE_CHARTS,
-  GET_ASSETS_BIG_LINE_CHARTS,
+  GET_CANDLESTICK_CHART,
   GET_STORED_PRICES,
 } = assetsTypes;
 
@@ -44,16 +44,21 @@ export const getAssetsLittleLineCharts = () => {
   };
 };
 
-export const getAssetsBigLineCharts = () => {
+export const getCandlestickChart = (name, interval) => {
   return async (dispatch) => {
     try {
-      const response = await fetch(BIG_LINE_CHARTS_URL);
+      const nameAndInterval = `${name}_${interval}`;
+      const response = await fetch(
+        `${CANDLESTICK_CHART_URL}/${nameAndInterval}`
+      );
       const result = await response.json();
 
-      dispatch({
-        type: GET_ASSETS_BIG_LINE_CHARTS,
-        payload: result,
-      });
+      if (result.length > 0) {
+        dispatch({
+          type: GET_CANDLESTICK_CHART,
+          payload: result,
+        });
+      }
     } catch (error) {
       console.log(error);
     }

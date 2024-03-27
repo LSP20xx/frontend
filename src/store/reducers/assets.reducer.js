@@ -5,7 +5,7 @@ const {
   SELECT_ASSET,
   UPDATE_ASSETS_PRICES,
   GET_ASSETS_LITTLE_LINE_CHARTS,
-  GET_ASSETS_BIG_LINE_CHARTS,
+  GET_CANDLESTICK_CHART,
   GET_STORED_PRICES,
   UPDATE_BALANCES,
 } = assetsTypes;
@@ -15,7 +15,7 @@ const initialState = {
   balances: [],
   selectedAsset: null,
   assetsLittleLineCharts: [],
-  assetsBigLineCharts: [],
+  candlestickChart: [],
   storedPrices: [],
   totalBalance: 0,
 };
@@ -31,12 +31,12 @@ const calculateBalanceValue = (balanceAmount, fiatValue) => {
 const calculateTotalBalance = (balances) => {
   const total = balances.reduce((accumulator, balance) => {
     const result = accumulator.plus(new BigNumber(balance.calculatedBalance));
-    console.log(
-      `Summing balance: ${balance.calculatedBalance}, current total: ${result}`
-    );
+    // console.log(
+    //   `Summing balance: ${balance.calculatedBalance}, current total: ${result}`
+    // );
     return result;
   }, new BigNumber(0));
-  console.log(`Total balance calculated: ${total.toString()}`);
+  // console.log(`Total balance calculated: ${total.toString()}`);
   return total.toString();
 };
 
@@ -151,10 +151,10 @@ const assetsReducer = (state = initialState, action) => {
         ...state,
         assetsLittleLineCharts: action.payload,
       };
-    case GET_ASSETS_BIG_LINE_CHARTS:
+    case GET_CANDLESTICK_CHART:
       return {
         ...state,
-        assetsBigLineCharts: action.payload,
+        candlestickChart: action.payload,
       };
     case GET_STORED_PRICES:
       return {

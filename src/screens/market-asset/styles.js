@@ -152,10 +152,12 @@ export const getStyles = (theme) =>
     priceText: {
       fontSize: 30,
       fontFamily: "Uto-Light",
+      color: theme.text,
     },
     changeText: {
       fontSize: 10,
       fontFamily: "Uto-Light",
+      color: COLORS.green,
     },
 
     column: {

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TradingView Chart</title>
+    <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        width: 100vw;
+        height: 100%;
+        overflow: hidden;
+      }
+      #chart {
+        width: 100vw;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="chart"></div>
+    <script>
+      function setChartDimensions() {
+        const width =
+          window.innerWidth ||
+          document.documentElement.clientWidth ||
+          document.body.clientWidth;
+        const height =
+          window.innerHeight ||
+          document.documentElement.clientHeight ||
+          document.body.clientHeight;
+
+        return { width, height };
+      }
+
+      const { width, height } = setChartDimensions();
+      const chart = LightweightCharts.createChart(
+        document.getElementById("chart"),
+        { width, height }
+      );
+      const candleSeries = chart.addCandlestickSeries();
+
+      const ohlcData = [
+        {
+          time: "2021-04-01",
+          open: 146.0,
+          high: 146.32,
+          low: 145.63,
+          close: 146.21,
+        },
+      ];
+      candleSeries.setData(ohlcData);
+
+      window.updateChartData = (data) => {
+        candleSeries.update(data);
+      };
+    </script>
+  </body>
+</html>
