@@ -15,7 +15,7 @@ import KYCStep4 from "../../screens/kyc-step-4";
 
 const Stack = createNativeStackNavigator();
 
-const ProfileNavigator = () => {
+const WalletNavigator = () => {
   return (
     <Stack.Navigator
       initialRouteName="Perfil"
@@ -41,4 +41,4 @@ const ProfileNavigator = () => {
   );
 };
 
-export default ProfileNavigator;
+export default WalletNavigator;

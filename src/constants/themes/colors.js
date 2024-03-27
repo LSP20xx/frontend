@@ -23,8 +23,8 @@ export const COLORS = {
   text: "#363535",
   titles: "#6A6565",
   interest: "#4A4F5E",
-  green: "#0A8956",
-  red: "#FF0000",
+  green: "#27A69A",
+  red: "#EF5450",
   input: "#f2f2f2",
 };
 

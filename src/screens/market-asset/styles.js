@@ -249,6 +249,18 @@ export const getStyles = (theme) =>
       borderRadius: 5,
       marginHorizontal: 8,
     },
+    temporalityButtonSelected: {
+      paddingHorizontal: 10,
+      paddingVertical: 5,
+      borderRadius: 5,
+      backgroundColor: COLORS.primaryDark,
+      marginHorizontal: 8,
+    },
+    temporalityTextSelected: {
+      fontSize: 11,
+      color: COLORS.black,
+      fontFamily: "Uto-Bold",
+    },
     temporalityText: {
       fontSize: 11,
       color: COLORS.primaryDark,

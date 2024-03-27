@@ -19,7 +19,7 @@ const Navbar = ({ navigation }) => {
     {
       text: "Cambiar",
       icon: "swap-horizontal-sharp",
-      route: "ProfileTab",
+      route: "WalletTab",
       disabled: true,
     },
     {

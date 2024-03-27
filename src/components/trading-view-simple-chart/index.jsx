@@ -76,8 +76,7 @@ import { useDispatch, useSelector } from "react-redux";
 const TradingViewSimpleChart = () => {
   const webViewRef = useRef(null);
   const { theme } = useTheme();
-  const { candlestickChart } = useSelector((state) => state.assets);
-  const [loading, setLoading] = useState(true);
+  const { candlestickChart, loading } = useSelector((state) => state.assets);
 
   {
     loading && (
@@ -223,8 +222,6 @@ const TradingViewSimpleChart = () => {
         ref={webViewRef}
         originWhitelist={["*"]}
         source={{ html: htmlContent }}
-        onLoadStart={() => setLoading(true)}
-        onLoadEnd={() => setLoading(false)}
         onMessage={(event) => {}}
         javaScriptEnabled={true}
         style={{ opacity: loading ? 0 : 1 }}

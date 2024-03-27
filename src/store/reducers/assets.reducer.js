@@ -5,13 +5,17 @@ const {
   SELECT_ASSET,
   UPDATE_ASSETS_PRICES,
   GET_ASSETS_LITTLE_LINE_CHARTS,
-  GET_CANDLESTICK_CHART,
+  GET_CANDLESTICK_CHART_REQUEST,
+  GET_CANDLESTICK_CHART_SUCCESS,
+  GET_CANDLESTICK_CHART_FAILURE,
   GET_STORED_PRICES,
   UPDATE_BALANCES,
 } = assetsTypes;
 
 const initialState = {
   assets: ASSETS,
+  loading: false,
+  error: null,
   balances: [],
   selectedAsset: null,
   assetsLittleLineCharts: [],
@@ -151,11 +155,25 @@ const assetsReducer = (state = initialState, action) => {
         ...state,
         assetsLittleLineCharts: action.payload,
       };
-    case GET_CANDLESTICK_CHART:
+    case GET_CANDLESTICK_CHART_REQUEST:
       return {
         ...state,
+        loading: true,
+      };
+    case GET_CANDLESTICK_CHART_SUCCESS:
+      return {
+        ...state,
+        loading: false,
         candlestickChart: action.payload,
       };
+
+    case GET_CANDLESTICK_CHART_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+
     case GET_STORED_PRICES:
       return {
         ...state,

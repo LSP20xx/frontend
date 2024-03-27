@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Header } from "../../components/index";
@@ -26,7 +26,8 @@ const MarketAsset = ({ navigation }) => {
   const description = blockchains.find(
     (blockchain) => blockchain.tokenSymbol === selectedAsset.symbol
   )?.description;
-  const intervals = ["1m", "5m", "15m", "1H", "4H", "1D", "1W", "1M"];
+  const temporalities = ["1m", "5m", "15m", "1h", "4h", "1d", "1w", "1M"];
+  const [selectedTemporality, setSelectedTemporality] = useState("1d");
 
   useEffect(() => {
     console.log("blockchains ***************", blockchains);
@@ -40,8 +41,10 @@ const MarketAsset = ({ navigation }) => {
   const styles = getStyles(theme);
 
   useEffect(() => {
-    dispatch(getCandlestickChart(selectedAsset.name.toLowerCase(), "1m"));
-  }, [selectedAsset]);
+    dispatch(
+      getCandlestickChart(selectedAsset.name.toLowerCase(), selectedTemporality)
+    );
+  }, [selectedAsset, selectedTemporality]);
 
   // useEffect(() => {
   //   console.log("candlestickChart", candlestickChart);
@@ -61,9 +64,27 @@ const MarketAsset = ({ navigation }) => {
         </View>
       </View>
       <View style={styles.temporalitiesContainer}>
-        {["● LIVE", ...intervals].map((temporality) => (
-          <TouchableOpacity key={temporality} style={styles.temporalityButton}>
-            <Text style={styles.temporalityText}>{temporality}</Text>
+        {["● LIVE", ...temporalities].map((temporality) => (
+          <TouchableOpacity
+            key={temporality}
+            style={
+              temporality === selectedTemporality
+                ? styles.temporalityButtonSelected
+                : styles.temporalityButton
+            }
+            onPress={() => {
+              setSelectedTemporality(temporality);
+            }}
+          >
+            <Text
+              style={
+                temporality === selectedTemporality
+                  ? styles.temporalityTextSelected
+                  : styles.temporalityText
+              }
+            >
+              {temporality}
+            </Text>
           </TouchableOpacity>
         ))}
       </View>

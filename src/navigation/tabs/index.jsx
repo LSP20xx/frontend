@@ -1,8 +1,8 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import WalletNavigator from "../wallet";
+import HomeNavigator from "../wallet";
 import MarketsNavigator from "../markets";
-import ProfileNavigator from "../profile";
+import WalletNavigator from "../profile";
 import CardNavigator from "../card";
 import { View } from "react-native";
 import { SvgXml } from "react-native-svg";
@@ -127,7 +127,7 @@ const TabsNavigator = () => {
     >
       <BottomTab.Screen
         name="HomeTab"
-        component={WalletNavigator}
+        component={HomeNavigator}
         options={{
           tabBarLabel: "Home",
           tabBarLabelStyle: {
@@ -173,8 +173,8 @@ const TabsNavigator = () => {
       />
 
       <BottomTab.Screen
-        name="ProfileTab"
-        component={ProfileNavigator}
+        name="WalletTab"
+        component={WalletNavigator}
         options={{
           tabBarLabel: "Wallet",
           tabBarLabelStyle: {

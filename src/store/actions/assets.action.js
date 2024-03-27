@@ -10,7 +10,9 @@ const {
   UPDATE_ASSETS_PRICES,
   UPDATE_BALANCES,
   GET_ASSETS_LITTLE_LINE_CHARTS,
-  GET_CANDLESTICK_CHART,
+  GET_CANDLESTICK_CHART_SUCCESS,
+  GET_CANDLESTICK_CHART_REQUEST,
+  GET_CANDLESTICK_CHART_FAILURE,
   GET_STORED_PRICES,
 } = assetsTypes;
 
@@ -47,6 +49,9 @@ export const getAssetsLittleLineCharts = () => {
 export const getCandlestickChart = (name, interval) => {
   return async (dispatch) => {
     try {
+      dispatch({
+        type: GET_CANDLESTICK_CHART_REQUEST,
+      });
       const nameAndInterval = `${name}_${interval}`;
       const response = await fetch(
         `${CANDLESTICK_CHART_URL}/${nameAndInterval}`
@@ -55,11 +60,15 @@ export const getCandlestickChart = (name, interval) => {
 
       if (result.length > 0) {
         dispatch({
-          type: GET_CANDLESTICK_CHART,
+          type: GET_CANDLESTICK_CHART_SUCCESS,
           payload: result,
         });
       }
     } catch (error) {
+      dispatch({
+        type: GET_CANDLESTICK_CHART_FAILURE,
+        payload: { error: error },
+      });
       console.log(error);
     }
   };
