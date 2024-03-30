@@ -87,19 +87,15 @@ const Navigation = () => {
   //   };
   // }, [dispatch]);
 
-  // useEffect(() => {
-  //   if (userId) {
-  //     webSocketService.connect(dispatch);
-  //     let interval = setInterval(
-  //       () => webSocketService.requestBalanceUpdate(userId),
-  //       3000
-  //     );
-  //     return () => clearInterval(interval);
-  //   }
-  //   return () => {
-  //     webSocketService.disconnect();
-  //   };
-  // }, [userId]);
+  useEffect(() => {
+    if (userId) {
+      let interval = setInterval(
+        () => webSocketService.requestBalanceUpdate(userId),
+        30000
+      );
+      return () => clearInterval(interval);
+    }
+  }, [userId]);
 
   // useEffect(() => {
   //   dispatch(getBalance(userId));

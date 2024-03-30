@@ -218,6 +218,7 @@ const TabsNavigator = () => {
               fill={theme.background}
             />
           ),
+          tabBarButton: (props) => <View {...props} enabled={true} />,
         }}
       />
     </BottomTab.Navigator>

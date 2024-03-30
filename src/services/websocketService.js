@@ -62,9 +62,8 @@ class WebSocketService {
     });
 
     this.socket.on("balance-update", (balances) => {
-      if (this.processIncomingData(balances)) {
-        this.dispatch(updateBalances(balances));
-      }
+      console.log("llega la respuesta?");
+      this.dispatch(updateBalances(balances));
     });
   }
 
