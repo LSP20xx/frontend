@@ -66,7 +66,7 @@ const formReducer = (state, action) => {
 
 const Auth = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { error, isLoading, hasError, token } = useSelector(
+  const { error, isLoading, hasError, preVerificationToken } = useSelector(
     (state) => state.auth
   );
   const [isLogin, setIsLogin] = useState(true);
@@ -145,10 +145,10 @@ const Auth = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    if (token) {
+    if (preVerificationToken) {
       navigation.navigate("Verification");
     }
-  }, [token, navigation]);
+  }, [preVerificationToken, navigation]);
 
   const overlayStyle = {
     ...StyleSheet.absoluteFillObject,

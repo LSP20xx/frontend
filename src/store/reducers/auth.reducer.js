@@ -27,10 +27,9 @@ const initialState = {
   error: null,
   userId: null,
   tempId: null,
-  sessionTempId: null,
   isLogin: true,
   email: null,
-  token: null,
+  preVerificationToken: null,
   phoneNumber: null,
   verified: false,
   verificationMethods: [],
@@ -43,14 +42,14 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoading: true,
-        token: null,
+        preVerificationToken: null,
       };
     case VERIFICATION_TOKEN_SUCCESS:
       return {
         ...state,
         tempId: action.tempId,
         isLogin: action.isLogin,
-        token: action.token,
+        preVerificationToken: action.preVerificationToken,
         email: action.email,
         phoneNumber: action.phoneNumber,
         verificationMethods: action.verificationMethods,
@@ -61,7 +60,7 @@ const authReducer = (state = initialState, action) => {
     case VERIFICATION_TOKEN_FAILURE:
       return {
         ...state,
-        token: null,
+        preVerificationToken: null,
         isLoading: false,
         error: action.error,
         hasError: true,
@@ -75,7 +74,6 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         userId: action.userId,
-        sessionTempId: action.sessionTempId,
         firstName: action.firstName,
         lastName: action.lastName,
         email: action.email,
@@ -105,7 +103,6 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         userId: action.userId,
-        sessionTempId: action.sessionTempId,
         firstName: action.firstName,
         lastName: action.lastName,
         email: action.email,
@@ -120,7 +117,6 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         userId: null,
-        sessionTempId: null,
         email: null,
         phoneNumber: null,
         isLoading: false,
@@ -139,7 +135,8 @@ const authReducer = (state = initialState, action) => {
         userId: null,
         email: null,
         phoneNumber: null,
-        token: null,
+        tempId: null,
+        preVerificationToken: null,
         verificationMethods: [],
       };
     case VERIFY_SMS_CODE:
