@@ -1,4 +1,5 @@
 export { default as Assets } from "./assets/index";
+export { default as Asset } from "./asset/index";
 export { default as MarketAsset } from "./market-asset/index";
 export { default as Receive } from "./receive/index";
 export { default as Send } from "./send/index";

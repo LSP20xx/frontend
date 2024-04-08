@@ -23,19 +23,29 @@ import { calculatePriceVariation, formatFiatValue } from "../../utils/prices";
 import BigNumber from "bignumber.js";
 import { useTheme } from "../../context/ThemeContext";
 
-const Assets = ({ navigation }) => {
-  const { assets, assetsLittleLineCharts, storedPrices, totalBalance } =
-    useSelector((state) => state.assets);
+const Asset = ({ navigation }) => {
+  const {
+    assets,
+    assetsLittleLineCharts,
+    storedPrices,
+    totalBalance,
+    selectedAsset,
+    balances,
+  } = useSelector((state) => state.assets);
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
   const dispatch = useDispatch();
 
+  const balance = balances.find(
+    (balance) => balance.symbol === selectedAsset.symbol
+  );
+
   const symbolImages = {
     btc: require("../../../assets/crypto-logos/btc.png"),
     eth: require("../../../assets/crypto-logos/eth.png"),
     doge: require("../../../assets/crypto-logos/doge.png"),
-    usdc: require("../../../assets/crypto-logos/usdc.png"),
+    usdt: require("../../../assets/crypto-logos/usdt.png"),
     ltc: require("../../../assets/crypto-logos/ltc.png"),
   };
 
@@ -49,100 +59,40 @@ const Assets = ({ navigation }) => {
     dispatch(getAssetsLittleLineCharts());
   }, []);
 
+  useEffect(() => {
+    console.log("balance", balance);
+  }, [balance]);
+
   return (
     <SafeAreaView style={styles.container}>
-      <Header navigation={navigation} showBackButton={false} isHome={true} />
-      <Text style={styles.balanceTitle}>BALANCE TOTAL</Text>
+      <Header navigation={navigation} showBackButton={true} />
+      <Text style={styles.balanceTitle}>
+        BALANCE {selectedAsset.name.toUpperCase()}
+      </Text>
       <View style={styles.balanceDetails}>
         <Text style={styles.fiatSymbol}>$</Text>
         <Text style={styles.fiatConvertedAmount}>
-          {totalBalance ? new BigNumber(totalBalance).toFixed(2) : "0.00"}
+          {balance
+            ? new BigNumber(balance.calculatedBalance).toFixed(2)
+            : "0.00"}
         </Text>
         <Text style={styles.fiatTicker}> USD</Text>
       </View>
       <Navbar navigation={navigation} />
       <View style={{ flex: 1, position: "relative" }}>
         <ScrollView style={styles.scrollView}>
-          <View style={styles.sectionComponent}>
-            <View style={styles.leftContainer}>
-              <Image
-                source={require("../../../assets/icons/dollar-circle.png")}
-                style={styles.categoryImage}
-                resizeMode="stretch"
-              />
-              <Text style={styles.titleStyle}>Cash</Text>
-            </View>
-
-            <View style={styles.rightContainer}>
-              <Text style={styles.amountStyle}>$0.00</Text>
-              <Text style={styles.percentageStyle}>4.00% Interés</Text>
-            </View>
-          </View>
-          <View style={styles.sectionComponent}>
-            <View style={styles.leftContainer}>
-              <Image
-                source={require("../../../assets/icons/billete-circle.png")}
-                style={styles.categoryImage}
-                resizeMode="stretch"
-              />
-              <Text style={styles.titleStyle}>Crypto</Text>
-            </View>
-
-            <View style={styles.rightContainer}>
-              <Text style={styles.amountStyle}>
-                ${totalBalance ? formatFiatValue(totalBalance, 2) : "0.00"}
-              </Text>
-            </View>
-          </View>
           <View style={styles.sectionContainer}>
             <View style={styles.leftContainer}>
-              <Text style={styles.sectionTitle}>Popular</Text>
-              <Text style={styles.sectionTitleTimeframe}>24hs</Text>
+              <Text style={styles.sectionTitle}>Historial</Text>
             </View>
             <ScrollView style={styles.popularScrolLView}>
               {assets.map((item) => {
-                const assetChartData = assetsLittleLineCharts.find(
-                  (chartData) =>
-                    chartData.assetName.toLowerCase() ===
-                    item.name.toLowerCase()
-                );
-
-                const assetStoredPrice = storedPrices.find(
-                  (storedPrice) =>
-                    storedPrice.assetName.toLowerCase() ===
-                    item.name.toLowerCase()
-                );
-
-                const displayPrice = item.fiatValue
-                  ? item.fiatValue
-                  : assetStoredPrice?.price;
-
-                let priceVariation;
-                let variationColor;
-
-                if (item.fiatValue && item.opening24h) {
-                  const currentPrice = parseFloat(item.fiatValue);
-                  const openingPrice = parseFloat(item.opening24h);
-                  priceVariation = calculatePriceVariation(
-                    currentPrice,
-                    openingPrice
-                  );
-                  variationColor = priceVariation >= 0 ? COLORS.green : "red";
-                } else if (assetStoredPrice?.priceVariation) {
-                  priceVariation = assetStoredPrice.priceVariation;
-                  variationColor =
-                    parseFloat(priceVariation) >= 0 ? COLORS.green : "red";
-                } else {
-                  priceVariation = "0.00";
-                  variationColor = "grey";
-                }
-
                 return (
                   <TouchableOpacity
                     key={item.id}
                     style={styles.cryptoItem}
                     onPress={() => handleAssetPress(item.id)}
-                    disabled={false}
+                    disabled={true}
                   >
                     <View style={styles.leftContainer}>
                       <Image
@@ -157,25 +107,25 @@ const Assets = ({ navigation }) => {
                       </View>
                     </View>
                     <View style={styles.middleContainer}>
-                      {assetChartData ? (
+                      {/* {assetChartData ? (
                         <LittleLineChart
                           symbol={item.symbol}
                           last7DaysData={assetChartData.last7DaysData}
                         />
-                      ) : null}
+                      ) : null} */}
                     </View>
                     <View style={styles.rightContainer}>
                       <View style={styles.priceRow}>
-                        <Text style={styles.priceFiatAmount}>$</Text>
+                        {/* <Text style={styles.priceFiatAmount}>$</Text> */}
                         <Text style={styles.price}>
-                          {formatFiatValue(displayPrice, item.priceDecimals)}
+                          {/* {formatFiatValue(displayPrice, item.priceDecimals)} */}
                         </Text>
                       </View>
                       <Text
                         style={[styles.variation, { color: variationColor }]}
                       >
-                        {priceVariation >= 0 && "+"}
-                        {priceVariation}%
+                        {/* {priceVariation >= 0 && "+"}
+                        {priceVariation}% */}
                       </Text>
                     </View>
                   </TouchableOpacity>
@@ -237,4 +187,4 @@ const Assets = ({ navigation }) => {
   );
 };
 
-export default Assets;
+export default Asset;

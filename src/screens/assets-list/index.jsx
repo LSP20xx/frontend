@@ -50,7 +50,7 @@ const AssetsList = ({ navigation, route, showBackButton }) => {
     btc: require("../../../assets/crypto-logos/btc.png"),
     eth: require("../../../assets/crypto-logos/eth.png"),
     doge: require("../../../assets/crypto-logos/doge.png"),
-    usdt: require("../../../assets/crypto-logos/usdt.png"),
+    usdc: require("../../../assets/crypto-logos/usdc.png"),
     ltc: require("../../../assets/crypto-logos/ltc.png"),
   };
 

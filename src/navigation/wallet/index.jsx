@@ -5,6 +5,7 @@ import {
 import { Verification } from "../../screens/verification";
 
 import Assets from "../../screens/assets";
+import Asset from "../../screens/asset";
 import Receive from "../../screens/receive";
 import Send from "../../screens/send";
 import Confirm from "../../screens/confirm";
@@ -36,6 +37,7 @@ const HomeNavigator = () => {
       }}
     >
       <Stack.Screen name="Assets" component={Assets} />
+      <Stack.Screen name="Asset" component={Asset} />
       <Stack.Screen name="MarketAsset" component={MarketAsset} />
       <Stack.Screen name="ReceiveList" component={AssetsList} />
       <Stack.Screen name="Receive" component={Receive} />

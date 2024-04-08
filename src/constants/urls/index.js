@@ -13,3 +13,4 @@ export const CANDLESTICK_CHART_URL = `http://192.168.0.92:8000/api/tokens/candle
 export const STORED_PRICES_URL = `http://192.168.0.92:8000/api/tokens/stored-prices`;
 export const FETCH_BLOCKCHAINS_URL = `http://192.168.0.92:8000/api/tokens/get-blockchains-for-tokens`;
 export const WITHDRAW_FROM_EVM_WALLET_URL = `http://192.168.0.92:8000/api/evm-wallet/withdraw`;
+export const GET_HISTORY_URL = `http://192.168.0.92:8000/api/evm-wallet/history`;

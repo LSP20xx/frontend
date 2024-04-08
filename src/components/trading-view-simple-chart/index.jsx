@@ -43,10 +43,10 @@ const TradingViewSimpleChart = () => {
     },
     grid: {
       vertLines: {
-        color: '${theme.chartLine}',
+        color: '${theme.background}',
       },
       horzLines: {
-        color: '${theme.chartLine}',
+        color: '${theme.background}',
       },
     }, });
     const candleSeries = chart.addCandlestickSeries();
@@ -56,7 +56,7 @@ const TradingViewSimpleChart = () => {
 
     if (data.length) {
       const endIndex = data.length - 1;
-      const startIndex = endIndex - 20;
+      const startIndex = endIndex - 100;
       const from = data[startIndex < 0 ? 0 : startIndex].time;
       const to = data[endIndex].time;
 

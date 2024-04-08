@@ -2,6 +2,7 @@ import { assetsTypes } from "../types";
 import {
   LITTLE_LINE_CHARTS_URL,
   CANDLESTICK_CHART_URL,
+  GET_HISTORY_URL,
   STORED_PRICES_URL,
 } from "../../constants";
 
@@ -14,6 +15,7 @@ const {
   GET_CANDLESTICK_CHART_REQUEST,
   GET_CANDLESTICK_CHART_FAILURE,
   GET_STORED_PRICES,
+  GET_HISTORY,
 } = assetsTypes;
 
 export const selectAsset = (id) => {
@@ -94,5 +96,21 @@ export const updateBalances = (balances) => {
   return {
     type: UPDATE_BALANCES,
     payload: balances,
+  };
+};
+
+export const getHistory = () => {
+  return async (dispatch) => {
+    try {
+      const response = await fetch(GET_HISTORY_URL);
+      const result = await response.json();
+
+      dispatch({
+        type: GET_HISTORY,
+        payload: result,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 };
