@@ -41,7 +41,7 @@ export const getStyles = (theme) =>
     calculatedAssetAmountContainer: {
       flexDirection: "row",
       alignItems: "center",
-      justifyContent: "space-between",
+      justifyContent: "flex-end",
       paddingLeft: 20,
       height: "50%",
     },
@@ -200,6 +200,7 @@ export const getStyles = (theme) =>
       width: "100%",
       height: 50,
       color: theme.placeholder,
+      fontFamily: "Uto-Light",
     },
     pickerItemNull: {
       fontSize: 16,
@@ -260,7 +261,7 @@ export const getStyles = (theme) =>
     },
     feeText: {
       fontSize: 14,
-      color: COLORS.error,
+      color: COLORS.primaryDark,
       textAlign: "left",
       marginBottom: 16,
       fontFamily: "Uto-Light",

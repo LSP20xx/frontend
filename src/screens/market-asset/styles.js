@@ -154,12 +154,16 @@ export const getStyles = (theme) =>
       fontFamily: "Uto-Light",
       color: theme.text,
     },
-    changeText: {
+    changeTextPositive: {
       fontSize: 10,
       fontFamily: "Uto-Light",
       color: COLORS.green,
     },
-
+    changeTextNegative: {
+      fontSize: 10,
+      fontFamily: "Uto-Light",
+      color: COLORS.red,
+    },
     column: {
       alignItems: "flex-start",
     },

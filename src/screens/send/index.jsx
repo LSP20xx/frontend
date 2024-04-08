@@ -16,7 +16,7 @@ import {
 
 import { Picker } from "@react-native-picker/picker";
 import { useDispatch, useSelector } from "react-redux";
-import { Header } from "../../components";
+import { Header, RotatingArrows } from "../../components";
 import { COLORS } from "../../constants";
 import { getStyles, styles } from "./styles";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -34,6 +34,7 @@ import {
   getCalculatedBalance,
 } from "../../store/selectors/assets.selector";
 import { useTheme } from "../../context/ThemeContext";
+import PressableSwapIcons from "../../components/pressable-swap-icons";
 
 BigNumber.config({ DECIMAL_PLACES: 18 });
 
@@ -374,6 +375,13 @@ const Send = ({ navigation }) => {
       <View style={styles.assetConversionContainer}>
         {selectedBlockchain && toAddress && (
           <>
+            <PressableSwapIcons
+              onPress={() => {
+                handleIconAnimation();
+                handleSwapValues();
+                adjustFontSizeAndMargin(calculatedAmount);
+              }}
+            />
             <View style={styles.assetConversionContainerFirstColumn}>
               <View style={styles.assetAmountContainerTop}>
                 {onMaxPress ? (
@@ -393,9 +401,6 @@ const Send = ({ navigation }) => {
                             .minus(withdrawFee)
                             .toFixed(selectedAsset.assetDecimals)
                     }
-                    onFocus={(text) => {
-                      setAmount(text);
-                    }}
                     onChangeText={(text) => {
                       setOnMaxPress(!onMaxPress);
                       setAmount(text);
@@ -421,24 +426,6 @@ const Send = ({ navigation }) => {
               </View>
 
               <View style={styles.calculatedAssetAmountContainer}>
-                <TouchableOpacity
-                  onPress={() => {
-                    handleIconAnimation();
-                    handleSwapValues();
-                    adjustFontSizeAndMargin(calculatedAmount);
-                  }}
-                >
-                  <Animated.View
-                    style={{ transform: [{ rotate: rotateData }] }}
-                  >
-                    <Ionicons
-                      name="sync"
-                      size={48}
-                      color={COLORS.greyLight}
-                      style={styles.changeAssetIcon}
-                    />
-                  </Animated.View>
-                </TouchableOpacity>
                 <View style={styles.calculatedAssetAmountColumn}>
                   {onMaxPress ? (
                     <Text style={styles.calculatedAssetAmount}>

@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Alert,
   Clipboard,
@@ -8,12 +8,11 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import QRCode from "react-native-qrcode-svg";
-import { SvgFromUri } from "react-native-svg";
 import { useSelector } from "react-redux";
 import { Header } from "../../components/index";
 import { useTheme } from "../../context/ThemeContext";
 import { getStyles } from "./styles";
+import QRCode from "react-qr-code";
 const Receive = ({ navigation }) => {
   const { selectedAsset, balances } = useSelector((state) => state.assets);
   const assetBalance = balances.find(
@@ -31,17 +30,18 @@ const Receive = ({ navigation }) => {
     ]);
   };
 
+  useEffect(() => {
+    console.log("address", address);
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <Header navigation={navigation} showBackButton={true} />
       <View style={styles.screenTitleContainer}>
         <Text style={styles.screenTitle}>Recibir {selectedAsset?.symbol}</Text>
       </View>
-      <View style={styles.logoContainer}>
-        <SvgFromUri uri={selectedAsset.logo} style={styles.logo} />
-      </View>
       <View style={styles.qrCodeContainer}>
-        <QRCode value={address} size={200} style={styles.qrCode} />
+        {address && <QRCode value={address} size={250} />}
       </View>
       <View style={styles.addressContainer} onPress={handlePress}>
         <TouchableOpacity onPress={handlePress}>

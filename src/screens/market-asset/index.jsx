@@ -3,16 +3,18 @@ import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Header } from "../../components/index";
 import { getStyles, styles } from "./styles";
-import BigLineChart from "../../components/big-line-chart";
-import { formatBalance, formatFiatValue } from "../../utils/prices";
+import {
+  calculatePriceVariation,
+  formatBalance,
+  formatFiatValue,
+} from "../../utils/prices";
 import { useTheme } from "../../context/ThemeContext";
-import webSocketService from "../../services/websocketService";
 import TradingViewSimpleChart from "../../components/trading-view-simple-chart";
 import { getCandlestickChart } from "../../store/actions";
 
 const MarketAsset = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { assets, selectedAsset, balances } = useSelector(
+  const { assets, selectedAsset, balances, storedPrices } = useSelector(
     (state) => state.assets
   );
   const { verified } = useSelector((state) => state.auth);
@@ -23,19 +25,17 @@ const MarketAsset = ({ navigation }) => {
   const asset = assets.find((asset) => asset.symbol === selectedAsset.symbol);
   const assetFiatValue = asset ? asset.fiatValue : 0;
   const balance = assetBalance ? assetBalance.balance : 0;
+  const assetOpening24h = asset ? asset.opening24h : 0;
+  const priceVariation = calculatePriceVariation(
+    assetFiatValue,
+    assetOpening24h
+  );
+  const priceDifference = assetFiatValue - assetOpening24h;
   const description = blockchains.find(
     (blockchain) => blockchain.tokenSymbol === selectedAsset.symbol
   )?.description;
   const temporalities = ["1m", "5m", "15m", "1h", "4h", "1d", "1w", "1M"];
   const [selectedTemporality, setSelectedTemporality] = useState("1d");
-
-  useEffect(() => {
-    console.log("blockchains ***************", blockchains);
-  }, [blockchains]);
-
-  // useEffect(() => {
-  //   webSocketService.subscribeToOhlcData(selectedAsset.symbol, "1m");
-  // }, [selectedAsset]);
 
   const { theme } = useTheme();
   const styles = getStyles(theme);
@@ -46,9 +46,15 @@ const MarketAsset = ({ navigation }) => {
     );
   }, [selectedAsset, selectedTemporality]);
 
-  // useEffect(() => {
-  //   console.log("candlestickChart", candlestickChart);
-  // }, [candlestickChart]);
+  const formatPriceWithSymbol = (value) => {
+    const formattedValue = formatFiatValue(Math.abs(value));
+    return `${value < 0 ? "-" : "+"}$${formattedValue}`;
+  };
+
+  useEffect(() => {
+    console.log("ASSET BALANCE", assetBalance);
+    console.log("asset", asset);
+  }, [assetBalance, asset]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -60,7 +66,15 @@ const MarketAsset = ({ navigation }) => {
           <Text style={styles.symbolText}>{selectedAsset.symbol}</Text>
           <Text style={styles.nameText}>{selectedAsset.name}</Text>
           <Text style={styles.priceText}>${assetFiatValue}</Text>
-          <Text style={styles.changeText}>+740.73 (1.68%)</Text>
+          <Text
+            style={
+              priceVariation >= 0
+                ? styles.changeTextPositive
+                : styles.changeTextNegative
+            }
+          >
+            {formatPriceWithSymbol(priceDifference)} ({priceVariation}%)
+          </Text>
         </View>
       </View>
       <View style={styles.temporalitiesContainer}>

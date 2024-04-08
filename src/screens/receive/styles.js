@@ -179,9 +179,6 @@ export const getStyles = (theme) =>
       alignItems: "center",
       justifyContent: "center",
       width: "100%",
-      marginTop: 32,
     },
-    qrCode: {
-      marginTop: 40,
-    },
+    qrCode: {},
   });

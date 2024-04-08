@@ -9,6 +9,7 @@ export const useTheme = () => useContext(ThemeContext);
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(LightTheme);
   const [isLightTheme, setIsLightMode] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadThemePreference = async () => {
@@ -20,6 +21,7 @@ export const ThemeProvider = ({ children }) => {
         setTheme(isLight ? LightTheme : DarkTheme);
         setIsLightMode(isLight);
       }
+      setIsLoading(false);
     };
 
     loadThemePreference();
@@ -34,6 +36,8 @@ export const ThemeProvider = ({ children }) => {
       newIsLightTheme ? "light" : "dark"
     );
   };
+
+  if (isLoading) return null;
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme, isLightTheme }}>
