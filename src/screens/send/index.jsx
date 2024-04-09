@@ -401,12 +401,12 @@ const Send = ({ navigation }) => {
               <Text style={styles.address}>0x2312424eafaf</Text>
             </View>
           </View>
-          <View style={styles.addToFavoritesContainer}>
+          <TouchableOpacity style={styles.addToFavoritesContainer}>
             <Text style={styles.addToFavoriteIcon}>
               <Ionicons name="add-outline" size={24} />
             </Text>
             <Text style={styles.addToFavoriteButton}>Agregar a favoritos</Text>
-          </View>
+          </TouchableOpacity>
         </View>
       </View>
       <View style={styles.contactsContainer}>
@@ -585,9 +585,9 @@ const Send = ({ navigation }) => {
           </>
         )}
       </View>
-
+      {/*
       <View style={styles.availableBalanceContainer}>
-        {/* <View style={styles.availableBalanceLeftContainer}>
+         <View style={styles.availableBalanceLeftContainer}>
           <Text style={styles.availableBalanceText}>Balance</Text>
           <Text style={styles.feeText}>Comisión</Text>
           <Text style={[styles.totalText, { paddingTop: 8 }]}>Disponible</Text>
@@ -622,19 +622,19 @@ const Send = ({ navigation }) => {
                   .toFixed(selectedAsset.assetDecimals)}{" "}
             {isFiatPrimary ? fiatSymbol : selectedAsset.symbol}
           </Text>
-        </View> */}
-      </View>
+        </View> 
+      </View>*/}
 
-      <View style={styles.feeContainer}>
+      {/* <View style={styles.feeContainer}>
         {selectedBlockchain && (
           <>
-            {/* <Text style={styles.feeTitle}>Comisión de retiro:</Text> */}
-            {/* <Text style={styles.feeValue}>
+             <Text style={styles.feeTitle}>Comisión de retiro:</Text> 
+          <Text style={styles.feeValue}>
               {withdrawFee} {selectedAsset.symbol}
-            </Text> */}
+            </Text> 
           </>
         )}
-      </View>
+      </View> */}
 
       {/* <TextInput
               placeholder="Cantidad a enviar"

@@ -162,7 +162,6 @@ export const getStyles = (theme) =>
       alignItems: "center",
       borderRadius: 5,
       width: "80%",
-      marginTop: 11,
     },
     buttonText: {
       color: COLORS.black,
