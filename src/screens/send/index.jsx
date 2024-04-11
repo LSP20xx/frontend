@@ -384,86 +384,91 @@ const Send = ({ navigation }) => {
           <Text style={styles.errorText}>Invalid address</Text>
         )}
         <View style={styles.contactsContainer}>
-          <View style={styles.contactsTitleContainer}>
-            <Text style={styles.favoritesTitle}>Favoritos</Text>
-            <TouchableOpacity>
-              <Text style={styles.showAllButton}>Ver todos</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.addressesContainer}>
-            <View style={styles.addressContainer}>
-              <Ionicons name="wallet-outline" size={24} />
+          {false && (
+            <View style={styles.contactsTitleContainer}>
+              <Text style={styles.favoritesTitle}>Favoritos</Text>
+              <TouchableOpacity>
+                <Text style={styles.showAllButton}>Ver todos</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          {false && (
+            <View style={styles.addressesContainer}>
+              <View style={styles.addressContainer}>
+                <Ionicons name="wallet-outline" size={24} />
 
-              <View style={styles.addressAndNameContainer}>
-                <Text style={styles.favoriteAddressName}>Lautaro</Text>
-                <Text style={styles.address}>0x2312424eafaf</Text>
+                <View style={styles.addressAndNameContainer}>
+                  <Text style={styles.favoriteAddressName}>Lautaro</Text>
+                  <Text style={styles.address}>0x2312424eafaf</Text>
+                </View>
+              </View>
+              <View style={styles.addressContainer}>
+                <Ionicons name="wallet-outline" size={24} />
+
+                <View style={styles.addressAndNameContainer}>
+                  <Text style={styles.favoriteAddressName}>Lautaro</Text>
+                  <Text style={styles.address}>0x2312424eafaf</Text>
+                </View>
+              </View>
+              <View style={styles.addressContainer}>
+                <Ionicons name="wallet-outline" size={24} />
+
+                <View style={styles.addressAndNameContainer}>
+                  <Text style={styles.favoriteAddressName}>Lautaro</Text>
+                  <Text style={styles.address}>0x2312424eafaf</Text>
+                </View>
               </View>
             </View>
-            <View style={styles.addressContainer}>
-              <Ionicons name="wallet-outline" size={24} />
-
-              <View style={styles.addressAndNameContainer}>
-                <Text style={styles.favoriteAddressName}>Lautaro</Text>
-                <Text style={styles.address}>0x2312424eafaf</Text>
-              </View>
-            </View>
-            <View style={styles.addressContainer}>
-              <Ionicons name="wallet-outline" size={24} />
-
-              <View style={styles.addressAndNameContainer}>
-                <Text style={styles.favoriteAddressName}>Lautaro</Text>
-                <Text style={styles.address}>0x2312424eafaf</Text>
-              </View>
-            </View>
-            <TouchableOpacity style={styles.addToFavoritesContainer}>
-              <View style={styles.addToFavoritesBackgroundCircle}>
-                <Ionicons
-                  style={styles.addToFavoritesIcon}
-                  name="add-outline"
-                  size={24}
-                />
-              </View>
-
-              <Text style={styles.addToFavoritesButton}>
-                Agregar a favoritos
-              </Text>
-            </TouchableOpacity>
-          </View>
+          )}
         </View>
-        <View style={styles.contactsContainer}>
-          <View style={styles.contactsTitleContainer}>
-            <Text style={styles.favoritesTitle}>Recientes</Text>
-            <TouchableOpacity>
-              <Text style={styles.showAllButton}>Ver todos</Text>
-            </TouchableOpacity>
+        <TouchableOpacity style={styles.addToFavoritesContainer}>
+          <View style={styles.addToFavoritesBackgroundCircle}>
+            <Ionicons
+              style={styles.addToFavoritesIcon}
+              name="add-outline"
+              size={24}
+            />
           </View>
-          <View style={styles.addressesContainer}>
-            <View style={styles.addressContainer}>
-              <Ionicons name="wallet-outline" size={24} />
 
-              <View style={styles.addressAndNameContainer}>
-                <Text style={styles.favoriteAddressName}>Lautaro</Text>
-                <Text style={styles.address}>0x2312424eafaf</Text>
-              </View>
+          <Text style={styles.addToFavoritesButton}>Agregar a favoritos</Text>
+        </TouchableOpacity>
+        {false && (
+          <View style={styles.contactsContainer}>
+            <View style={styles.contactsTitleContainer}>
+              <Text style={styles.favoritesTitle}>Recientes</Text>
+              <TouchableOpacity>
+                <Text style={styles.showAllButton}>Ver todos</Text>
+              </TouchableOpacity>
             </View>
-            <View style={styles.addressContainer}>
-              <Ionicons name="wallet-outline" size={24} />
+            <View style={styles.addressesContainer}>
+              <View style={styles.addressContainer}>
+                <Ionicons name="wallet-outline" size={24} />
 
-              <View style={styles.addressAndNameContainer}>
-                <Text style={styles.favoriteAddressName}>Lautaro</Text>
-                <Text style={styles.address}>0x2312424eafaf</Text>
+                <View style={styles.addressAndNameContainer}>
+                  <Text style={styles.favoriteAddressName}>Lautaro</Text>
+                  <Text style={styles.address}>0x2312424eafaf</Text>
+                </View>
               </View>
-            </View>
-            <View style={styles.addressContainer}>
-              <Ionicons name="wallet-outline" size={24} />
+              <View style={styles.addressContainer}>
+                <Ionicons name="wallet-outline" size={24} />
 
-              <View style={styles.addressAndNameContainer}>
-                <Text style={styles.favoriteAddressName}>Lautaro</Text>
-                <Text style={styles.address}>0x2312424eafaf</Text>
+                <View style={styles.addressAndNameContainer}>
+                  <Text style={styles.favoriteAddressName}>Lautaro</Text>
+                  <Text style={styles.address}>0x2312424eafaf</Text>
+                </View>
+              </View>
+              <View style={styles.addressContainer}>
+                <Ionicons name="wallet-outline" size={24} />
+
+                <View style={styles.addressAndNameContainer}>
+                  <Text style={styles.favoriteAddressName}>Lautaro</Text>
+                  <Text style={styles.address}>0x2312424eafaf</Text>
+                </View>
               </View>
             </View>
           </View>
-        </View>
+        )}
+
         {/* <View style={styles.assetConversionContainer}>
           {selectedBlockchain && toAddress && (
             <>

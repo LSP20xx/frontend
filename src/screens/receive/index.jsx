@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect } from "react";
-import { Alert, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Clipboard, Text, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
 import { Header } from "../../components/index";
 import { useTheme } from "../../context/ThemeContext";
