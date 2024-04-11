@@ -35,6 +35,7 @@ import {
 } from "../../store/selectors/assets.selector";
 import { useTheme } from "../../context/ThemeContext";
 import PressableSwapIcons from "../../components/pressable-swap-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 BigNumber.config({ DECIMAL_PLACES: 18 });
 
@@ -325,12 +326,19 @@ const Send = ({ navigation }) => {
   // }, [selectedAsset.assetDecimals]);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Header navigation={navigation} showBackButton={true} />
-      <View style={styles.screenTitleContainer}>
-        <Text style={styles.screenTitle}>Enviar {selectedAsset.symbol}</Text>
+
+      <View style={styles.titleContainer}>
+        <Text style={styles.sectionTitle}>Enviar {selectedAsset.symbol}</Text>
       </View>
-      {/* <View style={styles.pickerContainer}>
+      <View style={styles.subtitleContainer}>
+        <Text style={styles.sectionSubtitle}>
+          Ingresa la dirección de destino
+        </Text>
+      </View>
+      <ScrollView contentContainerStyle={{ maxHeight: 600 }}>
+        {/* <View style={styles.pickerContainer}>
         <Picker
           selectedValue={selectedBlockchain}
           onValueChange={(itemValue, itemIndex) =>
@@ -362,230 +370,247 @@ const Send = ({ navigation }) => {
           ))}
         </Picker>
       </View> */}
+        <TextInput
+          placeholder="Dirección de destino"
+          placeholderTextColor={theme.placeholder}
+          value={toAddress}
+          onChangeText={setToAddress}
+          style={styles.input}
+        />
+        <Text style={styles.exampleAddressText}>
+          Ej: 0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B{" "}
+        </Text>
+        {!isValidAddress && (
+          <Text style={styles.errorText}>Invalid address</Text>
+        )}
+        <View style={styles.contactsContainer}>
+          <View style={styles.contactsTitleContainer}>
+            <Text style={styles.favoritesTitle}>Favoritos</Text>
+            <TouchableOpacity>
+              <Text style={styles.showAllButton}>Ver todos</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.addressesContainer}>
+            <View style={styles.addressContainer}>
+              <Ionicons name="wallet-outline" size={24} />
 
-      <TextInput
-        placeholder="Dirección de destino"
-        placeholderTextColor={theme.placeholder}
-        value={toAddress}
-        onChangeText={setToAddress}
-        style={styles.input}
-      />
-      <Text style={styles.exampleAddressText}>
-        Ej: 0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B{" "}
-      </Text>
+              <View style={styles.addressAndNameContainer}>
+                <Text style={styles.favoriteAddressName}>Lautaro</Text>
+                <Text style={styles.address}>0x2312424eafaf</Text>
+              </View>
+            </View>
+            <View style={styles.addressContainer}>
+              <Ionicons name="wallet-outline" size={24} />
 
-      {!isValidAddress && <Text style={styles.errorText}>Invalid address</Text>}
-      <View style={styles.contactsContainer}>
-        <View style={styles.contactsTitleContainer}>
-          <Text style={styles.favoritesTitle}>Favoritos</Text>
-          <TouchableOpacity>
-            <Text style={styles.addToFavoritesButton}>Ver todos</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.addressesContainer}>
-          <View style={styles.addressContainer}>
-            <View>
-              <Text style={styles.favoriteAddressName}>Lautaro</Text>
-              <Text style={styles.address}>0x2312424eafaf</Text>
+              <View style={styles.addressAndNameContainer}>
+                <Text style={styles.favoriteAddressName}>Lautaro</Text>
+                <Text style={styles.address}>0x2312424eafaf</Text>
+              </View>
             </View>
-          </View>
-          <View style={styles.addressContainer}>
-            <View>
-              <Text style={styles.favoriteAddressName}>Lautaro</Text>
-              <Text style={styles.address}>0x2312424eafaf</Text>
-            </View>
-          </View>
-          <View style={styles.addressContainer}>
-            <View>
-              <Text style={styles.favoriteAddressName}>Lautaro</Text>
-              <Text style={styles.address}>0x2312424eafaf</Text>
-            </View>
-          </View>
-          <TouchableOpacity style={styles.addToFavoritesContainer}>
-            <Text style={styles.addToFavoriteIcon}>
-              <Ionicons name="add-outline" size={24} />
-            </Text>
-            <Text style={styles.addToFavoriteButton}>Agregar a favoritos</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      <View style={styles.contactsContainer}>
-        <View style={styles.contactsTitleContainer}>
-          <Text style={styles.favoritesTitle}>Recientes</Text>
-          <TouchableOpacity>
-            <Text style={styles.addToFavoritesButton}>Ver todos</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.addressesContainer}>
-          <View style={styles.addressContainer}>
-            <View>
-              <Text style={styles.favoriteAddressName}>Lautaro</Text>
-              <Text style={styles.address}>0x2312424eafaf</Text>
-            </View>
-          </View>
-          <View style={styles.addressContainer}>
-            <View>
-              <Text style={styles.favoriteAddressName}>Lautaro</Text>
-              <Text style={styles.address}>0x2312424eafaf</Text>
-            </View>
-          </View>
-          <View style={styles.addressContainer}>
-            <View>
-              <Text style={styles.favoriteAddressName}>Lautaro</Text>
-              <Text style={styles.address}>0x2312424eafaf</Text>
-            </View>
-          </View>
-        </View>
-      </View>
+            <View style={styles.addressContainer}>
+              <Ionicons name="wallet-outline" size={24} />
 
-      <View style={styles.assetConversionContainer}>
-        {selectedBlockchain && toAddress && (
-          <>
-            <PressableSwapIcons
-              onPress={() => {
-                handleIconAnimation();
-                handleSwapValues();
-                adjustFontSizeAndMargin(calculatedAmount);
-              }}
-            />
-            <View style={styles.assetConversionContainerFirstColumn}>
-              <View style={styles.assetAmountContainerTop}>
-                {onMaxPress ? (
-                  <TextInput
-                    ref={assetAmountInputRef}
-                    style={[styles.assetAmount, { fontSize: fontSize }]}
-                    selectionColor={COLORS.primaryDark}
-                    autoFocus={true}
-                    keyboardType="decimal-pad"
-                    value={
-                      isFiatPrimary
-                        ? new BigNumber(balance)
-                            .minus(withdrawFee)
-                            .times(assetFiatValue)
-                            .toFixed(2)
-                        : new BigNumber(balance)
-                            .minus(withdrawFee)
-                            .toFixed(selectedAsset.assetDecimals)
-                    }
-                    onChangeText={(text) => {
-                      setOnMaxPress(!onMaxPress);
-                      setAmount(text);
-                    }}
-                  />
-                ) : (
-                  <TextInput
-                    ref={assetAmountInputRef}
-                    style={[styles.assetAmount, { fontSize: fontSize }]}
-                    selectionColor={COLORS.primaryDark}
-                    autoFocus={true}
-                    keyboardType="decimal-pad"
-                    value={amount}
-                    onChangeText={handleAmountChange}
-                  />
-                )}
-
-                <Text style={styles.selectedAssetSymbol}>
-                  {isFiatPrimary
-                    ? fiatSymbol.toUpperCase()
-                    : selectedAsset.symbol.toUpperCase()}
-                </Text>
+              <View style={styles.addressAndNameContainer}>
+                <Text style={styles.favoriteAddressName}>Lautaro</Text>
+                <Text style={styles.address}>0x2312424eafaf</Text>
+              </View>
+            </View>
+            <TouchableOpacity style={styles.addToFavoritesContainer}>
+              <View style={styles.addToFavoritesBackgroundCircle}>
+                <Ionicons
+                  style={styles.addToFavoritesIcon}
+                  name="add-outline"
+                  size={24}
+                />
               </View>
 
-              <View style={styles.calculatedAssetAmountContainer}>
-                <View style={styles.calculatedAssetAmountColumn}>
+              <Text style={styles.addToFavoritesButton}>
+                Agregar a favoritos
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={styles.contactsContainer}>
+          <View style={styles.contactsTitleContainer}>
+            <Text style={styles.favoritesTitle}>Recientes</Text>
+            <TouchableOpacity>
+              <Text style={styles.showAllButton}>Ver todos</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.addressesContainer}>
+            <View style={styles.addressContainer}>
+              <Ionicons name="wallet-outline" size={24} />
+
+              <View style={styles.addressAndNameContainer}>
+                <Text style={styles.favoriteAddressName}>Lautaro</Text>
+                <Text style={styles.address}>0x2312424eafaf</Text>
+              </View>
+            </View>
+            <View style={styles.addressContainer}>
+              <Ionicons name="wallet-outline" size={24} />
+
+              <View style={styles.addressAndNameContainer}>
+                <Text style={styles.favoriteAddressName}>Lautaro</Text>
+                <Text style={styles.address}>0x2312424eafaf</Text>
+              </View>
+            </View>
+            <View style={styles.addressContainer}>
+              <Ionicons name="wallet-outline" size={24} />
+
+              <View style={styles.addressAndNameContainer}>
+                <Text style={styles.favoriteAddressName}>Lautaro</Text>
+                <Text style={styles.address}>0x2312424eafaf</Text>
+              </View>
+            </View>
+          </View>
+        </View>
+        {/* <View style={styles.assetConversionContainer}>
+          {selectedBlockchain && toAddress && (
+            <>
+              <PressableSwapIcons
+                onPress={() => {
+                  handleIconAnimation();
+                  handleSwapValues();
+                  adjustFontSizeAndMargin(calculatedAmount);
+                }}
+              />
+              <View style={styles.assetConversionContainerFirstColumn}>
+                <View style={styles.assetAmountContainerTop}>
                   {onMaxPress ? (
-                    <Text style={styles.calculatedAssetAmount}>
-                      {isFiatPrimary
-                        ? new BigNumber(balance)
-                            .minus(withdrawFee)
-                            .toFixed(selectedAsset.assetDecimals)
-                        : new BigNumber(balance)
-                            .minus(withdrawFee)
-                            .times(assetFiatValue)
-                            .toFixed(2)}{" "}
-                      {isFiatPrimary
-                        ? selectedAsset.symbol.toUpperCase()
-                        : fiatSymbol.toUpperCase()}
-                    </Text>
+                    <TextInput
+                      ref={assetAmountInputRef}
+                      style={[styles.assetAmount, { fontSize: fontSize }]}
+                      selectionColor={COLORS.primaryDark}
+                      autoFocus={true}
+                      keyboardType="decimal-pad"
+                      value={
+                        isFiatPrimary
+                          ? new BigNumber(balance)
+                              .minus(withdrawFee)
+                              .times(assetFiatValue)
+                              .toFixed(2)
+                          : new BigNumber(balance)
+                              .minus(withdrawFee)
+                              .toFixed(selectedAsset.assetDecimals)
+                      }
+                      onChangeText={(text) => {
+                        setOnMaxPress(!onMaxPress);
+                        setAmount(text);
+                      }}
+                    />
                   ) : (
-                    <Text style={styles.calculatedAssetAmount}>
-                      {calculatedAmount}{" "}
-                      {isFiatPrimary
-                        ? selectedAsset.symbol.toUpperCase()
-                        : fiatSymbol.toUpperCase()}
-                    </Text>
+                    <TextInput
+                      ref={assetAmountInputRef}
+                      style={[styles.assetAmount, { fontSize: fontSize }]}
+                      selectionColor={COLORS.primaryDark}
+                      autoFocus={true}
+                      keyboardType="decimal-pad"
+                      value={amount}
+                      onChangeText={handleAmountChange}
+                    />
                   )}
+                  <Text style={styles.selectedAssetSymbol}>
+                    {isFiatPrimary
+                      ? fiatSymbol.toUpperCase()
+                      : selectedAsset.symbol.toUpperCase()}
+                  </Text>
+                </View>
+
+                <View style={styles.calculatedAssetAmountContainer}>
+                  <View style={styles.calculatedAssetAmountColumn}>
+                    {onMaxPress ? (
+                      <Text style={styles.calculatedAssetAmount}>
+                        {isFiatPrimary
+                          ? new BigNumber(balance)
+                              .minus(withdrawFee)
+                              .toFixed(selectedAsset.assetDecimals)
+                          : new BigNumber(balance)
+                              .minus(withdrawFee)
+                              .times(assetFiatValue)
+                              .toFixed(2)}{" "}
+                        {isFiatPrimary
+                          ? selectedAsset.symbol.toUpperCase()
+                          : fiatSymbol.toUpperCase()}
+                      </Text>
+                    ) : (
+                      <Text style={styles.calculatedAssetAmount}>
+                        {calculatedAmount}{" "}
+                        {isFiatPrimary
+                          ? selectedAsset.symbol.toUpperCase()
+                          : fiatSymbol.toUpperCase()}
+                      </Text>
+                    )}
+                  </View>
                 </View>
               </View>
-            </View>
-            <View style={styles.assetConversionContainerSecondColumn}>
-              <TouchableOpacity
-                style={styles.selectedAssetImageContainer}
-                onPress={() =>
-                  navigation.navigate("SendList", {
-                    mode: "enviar",
-                  })
-                }
-              >
-                <Image
-                  source={symbolImages[selectedAsset.symbol.toLowerCase()]}
-                  style={styles.selectedAssetImage}
-                />
-                <Ionicons
-                  name="chevron-down"
-                  size={24}
-                  color={COLORS.greyLight}
-                />
-              </TouchableOpacity>
-              {onMaxPress ? (
+              <View style={styles.assetConversionContainerSecondColumn}>
                 <TouchableOpacity
-                  style={styles.maxButtonPressed}
-                  onPress={() => {
-                    setOnMaxPress(!onMaxPress);
-                    // adjustFontSizeAndMargin(calculatedBalance);
-                  }}
+                  style={styles.selectedAssetImageContainer}
+                  onPress={() =>
+                    navigation.navigate("SendList", {
+                      mode: "enviar",
+                    })
+                  }
                 >
-                  <Text style={styles.maxButtonText}>Max</Text>
+                  <Image
+                    source={symbolImages[selectedAsset.symbol.toLowerCase()]}
+                    style={styles.selectedAssetImage}
+                  />
+                  <Ionicons
+                    name="chevron-down"
+                    size={24}
+                    color={COLORS.greyLight}
+                  />
                 </TouchableOpacity>
-              ) : (
-                <TouchableOpacity
-                  style={styles.maxButton}
-                  onPress={() => {
-                    setOnMaxPress(!onMaxPress);
-                    setAmount(
-                      isFiatPrimary
-                        ? new BigNumber(balance)
-                            .minus(withdrawFee)
-                            .times(assetFiatValue)
-                            .toFixed(2)
-                        : new BigNumber(balance)
-                            .minus(withdrawFee)
-                            .toFixed(selectedAsset.assetDecimals)
-                    );
-                    adjustFontSizeAndMargin(
-                      isFiatPrimary
-                        ? new BigNumber(balance)
-                            .minus(withdrawFee)
-                            .times(assetFiatValue)
-                            .toFixed(2)
-                        : new BigNumber(balance)
-                            .minus(withdrawFee)
-                            .toFixed(selectedAsset.assetDecimals)
-                    );
+                {onMaxPress ? (
+                  <TouchableOpacity
+                    style={styles.maxButtonPressed}
+                    onPress={() => {
+                      setOnMaxPress(!onMaxPress);
+                      // adjustFontSizeAndMargin(calculatedBalance);
+                    }}
+                  >
+                    <Text style={styles.maxButtonText}>Max</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    style={styles.maxButton}
+                    onPress={() => {
+                      setOnMaxPress(!onMaxPress);
+                      setAmount(
+                        isFiatPrimary
+                          ? new BigNumber(balance)
+                              .minus(withdrawFee)
+                              .times(assetFiatValue)
+                              .toFixed(2)
+                          : new BigNumber(balance)
+                              .minus(withdrawFee)
+                              .toFixed(selectedAsset.assetDecimals)
+                      );
+                      adjustFontSizeAndMargin(
+                        isFiatPrimary
+                          ? new BigNumber(balance)
+                              .minus(withdrawFee)
+                              .times(assetFiatValue)
+                              .toFixed(2)
+                          : new BigNumber(balance)
+                              .minus(withdrawFee)
+                              .toFixed(selectedAsset.assetDecimals)
+                      );
 
-                    // setOnMaxPress(!onMaxPress);
-                    // setAmount(calculatedBalance);
-                    // adjustFontSizeAndMargin(calculatedBalance);
-                  }}
-                >
-                  <Text style={styles.maxButtonText}>Max</Text>
-                </TouchableOpacity>
-              )}
-            </View>
-          </>
-        )}
-      </View>
-      {/*
+                      // setOnMaxPress(!onMaxPress);
+                      // setAmount(calculatedBalance);
+                      // adjustFontSizeAndMargin(calculatedBalance);
+                    }}
+                  >
+                    <Text style={styles.maxButtonText}>Max</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            </>
+          )}
+        </View> */}
+        {/*
       <View style={styles.availableBalanceContainer}>
          <View style={styles.availableBalanceLeftContainer}>
           <Text style={styles.availableBalanceText}>Balance</Text>
@@ -624,8 +649,7 @@ const Send = ({ navigation }) => {
           </Text>
         </View> 
       </View>*/}
-
-      {/* <View style={styles.feeContainer}>
+        {/* <View style={styles.feeContainer}>
         {selectedBlockchain && (
           <>
              <Text style={styles.feeTitle}>Comisión de retiro:</Text> 
@@ -635,8 +659,7 @@ const Send = ({ navigation }) => {
           </>
         )}
       </View> */}
-
-      {/* <TextInput
+        {/* <TextInput
               placeholder="Cantidad a enviar"
               placeholderTextColor={COLORS.greyLight}
               value={amount}
@@ -650,23 +673,25 @@ const Send = ({ navigation }) => {
                 La cantidad excede el saldo disponible
               </Text>
             )} */}
-      {/* <View style={styles.recentTransfersContainer}>
+        {/* <View style={styles.recentTransfersContainer}>
               <Text style={styles.recentTransfersTitle}>Historial de retiros</Text>
             </View> */}
-      {/* <View style={styles.errorContainer}>
+        {/* <View style={styles.errorContainer}>
         {!!errorMessages[0] && (
           <Text style={styles.errorText}>{errorMessages[0]}</Text>
         )}
       </View> */}
-
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleSendPress}
-        disabled={!!errorMessages[0]}
-      >
-        <Text style={styles.buttonText}>Confirmar</Text>
-      </TouchableOpacity>
-    </View>
+      </ScrollView>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleSendPress}
+          disabled={!!errorMessages[0]}
+        >
+          <Text style={styles.buttonText}>Confirmar</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 };
 

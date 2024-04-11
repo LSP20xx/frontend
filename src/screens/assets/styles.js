@@ -7,7 +7,6 @@ export const getStyles = (theme) =>
     container: {
       flex: 1,
       backgroundColor: theme.background,
-      paddingTop: 20,
       alignItems: "center",
       position: "relative",
     },

@@ -8,7 +8,6 @@ export const getStyles = (theme) =>
       justifyContent: "space-between",
       alignItems: "center",
       width: "100%",
-      paddingTop: 24,
       paddingHorizontal: 32,
       backgroundColor: theme.background,
     },

@@ -6,8 +6,17 @@ export const getStyles = (theme) =>
     container: {
       flex: 1,
       backgroundColor: theme.background,
-      paddingTop: 20,
+      justifyContent: "space-between", // Alinea el contenido al principio y el botón al final.
+    },
+    scrollContainer: {
+      flex: 1,
+    },
+    buttonContainer: {
+      padding: 10,
+      borderTopWidth: 1,
+      borderColor: COLORS.primaryLight,
       alignItems: "center",
+      justifyContent: "center",
     },
     contactsContainer: {
       width: "100%",
@@ -35,8 +44,7 @@ export const getStyles = (theme) =>
     favoriteAddressName: {
       fontFamily: "Uto-Medium",
     },
-    addToFavoriteIcon: {},
-    addToFavoriteButton: {
+    addToFavoritesButton: {
       fontFamily: "Uto-Medium",
       marginTop: 6,
     },
@@ -47,6 +55,24 @@ export const getStyles = (theme) =>
       marginVertical: 10,
     },
     addToFavoritesButton: {
+      fontFamily: "Uto-Bold",
+      color: COLORS.primaryDark,
+      marginTop: 6,
+      marginRight: 4,
+    },
+    addToFavoritesBackgroundCircle: {
+      borderRadius: 12,
+      backgroundColor: COLORS.greyBackground,
+    },
+    addToFavoritesIcon: {
+      marginLeft: 1,
+    },
+    addToFavoritesButton: {
+      marginLeft: 6,
+      marginTop: 6,
+      fontFamily: "Uto-Bold",
+    },
+    showAllButton: {
       fontFamily: "Uto-Bold",
       color: COLORS.primaryDark,
       marginRight: 30,
@@ -151,10 +177,15 @@ export const getStyles = (theme) =>
       borderRadius: 16,
       paddingVertical: 5,
       paddingHorizontal: 15,
-      width: "90%",
+      marginTop: 10,
+      marginHorizontal: 24,
+
       height: 50,
       color: theme.text,
       fontFamily: "Uto-Light",
+    },
+    mainContainer: {
+      flex: 1,
     },
     button: {
       backgroundColor: COLORS.primaryLight,
@@ -199,15 +230,16 @@ export const getStyles = (theme) =>
       textAlign: "left",
       marginHorizontal: 23,
       marginTop: 30,
-      marginBottom: 20,
       backgroundColor: theme.background,
       fontFamily: "Uto-Medium",
+      marginBottom: 10,
     },
     exampleAddressText: {
       fontFamily: "Uto-Light",
       fontSize: 12,
       color: COLORS.grey,
       paddingBottom: 30,
+      marginHorizontal: 28,
     },
     maxButton: {
       backgroundColor: COLORS.greyLight,
@@ -318,5 +350,32 @@ export const getStyles = (theme) =>
       color: theme.text,
       textAlign: "left",
       fontFamily: "Uto-Light",
+    },
+    addressAndNameContainer: {
+      marginLeft: 8,
+    },
+    titleContainer: {
+      alignItems: "flex-start",
+    },
+    subtitleContainer: {
+      alignItems: "flex-start",
+    },
+    sectionTitle: {
+      fontSize: 20,
+      color: theme.text,
+      fontFamily: "Uto-Bold",
+      textAlign: "left",
+      marginTop: 20,
+      paddingTop: 10,
+      marginLeft: 8,
+    },
+    sectionSubtitle: {
+      fontSize: 14,
+      color: theme.text,
+      fontFamily: "Uto-Regular",
+      textAlign: "left",
+      paddingTop: 10,
+      marginLeft: 8,
+      marginBottom: 20,
     },
   });

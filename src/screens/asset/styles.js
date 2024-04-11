@@ -26,7 +26,7 @@ export const getStyles = (theme) =>
       marginVertical: 8,
     },
     titleContainer: {
-      alignItems: "center",
+      alignItems: "flex-start",
     },
     titleStyle: {
       fontSize: 24,
@@ -84,7 +84,6 @@ export const getStyles = (theme) =>
       width: "98%",
       backgroundColor: theme.background,
       flex: 1,
-      marginTop: 16,
     },
     priceRow: {
       flexDirection: "row",
@@ -104,9 +103,9 @@ export const getStyles = (theme) =>
       paddingTop: 10,
     },
     sectionTitle: {
-      fontSize: 16,
+      fontSize: 20,
       color: theme.text,
-      fontFamily: "Uto-Regular",
+      fontFamily: "Uto-Bold",
       textAlign: "left",
       marginTop: 20,
       paddingTop: 10,
@@ -247,7 +246,6 @@ export const getStyles = (theme) =>
       height: 40,
       width: 40,
       resizeMode: "contain",
-      marginTop: 8,
     },
     categoryImage: {
       width: 55,
@@ -260,5 +258,126 @@ export const getStyles = (theme) =>
       fontFamily: "Uto-Light",
       color: COLORS.greyLight,
       marginRight: 4,
+    },
+
+    contactsContainer: {
+      width: "100%",
+    },
+    contactsTitleContainer: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      marginTop: 6,
+    },
+    favoritesTitle: {
+      textAlign: "left",
+      marginLeft: 30,
+      fontFamily: "Uto-Bold",
+    },
+    addressesContainer: {
+      marginVertical: 20,
+    },
+    addressContainer: {
+      flexDirection: "row",
+      marginLeft: 30,
+      marginVertical: 10,
+    },
+    address: {
+      fontFamily: "Uto-Light",
+    },
+    favoriteAddressName: {
+      fontFamily: "Uto-Medium",
+    },
+    addToFavoritesButton: {
+      fontFamily: "Uto-Medium",
+      marginTop: 6,
+    },
+
+    addToFavoritesContainer: {
+      flexDirection: "row",
+      marginLeft: 30,
+      marginVertical: 10,
+    },
+    addToFavoritesButton: {
+      fontFamily: "Uto-Bold",
+      color: COLORS.primaryDark,
+      marginTop: 6,
+      marginRight: 4,
+    },
+    addToFavoritesBackgroundCircle: {
+      borderRadius: 12,
+      backgroundColor: COLORS.greyBackground,
+    },
+    addToFavoritesIcon: {
+      marginLeft: 1,
+    },
+    addToFavoritesButton: {
+      marginLeft: 6,
+      marginTop: 6,
+      fontFamily: "Uto-Bold",
+    },
+    showAllButton: {
+      fontFamily: "Uto-Bold",
+      color: COLORS.primaryDark,
+      marginRight: 30,
+    },
+    subtitleContainer: {
+      alignItems: "flex-start",
+    },
+    sectionSubtitle: {
+      fontSize: 14,
+      color: theme.text,
+      fontFamily: "Uto-Regular",
+      textAlign: "left",
+      paddingTop: 10,
+      marginLeft: 8,
+      marginBottom: 20,
+    },
+    input: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "flex-start",
+      backgroundColor: theme.input,
+      borderRadius: 16,
+      paddingVertical: 5,
+      paddingHorizontal: 15,
+      marginTop: 10,
+      marginHorizontal: 24,
+      height: 50,
+      color: theme.text,
+      fontFamily: "Uto-Light",
+    },
+    receiveMessageContainer: {
+      margin: 20,
+
+      height: 90,
+      maxHeight: 90,
+      paddingTop: 10,
+      backgroundColor: theme.background,
+      flex: 1,
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      padding: 10,
+      borderRadius: 16,
+      ...Platform.select({
+        ios: {
+          shadowColor: theme.shadow,
+          shadowOffset: { width: 10, height: 10 },
+          shadowOpacity: 0.5,
+          shadowRadius: 5,
+        },
+        android: {
+          elevation: 10,
+          shadowColor: theme.shadow,
+        },
+      }),
+    },
+    receiveMessage: {
+      textAlign: "center",
+      fontFamily: "Uto-Light",
+    },
+    receiveButton: {
+      fontFamily: "Uto-Bold",
+      color: theme.text,
     },
   });

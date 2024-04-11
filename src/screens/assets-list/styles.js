@@ -7,9 +7,7 @@ export const getStyles = (theme) =>
     container: {
       flex: 1,
       backgroundColor: theme.background,
-      paddingTop: 20,
-      alignItems: "center",
-      position: "relative",
+      justifyContent: "space-between",
     },
     listContainer: {
       paddingHorizontal: 16,
@@ -95,7 +93,6 @@ export const getStyles = (theme) =>
       width: "98%",
       backgroundColor: theme.background,
       flex: 1,
-      marginTop: 16,
     },
     amountRow: {
       flexDirection: "row",

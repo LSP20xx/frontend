@@ -1,17 +1,123 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { WebView } from "react-native-webview";
-import { useSelector } from "react-redux";
 import { useTheme } from "../../context/ThemeContext";
-import { COLORS } from "../../constants";
+import { getCandlestickChart } from "../../store/actions";
+import { useDispatch, useSelector } from "react-redux";
+
+// const ChartComponent = (props) => {
+//   const {
+//     data,
+//     colors: {
+//       backgroundColor = "white",
+//       lineColor = "#2962FF",
+//       textColor = "black",
+//       areaTopColor = "#2962FF",
+//       areaBottomColor = "rgba(41, 98, 255, 0.28)",
+//     } = {},
+//   } = props;
+
+//   const chartContainerRef = useRef();
+
+//   useEffect(() => {
+//     const handleResize = () => {
+//       chart.applyOptions({ width: chartContainerRef.current.clientWidth });
+//     };
+
+//     const chart = createChart(chartContainerRef.current, {
+//       layout: {
+//         background: { type: ColorType.Solid, color: backgroundColor },
+//         textColor,
+//       },
+//       width: chartContainerRef.current.clientWidth,
+//       height: 300,
+//     });
+//     chart.timeScale().fitContent();
+
+//     const newSeries = chart.addAreaSeries({
+//       lineColor,
+//       topColor: areaTopColor,
+//       bottomColor: areaBottomColor,
+//     });
+//     newSeries.setData(data);
+
+//     window.addEventListener("resize", handleResize);
+
+//     return () => {
+//       window.removeEventListener("resize", handleResize);
+
+//       chart.remove();
+//     };
+//   }, [
+//     data,
+//     backgroundColor,
+//     lineColor,
+//     textColor,
+//     areaTopColor,
+//     areaBottomColor,
+//   ]);
+
+//   return <div ref={chartContainerRef} />;
+// };
+
+// const initialData = [
+//   { time: "2018-12-22", value: 32.51 },
+//   { time: "2018-12-23", value: 31.11 },
+//   { time: "2018-12-24", value: 27.02 },
+//   { time: "2018-12-25", value: 27.32 },
+//   { time: "2018-12-26", value: 25.17 },
+//   { time: "2018-12-27", value: 28.89 },
+//   { time: "2018-12-28", value: 25.46 },
+//   { time: "2018-12-29", value: 23.92 },
+//   { time: "2018-12-30", value: 22.68 },
+//   { time: "2018-12-31", value: 22.67 },
+// ];
+
 const TradingViewSimpleChart = () => {
   const webViewRef = useRef(null);
   const { theme } = useTheme();
   const { candlestickChart, loading } = useSelector((state) => state.assets);
-  const [isLoading, setIsLoading] = useState(loading);
+
+  {
+    loading && (
+      <ActivityIndicator
+        size="large"
+        color="#00ff00"
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          top: 0,
+          bottom: 0,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      />
+    );
+  }
 
   let filteredData =
     candlestickChart.length > 0 ? candlestickChart[0].filteredData : null;
+
+  console.log("MODIFIED DATA *************", filteredData);
+
+  // const handleIncomingChartData = (data) => {
+  //   const formattedData = transformChartData(data);
+  //   webViewRef.current.postMessage(JSON.stringify(formattedData));
+  // };
+
+  // window.addEventListener("message", function (event) {
+  //   const data = JSON.parse(event.data);
+  //   candleSeries.update(data);
+  // });
+
+  // useEffect(() => {
+  //   if (candlestickChart.filteredData) {
+  //     webViewRef.current.postMessage(
+  //       JSON.stringify(candlestickChart.filteredData)
+  //     );
+  //   }
+  // }, [candlestickChart]);
 
   const htmlContent = `<!DOCTYPE html>
   <html>
@@ -43,10 +149,10 @@ const TradingViewSimpleChart = () => {
     },
     grid: {
       vertLines: {
-        color: '${theme.background}',
+        color: '${theme.chartLine}',
       },
       horzLines: {
-        color: '${theme.background}',
+        color: '${theme.chartLine}',
       },
     }, });
     const candleSeries = chart.addCandlestickSeries();
@@ -56,7 +162,7 @@ const TradingViewSimpleChart = () => {
 
     if (data.length) {
       const endIndex = data.length - 1;
-      const startIndex = endIndex - 100;
+      const startIndex = endIndex - 20;
       const from = data[startIndex < 0 ? 0 : startIndex].time;
       const to = data[endIndex].time;
 
@@ -72,26 +178,35 @@ const TradingViewSimpleChart = () => {
   </html>
   `;
 
-  useEffect(() => {
-    if (filteredData) {
-      setIsLoading(false);
-    } else {
-      setIsLoading(true);
-    }
-  }, [filteredData]);
+  // useEffect(() => {
+  //     // Aquí puedes suscribirte a WebSocketService y escuchar los datos OHLC.
+  //     // Suponiendo que tienes una función setupWebSocketListeners en tu servicio:
+  //     WebSocketService.setupWebSocketListeners(handleIncomingChartData);
 
-  useEffect(() => {
-    if (webViewRef.current) {
-      webViewRef.current.reload();
-    }
-  }, [filteredData]);
+  //     return () => {
+  //         // No olvides limpiar y desconectar los listeners al desmontar el componente.
+  //         WebSocketService.disconnectWebSocketListeners(handleIncomingChartData);
+  //     };
+  // }, []);
 
+  // const handleIncomingChartData = (data) => {
+  //     const formattedData = transformChartData(data);
+  //     webViewRef.current.postMessage(JSON.stringify(formattedData));
+  // };
+
+  // const transformChartData = (data) => {
+  //     // Transforma los datos recibidos del WebSocket al formato esperado por el gráfico.
+  //     return data; // Este es solo un placeholder. Ajusta según sea necesario.
+  // };
+  useEffect(() => {
+    console.log("theme.background", theme.background);
+  }, [theme.background]);
   return (
     <View style={{ height: 380 }}>
-      {isLoading && (
+      {loading && (
         <ActivityIndicator
           size="large"
-          color={COLORS.primary}
+          color="#00ff00"
           style={{
             position: "absolute",
             left: 0,
@@ -109,7 +224,7 @@ const TradingViewSimpleChart = () => {
         source={{ html: htmlContent }}
         onMessage={(event) => {}}
         javaScriptEnabled={true}
-        style={{ opacity: isLoading ? 0 : 1 }}
+        style={{ opacity: loading ? 0 : 1 }}
       />
     </View>
   );

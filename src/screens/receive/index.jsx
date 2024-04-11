@@ -1,18 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect } from "react";
-import {
-  Alert,
-  Clipboard,
-  SafeAreaView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
 import { Header } from "../../components/index";
 import { useTheme } from "../../context/ThemeContext";
 import { getStyles } from "./styles";
 import QRCode from "react-qr-code";
+import { SafeAreaView } from "react-native-safe-area-context";
 const Receive = ({ navigation }) => {
   const { selectedAsset, balances } = useSelector((state) => state.assets);
   const assetBalance = balances.find(
@@ -38,7 +32,10 @@ const Receive = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <Header navigation={navigation} showBackButton={true} />
       <View style={styles.screenTitleContainer}>
-        <Text style={styles.screenTitle}>Recibir {selectedAsset?.symbol}</Text>
+        <Text style={styles.sectionTitle}>Recibir {selectedAsset?.symbol}</Text>
+      </View>
+      <View style={styles.subtitleContainer}>
+        <Text style={styles.sectionSubtitle}>Escanea o copia la dirección</Text>
       </View>
       <View style={styles.qrCodeContainer}>
         {address && <QRCode value={address} size={250} />}

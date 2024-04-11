@@ -5,7 +5,11 @@ import { useEffect, useState } from "react";
 import webSocketService from "../services/websocketService";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { fetchBlockchains, getUserInfoById } from "../store/actions";
+import {
+  fetchBlockchains,
+  getTransactions,
+  getUserInfoById,
+} from "../store/actions";
 
 const Navigation = () => {
   const { userId } = useSelector((state) => state.auth);
@@ -71,6 +75,7 @@ const Navigation = () => {
     if (userId) {
       webSocketService.subscribeToBalanceUpdate(userId);
       dispatch(getUserInfoById(userId));
+      dispatch(getTransactions(userId));
     }
   }, [userId]);
 

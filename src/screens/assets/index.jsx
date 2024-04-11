@@ -1,12 +1,5 @@
 import React, { useEffect } from "react";
-import {
-  Image,
-  SafeAreaView,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Header } from "../../components";
 import Navbar from "../../components/navbar";
@@ -22,6 +15,7 @@ import webSocketService from "../../services/websocketService";
 import { calculatePriceVariation, formatFiatValue } from "../../utils/prices";
 import BigNumber from "bignumber.js";
 import { useTheme } from "../../context/ThemeContext";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Assets = ({ navigation }) => {
   const { assets, assetsLittleLineCharts, storedPrices, totalBalance } =

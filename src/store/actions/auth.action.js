@@ -248,8 +248,9 @@ export const checkPhoneNumberAuthData = ({
 }) => {
   return async (dispatch) => {
     try {
+      console.log("llega antes de checkPhoneNumberAuthData");
       dispatch({ type: VERIFICATION_TOKEN_REQUEST });
-
+      console.log("AUTH_CHECK_DATA", AUTH_CHECK_DATA);
       const response = await fetch(AUTH_CHECK_DATA, {
         method: "POST",
         headers: {
@@ -263,6 +264,7 @@ export const checkPhoneNumberAuthData = ({
       });
 
       const data = await response.json();
+      console.log("llega despues de checkPhoneNumberAuthData");
 
       console.log("DATA check: ", data);
 

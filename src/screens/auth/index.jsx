@@ -99,6 +99,7 @@ const Auth = ({ navigation }) => {
   const onHandleAuth = () => {
     if (inputType === "phoneNumber") {
       const phoneNumberWithCode = `+${callingCode}${formState.email.value}`;
+      console.log("llegar antes de checkPhoneNumberAuthData");
       dispatch(
         checkPhoneNumberAuthData({
           phoneNumber: phoneNumberWithCode,

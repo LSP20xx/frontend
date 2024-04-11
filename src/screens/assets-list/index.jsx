@@ -1,13 +1,6 @@
 import React from "react";
 
-import {
-  Image,
-  SafeAreaView,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Header } from "../../components/index";
 
@@ -20,6 +13,7 @@ import {
 } from "../../utils/prices";
 import { selectAsset } from "../../store/actions";
 import { useTheme } from "../../context/ThemeContext";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const AssetsList = ({ navigation, route, showBackButton }) => {
   const dispatch = useDispatch();

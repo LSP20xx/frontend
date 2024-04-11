@@ -14,6 +14,7 @@ export const COLORS = {
   greyLight: "#747A85",
   greyDark: "#0F0F0F",
   greySecondary: "#666363",
+  greyBackground: "#e2e2e2",
   separator: "#35383F",
   white: "#f8f8f8",
   black: "#080808",

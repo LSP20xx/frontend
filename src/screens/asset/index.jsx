@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import {
   Image,
-  SafeAreaView,
   ScrollView,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -22,6 +22,7 @@ import webSocketService from "../../services/websocketService";
 import { calculatePriceVariation, formatFiatValue } from "../../utils/prices";
 import BigNumber from "bignumber.js";
 import { useTheme } from "../../context/ThemeContext";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Asset = ({ navigation }) => {
   const {
@@ -40,7 +41,7 @@ const Asset = ({ navigation }) => {
   const balance = balances.find(
     (balance) => balance.symbol === selectedAsset.symbol
   );
-
+  const selectedAssetTransactions = false;
   const symbolImages = {
     btc: require("../../../assets/crypto-logos/btc.png"),
     eth: require("../../../assets/crypto-logos/eth.png"),
@@ -79,60 +80,134 @@ const Asset = ({ navigation }) => {
         <Text style={styles.fiatTicker}> USD</Text>
       </View>
       <Navbar navigation={navigation} />
-      <View style={{ flex: 1, position: "relative" }}>
+      <View style={styles.sectionContainer}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.sectionTitle}>
+            Historial de {selectedAsset.symbol}
+          </Text>
+        </View>
+        <View style={styles.subtitleContainer}>
+          <Text style={styles.sectionSubtitle}>
+            Encuentra todas las transacciones realizadas
+          </Text>
+        </View>
+
         <ScrollView style={styles.scrollView}>
-          <View style={styles.sectionContainer}>
-            <View style={styles.leftContainer}>
-              <Text style={styles.sectionTitle}>Historial</Text>
-            </View>
-            <ScrollView style={styles.popularScrolLView}>
-              {assets.map((item) => {
-                return (
-                  <TouchableOpacity
-                    key={item.id}
-                    style={styles.cryptoItem}
-                    onPress={() => handleAssetPress(item.id)}
-                    disabled={true}
-                  >
-                    <View style={styles.leftContainer}>
-                      <Image
-                        source={symbolImages[item.symbol.toLowerCase()]}
-                        style={styles.logo}
-                      />
-                      <View style={styles.textContainer}>
-                        <Text style={styles.cryptoName}>{item.name}</Text>
-                        <Text style={styles.cryptoSymbol}>
-                          {item.symbol.toUpperCase()}
-                        </Text>
-                      </View>
-                    </View>
-                    <View style={styles.middleContainer}>
-                      {/* {assetChartData ? (
-                        <LittleLineChart
-                          symbol={item.symbol}
-                          last7DaysData={assetChartData.last7DaysData}
-                        />
-                      ) : null} */}
-                    </View>
-                    <View style={styles.rightContainer}>
-                      <View style={styles.priceRow}>
-                        {/* <Text style={styles.priceFiatAmount}>$</Text> */}
-                        <Text style={styles.price}>
-                          {/* {formatFiatValue(displayPrice, item.priceDecimals)} */}
-                        </Text>
-                      </View>
-                      <Text
-                        style={[styles.variation, { color: variationColor }]}
-                      >
-                        {/* {priceVariation >= 0 && "+"}
-                        {priceVariation}% */}
-                      </Text>
-                    </View>
+          {selectedAssetTransactions ? (
+            <>
+              <View style={styles.contactsContainer}>
+                <View style={styles.contactsTitleContainer}>
+                  <Text style={styles.favoritesTitle}>
+                    {selectedAsset.symbol} recibido
+                  </Text>
+                  <TouchableOpacity>
+                    <Text style={styles.showAllButton}>Ver todos</Text>
                   </TouchableOpacity>
-                );
-              })}
-            </ScrollView>
-            {/* <View style={styles.categoriesContainer}>
+                </View>
+                <View style={styles.addressesContainer}>
+                  <View style={styles.addressContainer}>
+                    {/* <Ionicons name="wallet-outline" size={24} /> */}
+                    <Image
+                      source={symbolImages[selectedAsset.symbol.toLowerCase()]}
+                      style={styles.logo}
+                    />
+                    <View style={styles.addressAndNameContainer}>
+                      <Text style={styles.favoriteAddressName}>Lautaro</Text>
+                      <Text style={styles.address}>0x2312424eafaf</Text>
+                    </View>
+                  </View>
+                  <View style={styles.addressContainer}>
+                    {/* <Ionicons name="wallet-outline" size={24} /> */}
+                    <Image
+                      source={symbolImages[selectedAsset.symbol.toLowerCase()]}
+                      style={styles.logo}
+                    />
+                    <View style={styles.addressAndNameContainer}>
+                      <Text style={styles.favoriteAddressName}>Lautaro</Text>
+                      <Text style={styles.address}>0x2312424eafaf</Text>
+                    </View>
+                  </View>
+                  <View style={styles.addressContainer}>
+                    {/* <Ionicons name="wallet-outline" size={24} /> */}
+                    <Image
+                      source={symbolImages[selectedAsset.symbol.toLowerCase()]}
+                      style={styles.logo}
+                    />
+                    <View style={styles.addressAndNameContainer}>
+                      <Text style={styles.favoriteAddressName}>Lautaro</Text>
+                      <Text style={styles.address}>0x2312424eafaf</Text>
+                    </View>
+                  </View>
+                  {/* <TouchableOpacity style={styles.addToFavoritesContainer}>
+                <View style={styles.addToFavoritesBackgroundCircle}></View>
+
+                <Text style={styles.addToFavoritesButton}>
+                  Agregar a favoritos
+                </Text>
+              </TouchableOpacity> */}
+                </View>
+              </View>
+              <View style={styles.contactsContainer}>
+                <View style={styles.contactsTitleContainer}>
+                  <Text style={styles.favoritesTitle}>
+                    {selectedAsset.symbol} enviados
+                  </Text>
+                  <TouchableOpacity>
+                    <Text style={styles.showAllButton}>Ver todos</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.addressesContainer}>
+                  <View style={styles.addressContainer}>
+                    {/* <Ionicons name="wallet-outline" size={24} /> */}
+                    <Image
+                      source={symbolImages[selectedAsset.symbol.toLowerCase()]}
+                      style={styles.logo}
+                    />
+                    <View style={styles.addressAndNameContainer}>
+                      <Text style={styles.favoriteAddressName}>Lautaro</Text>
+                      <Text style={styles.address}>0x2312424eafaf</Text>
+                    </View>
+                  </View>
+                  <View style={styles.addressContainer}>
+                    {/* <Ionicons name="wallet-outline" size={24} /> */}
+                    <Image
+                      source={symbolImages[selectedAsset.symbol.toLowerCase()]}
+                      style={styles.logo}
+                    />
+                    <View style={styles.addressAndNameContainer}>
+                      <Text style={styles.favoriteAddressName}>Lautaro</Text>
+                      <Text style={styles.address}>0x2312424eafaf</Text>
+                    </View>
+                  </View>
+                  <View style={styles.addressContainer}>
+                    {/* <Ionicons name="wallet-outline" size={24} /> */}
+                    <Image
+                      source={symbolImages[selectedAsset.symbol.toLowerCase()]}
+                      style={styles.logo}
+                    />
+                    <View style={styles.addressAndNameContainer}>
+                      <Text style={styles.favoriteAddressName}>Lautaro</Text>
+                      <Text style={styles.address}>0x2312424eafaf</Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+              <View style={styles.scrollIndicator} />
+            </>
+          ) : (
+            <View style={styles.receiveMessageContainer}>
+              <Text style={styles.receiveMessage}>
+                Ingresa en{" "}
+                <Text style={styles.receiveButton} onPress={() => {}}>
+                  Recibir
+                </Text>{" "}
+                para encontrar tu dirección de {selectedAsset.symbol}
+              </Text>
+            </View>
+          )}
+        </ScrollView>
+
+        {/* <View style={styles.categoriesContainer}>
           <View style={styles.row}>
             <View style={styles.column}>
               <TouchableOpacity style={styles.categoryContainer} onPress={() => onSelectedCategory('Restaurantes')}>
@@ -179,9 +254,6 @@ const Asset = ({ navigation }) => {
           keyExtractor={(item) => item.id.toString()}
           renderItem={renderHomePlaceItem}
         /> */}
-          </View>
-        </ScrollView>
-        <View style={styles.scrollIndicator} />
       </View>
     </SafeAreaView>
   );

@@ -6,7 +6,6 @@ export const getStyles = (theme) =>
     container: {
       flex: 1,
       backgroundColor: theme.background,
-      paddingTop: 20,
       alignItems: "center",
     },
     listContainer: {
@@ -32,23 +31,34 @@ export const getStyles = (theme) =>
       width: "100%",
       backgroundColor: theme.background,
     },
+    subtitleContainer: {
+      width: "100%",
+    },
+    sectionSubtitle: {
+      fontSize: 14,
+      color: theme.text,
+      fontFamily: "Uto-Regular",
+      textAlign: "left",
+      paddingTop: 10,
+      marginLeft: 8,
+      marginBottom: 20,
+    },
     screenTitle: {
       fontSize: 20,
       color: theme.text,
       textAlign: "left",
-      marginHorizontal: 46,
-      marginTop: 50,
       marginBottom: 14,
       backgroundColor: theme.background,
       fontFamily: "Uto-Medium",
     },
     sectionTitle: {
-      textAlign: "center",
-      fontSize: 24,
-      fontFamily: "Uto-Medium",
+      fontSize: 20,
       color: theme.text,
-      marginTop: 8,
-      marginBottom: 8,
+      fontFamily: "Uto-Bold",
+      textAlign: "left",
+      marginTop: 20,
+      paddingTop: 10,
+      marginLeft: 8,
     },
     categoriesContainer: {
       flex: 1,
@@ -179,6 +189,7 @@ export const getStyles = (theme) =>
       alignItems: "center",
       justifyContent: "center",
       width: "100%",
+      paddingVertical: 20,
     },
     qrCode: {},
   });
