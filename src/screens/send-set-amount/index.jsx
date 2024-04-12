@@ -88,7 +88,9 @@ const OdometerAnimation = ({ value }) => {
   );
 };
 
-const Send = ({ navigation }) => {
+const SendSetAmount = ({ route, navigation }) => {
+  const { toAddress } = route.params;
+
   const { assets, selectedAsset, balances } = useSelector(
     (state) => state.assets
   );
@@ -115,7 +117,6 @@ const Send = ({ navigation }) => {
   useEffect(() => {}, [assetFiatValue]);
 
   const fiatSymbol = "USD";
-  const [toAddress, setToAddress] = useState("");
   const [amount, setAmount] = useState("");
   const [blockchainId, setBlockchainId] = useState("");
   const [calculatedAmount, setCalculatedAmount] = useState("");
@@ -140,8 +141,7 @@ const Send = ({ navigation }) => {
   const addressInputRef = useRef(null);
   const nameInputRef = useRef(null);
   const { theme } = useTheme();
-  const [clipboardContent, setClipboardContent] = useState("");
-  const { selectedAddress } = useSelector((state) => state.user);
+
   const styles = getStyles(theme);
 
   useEffect(() => {
@@ -157,30 +157,24 @@ const Send = ({ navigation }) => {
     setBlockchainsWithFees(blockchainsWithCalculatedFees);
   }, [blockchains, selectedAsset, assetFiatValue]);
 
-  const handlePastePress = async () => {
-    const content = await Clipboard.getString();
-    setClipboardContent(content);
-    setToAddress(content); // Esto pegará el contenido en el TextInput
-  };
-
   const handleSendPress = () => {
-    // let result;
-    // if (isFiatPrimary && onMaxPress) {
-    //   result = new BigNumber(balance).toFixed(selectedAsset.assetDecimals);
-    // } else if (isFiatPrimary && !onMaxPress) {
-    //   result = new BigNumber(calculatedAmount).toFixed(
-    //     selectedAsset.assetDecimals
-    //   );
-    // } else if (!isFiatPrimary && onMaxPress) {
-    //   result = new BigNumber(balance).toFixed(selectedAsset.assetDecimals);
-    // } else if (!isFiatPrimary && !onMaxPress) {
-    //   result = new BigNumber(amount).toFixed(selectedAsset.assetDecimals);
-    // }
+    let result;
+    if (isFiatPrimary && onMaxPress) {
+      result = new BigNumber(balance).toFixed(selectedAsset.assetDecimals);
+    } else if (isFiatPrimary && !onMaxPress) {
+      result = new BigNumber(calculatedAmount).toFixed(
+        selectedAsset.assetDecimals
+      );
+    } else if (!isFiatPrimary && onMaxPress) {
+      result = new BigNumber(balance).toFixed(selectedAsset.assetDecimals);
+    } else if (!isFiatPrimary && !onMaxPress) {
+      result = new BigNumber(amount).toFixed(selectedAsset.assetDecimals);
+    }
     if (!errorMessages[0]) {
-      navigation.navigate("SendSetAmount", {
+      navigation.navigate("Verification", {
         toAddress,
         fromAddress,
-        // amount: result,
+        // amount: Result,
         amount: 0,
         coin: selectedAsset.symbol,
         selectedBlockchain,
@@ -192,17 +186,17 @@ const Send = ({ navigation }) => {
 
   const validateFields = useCallback(() => {
     let error = "";
-    if (
+    /*  if (
       /*  (!selectedBlockchain) {
       error = "Por favor, selecciona una red.";
-    } else if */ toAddress.trim() === ""
+    } else if  toAddress.trim() === ""
     ) {
       error = "Por favor, ingresa la dirección de envío.";
     } else if (!isValidAddress) {
       error = "La dirección es inválida.";
-    } /* else if (amount.trim() === "") {
+    } */ if (amount.trim() === "") {
       error = "El monto no puede estar vacío.";
-    }  else {
+    } else {
       let amountBN;
       if (isFiatPrimary) {
         amountBN = new BigNumber(calculatedAmount);
@@ -224,7 +218,7 @@ const Send = ({ navigation }) => {
         "isLessThanOrEqualTo",
         totalDeduction.isLessThanOrEqualTo(balanceBN)
       );
-    }*/
+    }
     setErrorMessages([error]);
     return error === "";
   }, [
@@ -235,12 +229,14 @@ const Send = ({ navigation }) => {
     withdrawFee,
     balance,
   ]);
-  const handleAddressChange = (address) => {
-    const trimmedAddress = address.trim();
-    setToAddress(trimmedAddress);
-    const isValid = validateAddress(trimmedAddress, selectedAsset.symbol, true);
-    setIsValidAddress(isValid);
-  };
+
+  // const handleAddressChange = (address) => {
+  //   const trimmedAddress = address.trim();
+  //   setToAddress(trimmedAddress);
+  //   const isValid = validateAddress(trimmedAddress, selectedAsset.symbol, true);
+  //   setIsValidAddress(isValid);
+  // };
+
   const handleAmountChange = useCallback(
     (text) => {
       const newText = text
@@ -308,15 +304,15 @@ const Send = ({ navigation }) => {
   };
 
   useEffect(() => {
-    if (selectedBlockchain) {
-      const blockchain = supportedBlockchains.find(
-        (blockchain) =>
-          blockchain.blockchainSymbol === selectedBlockchain.split(" ")[0]
-      );
-      setWithdrawFee(blockchain.withdrawFee);
-      setBlockchainId(blockchain.blockchainId);
-    }
-  }, [selectedBlockchain]);
+    console.log("SUPPORTED blockchains", supportedBlockchains);
+    // const blockchain = supportedBlockchains.find(
+    //   (blockchain) =>
+    //     blockchain.blockchainSymbol === selectedBlockchain.split(" ")[0]
+    // );
+    const blockchain = supportedBlockchains[0];
+    setWithdrawFee(blockchain.withdrawFee);
+    setBlockchainId(blockchain.blockchainId);
+  }, []);
 
   useEffect(() => {
     console.log("fromAddress", fromAddress);
@@ -356,195 +352,17 @@ const Send = ({ navigation }) => {
       <Header navigation={navigation} showBackButton={true} />
 
       <View style={styles.titleContainer}>
-        <Text style={styles.sectionTitle}>Enviar {selectedAsset.symbol}</Text>
-      </View>
-      <View style={styles.subtitleContainer}>
-        <Text style={styles.sectionSubtitle}>
-          Ingresa la dirección de destino
+        <Text style={styles.sectionTitle}>
+          Cantidad de {selectedAsset.symbol} a enviar
         </Text>
       </View>
+      <View style={styles.subtitleContainer}>
+        <Text style={styles.sectionSubtitle}>Ingresa la cantidad a enviar</Text>
+      </View>
       <ScrollView contentContainerStyle={{ maxHeight: 600 }}>
-        {/* <View style={styles.pickerContainer}>
-        <Picker
-          selectedValue={selectedBlockchain}
-          onValueChange={(itemValue, itemIndex) =>
-            setSelectedBlockchain(itemValue)
-          }
-          style={styles.pickerStyle}
-          placeholderTextColor={theme.placeholder}
-        >
-          <Picker.Item
-            label="Selecciona una red"
-            value={null}
-            style={styles.pickerItemNull}
-          />
-          {blockchainsWithFees.map((blockchain) => (
-            <Picker.Item
-              key={blockchain.blockchainId}
-              label={`${blockchain.blockchainSymbol} (${
-                blockchain.blockchainName
-                  .split("-")[0]
-                  .charAt(0)
-                  .toUpperCase() +
-                blockchain.blockchainName.split("-")[0].slice(1)
-              })                             ${
-                blockchain.calculatedWithdrawFee
-              } ${fiatSymbol}`}
-              value={blockchain.blockchainSymbol}
-              style={styles.pickerItemNotNull}
-            />
-          ))}
-        </Picker>
-      </View> */}
-        <TextInput
-          placeholder="Dirección de destino"
-          placeholderTextColor={theme.placeholder}
-          value={toAddress}
-          onChangeText={handleAddressChange}
-          ref={addressInputRef}
-          style={[
-            styles.input,
-            toAddress === ""
-              ? null
-              : isValidAddress
-              ? { borderColor: COLORS.green, borderWidth: 1 }
-              : { borderColor: COLORS.error, borderWidth: 1 },
-          ]}
-        />
-
-        <View style={styles.validationContainer}>
-          {toAddress !== "" && (
-            <Ionicons
-              name={isValidAddress ? "shield-checkmark" : "close-circle"}
-              size={16}
-              color={isValidAddress ? COLORS.green : COLORS.red}
-              style={styles.verifiedIcon}
-            />
-          )}
-          {toAddress === "" ? (
-            <Text style={styles.exampleAddressText}>
-              Ej: 0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B{" "}
-            </Text>
-          ) : isValidAddress ? (
-            <Text style={styles.validText}>Dirección válida</Text>
-          ) : (
-            <Text style={styles.errorText}>Dirección inválida</Text>
-          )}
-        </View>
-
-        {isAddingFavorite && (
-          <TextInput
-            ref={nameInputRef}
-            placeholder="Nombre del favorito"
-            placeholderTextColor={theme.placeholder}
-            style={styles.input}
-          />
-        )}
-        <View style={styles.contactsContainer}>
-          {false && (
-            <View style={styles.contactsTitleContainer}>
-              <Text style={styles.favoritesTitle}>Favoritos</Text>
-              <TouchableOpacity>
-                <Text style={styles.showAllButton}>Ver todos</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-          {false && (
-            <View style={styles.addressesContainer}>
-              <View style={styles.addressContainer}>
-                <Ionicons name="wallet-outline" size={24} />
-
-                <View style={styles.addressAndNameContainer}>
-                  <Text style={styles.favoriteAddressName}>Lautaro</Text>
-                  <Text style={styles.address}>0x2312424eafaf</Text>
-                </View>
-              </View>
-              <View style={styles.addressContainer}>
-                <Ionicons name="wallet-outline" size={24} />
-
-                <View style={styles.addressAndNameContainer}>
-                  <Text style={styles.favoriteAddressName}>Lautaro</Text>
-                  <Text style={styles.address}>0x2312424eafaf</Text>
-                </View>
-              </View>
-              <View style={styles.addressContainer}>
-                <Ionicons name="wallet-outline" size={24} />
-
-                <View style={styles.addressAndNameContainer}>
-                  <Text style={styles.favoriteAddressName}>Lautaro</Text>
-                  <Text style={styles.address}>0x2312424eafaf</Text>
-                </View>
-              </View>
-            </View>
-          )}
-        </View>
-        {(toAddress === "" || isValidAddress) && !isAddingFavorite && (
-          <TouchableOpacity
-            style={styles.addToFavoritesContainer}
-            onPress={() => {
-              if (toAddress === "") {
-                addressInputRef.current && addressInputRef.current.focus();
-              } else if (isValidAddress) {
-                setIsAddingFavorite(true);
-              }
-            }}
-          >
-            <View style={styles.addToFavoritesBackgroundCircle}>
-              <Ionicons
-                style={styles.addToFavoritesIcon}
-                name="add-outline"
-                size={24}
-              />
-            </View>
-            <Text style={styles.addToFavoritesButton}>Agregar a favoritos</Text>
-          </TouchableOpacity>
-        )}
-        {false && (
-          <View style={styles.contactsContainer}>
-            <View style={styles.contactsTitleContainer}>
-              <Text style={styles.favoritesTitle}>Recientes</Text>
-              <TouchableOpacity>
-                <Text style={styles.showAllButton}>Ver todos</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.addressesContainer}>
-              <View style={styles.addressContainer}>
-                <Ionicons name="wallet-outline" size={24} />
-
-                <View style={styles.addressAndNameContainer}>
-                  <Text style={styles.favoriteAddressName}>Lautaro</Text>
-                  <Text style={styles.address}>0x2312424eafaf</Text>
-                </View>
-              </View>
-              <View style={styles.addressContainer}>
-                <Ionicons name="wallet-outline" size={24} />
-
-                <View style={styles.addressAndNameContainer}>
-                  <Text style={styles.favoriteAddressName}>Lautaro</Text>
-                  <Text style={styles.address}>0x2312424eafaf</Text>
-                </View>
-              </View>
-              <View style={styles.addressContainer}>
-                <Ionicons name="wallet-outline" size={24} />
-
-                <View style={styles.addressAndNameContainer}>
-                  <Text style={styles.favoriteAddressName}>Lautaro</Text>
-                  <Text style={styles.address}>0x2312424eafaf</Text>
-                </View>
-              </View>
-            </View>
-          </View>
-        )}
-        {/* <View style={styles.assetConversionContainer}>
-          {selectedBlockchain && toAddress && (
+        <View style={styles.assetConversionContainer}>
+          {blockchainId && toAddress && (
             <>
-              <PressableSwapIcons
-                onPress={() => {
-                  handleIconAnimation();
-                  handleSwapValues();
-                  adjustFontSizeAndMargin(calculatedAmount);
-                }}
-              />
               <View style={styles.assetConversionContainerFirstColumn}>
                 <View style={styles.assetAmountContainerTop}>
                   {onMaxPress ? (
@@ -588,6 +406,13 @@ const Send = ({ navigation }) => {
                 </View>
 
                 <View style={styles.calculatedAssetAmountContainer}>
+                  <PressableSwapIcons
+                    onPress={() => {
+                      handleIconAnimation();
+                      handleSwapValues();
+                      adjustFontSizeAndMargin(calculatedAmount);
+                    }}
+                  />
                   <View style={styles.calculatedAssetAmountColumn}>
                     {onMaxPress ? (
                       <Text style={styles.calculatedAssetAmount}>
@@ -680,78 +505,47 @@ const Send = ({ navigation }) => {
               </View>
             </>
           )}
-        </View> */}
-        {/*
-      <View style={styles.availableBalanceContainer}>
-         <View style={styles.availableBalanceLeftContainer}>
-          <Text style={styles.availableBalanceText}>Balance</Text>
-          <Text style={styles.feeText}>Comisión</Text>
-          <Text style={[styles.totalText, { paddingTop: 8 }]}>Disponible</Text>
         </View>
-        <View style={styles.availableBalanceRightContainer}>
-          <Text style={styles.availableBalanceText}>
-            {isFiatPrimary
-              ? new BigNumber(calculatedBalance).toFixed(2)
-              : new BigNumber(balance).toFixed(
-                  selectedAsset.assetDecimals
-                )}{" "}
-            {isFiatPrimary ? fiatSymbol : selectedAsset.symbol}{" "}
-          </Text>
-          <Text style={styles.feeText}>
-            -
-            {isFiatPrimary
-              ? new BigNumber(withdrawFee).times(assetFiatValue).toFixed(2)
-              : new BigNumber(withdrawFee).toFixed(
-                  selectedAsset.assetDecimals
-                )}{" "}
-            {isFiatPrimary ? fiatSymbol : selectedAsset.symbol}{" "}
-          </Text>
-          <View style={styles.separator} />
+        {/* <View style={styles.availableBalanceContainer}>
+          <View style={styles.availableBalanceLeftContainer}>
+            <Text style={styles.availableBalanceText}>Balance</Text>
+            <Text style={styles.feeText}>Comisión</Text>
+            <Text style={[styles.totalText, { paddingTop: 8 }]}>
+              Disponible
+            </Text>
+          </View>
+          <View style={styles.availableBalanceRightContainer}>
+            <Text style={styles.availableBalanceText}>
+              {isFiatPrimary
+                ? new BigNumber(calculatedBalance).toFixed(2)
+                : new BigNumber(balance).toFixed(
+                    selectedAsset.assetDecimals
+                  )}{" "}
+              {isFiatPrimary ? fiatSymbol : selectedAsset.symbol}{" "}
+            </Text>
+            <Text style={styles.feeText}>
+              -
+              {isFiatPrimary
+                ? new BigNumber(withdrawFee).times(assetFiatValue).toFixed(2)
+                : new BigNumber(withdrawFee).toFixed(
+                    selectedAsset.assetDecimals
+                  )}{" "}
+              {isFiatPrimary ? fiatSymbol : selectedAsset.symbol}{" "}
+            </Text>
+            <View style={styles.separator} />
 
-          <Text style={styles.totalText}>
-            {isFiatPrimary
-              ? new BigNumber(calculatedBalance)
-                  .minus(new BigNumber(withdrawFee).times(assetFiatValue))
-                  .toFixed(2)
-              : new BigNumber(balance)
-                  .minus(withdrawFee)
-                  .toFixed(selectedAsset.assetDecimals)}{" "}
-            {isFiatPrimary ? fiatSymbol : selectedAsset.symbol}
-          </Text>
-        </View> 
-      </View>*/}
-        {/* <View style={styles.feeContainer}>
-        {selectedBlockchain && (
-          <>
-             <Text style={styles.feeTitle}>Comisión de retiro:</Text> 
-          <Text style={styles.feeValue}>
-              {withdrawFee} {selectedAsset.symbol}
-            </Text> 
-          </>
-        )}
-      </View> */}
-        {/* <TextInput
-              placeholder="Cantidad a enviar"
-              placeholderTextColor={COLORS.greyLight}
-              value={amount}
-              onChangeText={setAmount}
-              keyboardType="numeric"
-              style={styles.input}
-              onBlur={() => setIsValidAmount(parseFloat(amount) <= balance)}
-            />
-            {!isValidAmount && (
-              <Text style={styles.errorText}>
-                La cantidad excede el saldo disponible
-              </Text>
-            )} */}
-        {/* <View style={styles.recentTransfersContainer}>
-              <Text style={styles.recentTransfersTitle}>Historial de retiros</Text>
-            </View> */}
-        {/* <View style={styles.errorContainer}>
-        {!!errorMessages[0] && (
-          <Text style={styles.errorText}>{errorMessages[0]}</Text>
-        )}
-      </View> */}
+            <Text style={styles.totalText}>
+              {isFiatPrimary
+                ? new BigNumber(calculatedBalance)
+                    .minus(new BigNumber(withdrawFee).times(assetFiatValue))
+                    .toFixed(2)
+                : new BigNumber(balance)
+                    .minus(withdrawFee)
+                    .toFixed(selectedAsset.assetDecimals)}{" "}
+              {isFiatPrimary ? fiatSymbol : selectedAsset.symbol}
+            </Text>
+          </View>
+        </View> */}
       </ScrollView>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
@@ -766,4 +560,4 @@ const Send = ({ navigation }) => {
   );
 };
 
-export default Send;
+export default SendSetAmount;

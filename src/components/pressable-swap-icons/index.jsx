@@ -41,13 +41,13 @@ const PressableSwapIcons = ({ onPress }) => {
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        marginLeft: 30,
+        marginRight: 4,
       }}
     >
       <TouchableOpacity onPress={animatePress}>
         <AnimatedIcon
           name="exchange"
-          size={50}
+          size={16}
           color={COLORS.primaryLight}
           style={{
             // Aplicamos la transformación de rotación en Y usando la interpolación.

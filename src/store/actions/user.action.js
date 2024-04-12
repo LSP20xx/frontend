@@ -1,7 +1,13 @@
 import { USER_INFO_URL, SEND_EMAIL_URL, SEND_SMS_URL } from "../../constants";
 import { userTypes } from "../types/user.types";
-const { GET_USER_INFO_BY_ID, ADD_USER, SET_USER_IMAGE, SEND_EMAIL, SEND_SMS } =
-  userTypes;
+const {
+  GET_USER_INFO_BY_ID,
+  ADD_USER,
+  SET_USER_IMAGE,
+  SEND_EMAIL,
+  SEND_SMS,
+  SET_SELECTED_ADDRESS,
+} = userTypes;
 
 export const getUserInfoById = (userId) => {
   return async (dispatch) => {
@@ -15,6 +21,13 @@ export const getUserInfoById = (userId) => {
     } catch (error) {
       console.log(error);
     }
+  };
+};
+
+export const setSelectedAddress = (address) => {
+  return {
+    type: SET_SELECTED_ADDRESS,
+    item: address,
   };
 };
 

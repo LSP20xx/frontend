@@ -1,10 +1,17 @@
 import { userTypes } from "../types/user.types";
-const { GET_USER_INFO_BY_ID, ADD_USER, SET_USER_IMAGE, SEND_EMAIL, SEND_SMS } =
-  userTypes;
+const {
+  GET_USER_INFO_BY_ID,
+  ADD_USER,
+  SET_USER_IMAGE,
+  SEND_EMAIL,
+  SEND_SMS,
+  SET_SELECTED_ADDRESS,
+} = userTypes;
 
 const initialState = {
   user: null,
   isLoading: false,
+  selectedAddress: null,
   error: null,
   hasError: false,
 };
@@ -36,6 +43,12 @@ const userReducer = (state = initialState, action) => {
     case SEND_SMS:
       return {
         ...state,
+      };
+
+    case SET_SELECTED_ADDRESS:
+      return {
+        ...state,
+        selectedAddress: action.item,
       };
     default:
       return state;

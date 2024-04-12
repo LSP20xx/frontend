@@ -12,6 +12,8 @@ import Confirm from "../../screens/confirm";
 
 import { COLORS } from "../../constants";
 import AssetsList from "../../screens/assets-list";
+import BlockchainsList from "../../screens/blockchains-list";
+import SendSetAmount from "../../screens/send-set-amount";
 import MarketAsset from "../../screens/market-asset";
 import UserConfig from "../../screens/user-config";
 import MyInformation from "../../screens/user-my-information";
@@ -41,6 +43,8 @@ const HomeNavigator = () => {
       <Stack.Screen name="MarketAsset" component={MarketAsset} />
       <Stack.Screen name="ReceiveList" component={AssetsList} />
       <Stack.Screen name="Receive" component={Receive} />
+      <Stack.Screen name="BlockchainsList" component={BlockchainsList} />
+      <Stack.Screen name="SendSetAmount" component={SendSetAmount} />
       <Stack.Screen name="SendList" component={AssetsList} />
       <Stack.Screen name="Send" component={Send} />
       <Stack.Screen name="Confirm" component={Confirm} />

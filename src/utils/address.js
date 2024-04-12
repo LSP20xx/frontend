@@ -1,8 +1,9 @@
+// import { PublicKey } from "@solana/web3.js";
 import axios from "axios";
-import { ethers } from "ethers";
+import { isAddress } from "ethers";
 
 const validateEthereumAddress = (address) => {
-  return ethers.utils.isAddress(address);
+  return isAddress(address);
 };
 
 const validateUxtoAddress = async (address, symbol, isTestnet = false) => {
@@ -26,9 +27,20 @@ const validateAddress = (address, coin, isTestnet = false) => {
     case "DOGE":
     case "LTC":
       return validateUxtoAddress(address, coin, isTestnet);
+    // case "SOL":
+    //   return validateSolanaAddress(address);
     default:
       throw new Error(`Unsupported coin: ${coin}`);
   }
 };
+
+// const validateSolanaAddress = (address) => {
+//   try {
+//     new PublicKey(address);
+//     return true;
+//   } catch (error) {
+//     return false;
+//   }
+// };
 
 export { validateAddress };
