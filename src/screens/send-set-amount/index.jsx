@@ -398,7 +398,9 @@ const SendSetAmount = ({ route, navigation }) => {
                       onChangeText={handleAmountChange}
                     />
                   )}
-                  <Text style={styles.selectedAssetSymbol}>
+                  <Text
+                    style={[styles.selectedAsetSymbol, { fontSize: fontSize }]}
+                  >
                     {isFiatPrimary
                       ? fiatSymbol.toUpperCase()
                       : selectedAsset.symbol.toUpperCase()}

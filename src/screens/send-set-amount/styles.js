@@ -98,7 +98,6 @@ export const getStyles = (theme) =>
       textAlign: "right",
     },
     selectedAssetSymbol: {
-      fontSize: 16,
       fontFamily: "Uto-Medium",
       color: COLORS.greyLight,
       textAlign: "center",
@@ -416,5 +415,9 @@ export const getStyles = (theme) =>
     verifiedIcon: {
       marginBottom: 28,
       paddingLeft: 24,
+    },
+    selectedAsetSymbol: {
+      marginLeft: 2,
+      fontFamily: "Uto-Regular",
     },
   });
