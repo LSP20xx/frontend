@@ -38,6 +38,7 @@ import {
 import { useTheme } from "../../context/ThemeContext";
 import PressableSwapIcons from "../../components/pressable-swap-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useFocusEffect } from "@react-navigation/native";
 
 BigNumber.config({ DECIMAL_PLACES: 18 });
 
@@ -72,10 +73,6 @@ const OdometerAnimation = ({ value }) => {
 
     Animated.parallel(animations).start();
   }, [value, animatedValues]);
-
-  useEffect(() => {
-    console.log("selectedAsset", selectedAddress);
-  }, [selectedAddress]);
 
   return (
     <View style={{ flexDirection: "row" }}>
@@ -148,6 +145,7 @@ const Send = ({ navigation }) => {
   const [clipboardContent, setClipboardContent] = useState("");
   const { selectedAddress } = useSelector((state) => state.user);
   const styles = getStyles(theme);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const blockchainsWithCalculatedFees = blockchains
@@ -182,12 +180,11 @@ const Send = ({ navigation }) => {
     //   result = new BigNumber(amount).toFixed(selectedAsset.assetDecimals);
     // }
     if (!errorMessages[0]) {
-      setSelectedAddress(toAddress);
       navigation.navigate("SendSetAmount", {
         toAddress,
         fromAddress,
         // amount: result,
-        amount: 0,
+        // amount: 0,
         coin: selectedAsset.symbol,
         selectedBlockchain,
         verificationType: "send",
@@ -241,12 +238,20 @@ const Send = ({ navigation }) => {
     withdrawFee,
     balance,
   ]);
+
   const handleAddressChange = (address) => {
     const trimmedAddress = address.trim();
     setToAddress(trimmedAddress);
     const isValid = validateAddress(trimmedAddress, selectedAsset.symbol, true);
     setIsValidAddress(isValid);
+
+    if (isValid) {
+      dispatch(setSelectedAddress(trimmedAddress));
+    } else {
+      dispatch(setSelectedAddress(null));
+    }
   };
+
   const handleAmountChange = useCallback(
     (text) => {
       const newText = text
@@ -357,6 +362,15 @@ const Send = ({ navigation }) => {
     }
   }, [isAddingFavorite, isValidAddress]);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log("Screen is focused, selectedAddress:", selectedAddress);
+
+      return () => {
+        console.log("Screen is unfocused");
+      };
+    }, [selectedAddress])
+  );
   return (
     <SafeAreaView style={styles.container}>
       <Header navigation={navigation} showBackButton={true} />
@@ -405,7 +419,7 @@ const Send = ({ navigation }) => {
         <TextInput
           placeholder="Dirección de destino"
           placeholderTextColor={theme.placeholder}
-          value={toAddress}
+          value={selectedAddress ? selectedAddress : toAddress}
           onChangeText={handleAddressChange}
           ref={addressInputRef}
           style={[
