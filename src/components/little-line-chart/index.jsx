@@ -8,11 +8,11 @@ import DOGEUSD from "../../../DOGE-USD.json";
 import USDTUSD from "../../../USDT-USD.json";
 
 const dataFiles = {
-  "BTC-USD": BTCUSD,
-  "ETH-USD": ETHUSD,
-  "LTC-USD": LTCUSD,
-  "DOGE-USD": DOGEUSD,
-  "USDT-USD": USDTUSD,
+  BTC: "#F7941C",
+  ETH: "#5F73B7",
+  LTC: "#325F9F",
+  DOGE: "#C3A835",
+  USDC: "#2E74BA",
 };
 
 const screenWidth = 75;
@@ -37,15 +37,29 @@ const LittleLineChart = ({ symbol, last7DaysData }) => {
       ((item.close - minValue) / (maxValue - minValue)) * screenHeight,
   }));
 
-  const pathData = data
-    .map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`)
-    .join(" ");
+  // Modificación para utilizar curvas Bézier
+  let pathData = data.reduce((acc, point, index, points) => {
+    if (index === 0) {
+      return `M ${point.x},${point.y}`;
+    }
+    const prevPoint = points[index - 1];
+    const midX = (prevPoint.x + point.x) / 2;
+    const midY = (prevPoint.y + point.y) / 2;
+    return `${acc} Q ${prevPoint.x},${prevPoint.y} ${midX},${midY}`;
+  }, "");
 
-  const lineColor =
-    last7DaysData[0].close <= last7DaysData[last7DaysData.length - 1].close
-      ? "#0A8956"
-      : "red";
+  // Añadir el último punto
+  if (data.length > 1) {
+    const lastPoint = data[data.length - 1];
+    pathData += ` T ${lastPoint.x},${lastPoint.y}`;
+  }
 
+  // const lineColor =
+  //   last7DaysData[0].close <= last7DaysData[last7DaysData.length - 1].close
+  //     ? "#0A8956"
+  //     : "red";
+
+  const lineColor = dataFiles[symbol];
   return (
     <View>
       <Svg height={screenHeight} width={screenWidth}>

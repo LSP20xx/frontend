@@ -28,6 +28,7 @@ import { formatBalance, formatFiatValue } from "../../utils/prices";
 import BigNumber from "bignumber.js";
 import { fetchBlockchains } from "../../store/actions/blockchains.action";
 import { validateAddress } from "../../utils/address";
+import { setSelectedAddress } from "../../store/actions/user.action";
 import {
   getAssetAddress,
   getAssetBalance,
@@ -71,6 +72,10 @@ const OdometerAnimation = ({ value }) => {
 
     Animated.parallel(animations).start();
   }, [value, animatedValues]);
+
+  useEffect(() => {
+    console.log("selectedAsset", selectedAddress);
+  }, [selectedAddress]);
 
   return (
     <View style={{ flexDirection: "row" }}>
@@ -177,6 +182,7 @@ const Send = ({ navigation }) => {
     //   result = new BigNumber(amount).toFixed(selectedAsset.assetDecimals);
     // }
     if (!errorMessages[0]) {
+      setSelectedAddress(toAddress);
       navigation.navigate("SendSetAmount", {
         toAddress,
         fromAddress,

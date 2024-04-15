@@ -119,6 +119,7 @@ const SendSetAmount = ({ route, navigation }) => {
   const fiatSymbol = "USD";
   const [amount, setAmount] = useState("");
   const [blockchainId, setBlockchainId] = useState("");
+  const [blockchainName, setBlockchainName] = useState("");
   const [calculatedAmount, setCalculatedAmount] = useState("");
   const [fontSize, setFontSize] = useState(52);
   const [margin, setMargin] = useState({ top: 16, left: 8 });
@@ -310,8 +311,11 @@ const SendSetAmount = ({ route, navigation }) => {
     //     blockchain.blockchainSymbol === selectedBlockchain.split(" ")[0]
     // );
     const blockchain = supportedBlockchains[0];
+    console.log("blockchain", blockchain);
+
     setWithdrawFee(blockchain.withdrawFee);
     setBlockchainId(blockchain.blockchainId);
+    setBlockchainName(blockchain.blockchainName.split("-")[0]);
   }, []);
 
   useEffect(() => {
@@ -508,6 +512,112 @@ const SendSetAmount = ({ route, navigation }) => {
             </>
           )}
         </View>
+        <View style={styles.assetSendSetup}>
+          <View style={styles.assetSendSetupRow}>
+            <TouchableOpacity style={styles.assetSendSetupColumn}>
+              <Image
+                source={symbolImages[selectedAsset.symbol.toLowerCase()]}
+                style={styles.selectedAssetImage}
+              />
+              <Text style={styles.networkLabel}>Red:</Text>
+              <Text style={styles.networkName}>
+                {blockchainName &&
+                  blockchainName.charAt(0).toUpperCase() +
+                    blockchainName.slice(1)}
+              </Text>
+              <TouchableOpacity>
+                <Ionicons
+                  name="chevron-down"
+                  size={24}
+                  color={COLORS.greyLight}
+                  style={styles.dropdownIcon}
+                />
+              </TouchableOpacity>
+            </TouchableOpacity>
+            <View style={styles.availableBalanceContainer}>
+              <View
+                style={{
+                  flexDirection: "row",
+                }}
+              >
+                <View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                    }}
+                  >
+                    <Text style={styles.amount}>
+                      {isFiatPrimary
+                        ? new BigNumber(balance)
+                            .minus(withdrawFee)
+                            .times(assetFiatValue)
+                            .toFixed(2)
+                        : new BigNumber(balance)
+                            .minus(withdrawFee)
+                            .toFixed(selectedAsset.assetDecimals)}
+                    </Text>
+                    <Text style={styles.symbol}>
+                      {isFiatPrimary
+                        ? fiatSymbol.toUpperCase()
+                        : selectedAsset.symbol.toUpperCase()}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "flex-end",
+                    }}
+                  >
+                    <Text style={styles.available}>Disponible</Text>
+                    <Ionicons
+                      name="information-circle"
+                      size={16}
+                      color={COLORS.greyLight}
+                      style={styles.infoIcon}
+                    />
+                  </View>
+
+                  {/* <MaterialIcons name="info-outline" style={styles.icon} /> */}
+                  {/* <MaterialIcons name="chevron-right" style={styles.icon} /> */}
+                </View>
+                <TouchableOpacity>
+                  <Ionicons
+                    name="chevron-forward"
+                    size={24}
+                    color={COLORS.greyLight}
+                    style={styles.forwardIcon}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+          <View style={styles.separator} />
+
+          <View style={styles.assetSendSetupRow}>
+            <TouchableOpacity style={styles.walletRow}>
+              <View style={styles.walletIconContainer}>
+                <View style={styles.walletIcon}>
+                  <Ionicons name="wallet" size={15} color={theme.text} />
+                </View>
+              </View>
+
+              <View>
+                <Text style={styles.toTitle}>Destino</Text>
+                <Text style={styles.toAddress}>Address</Text>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity>
+              <Ionicons
+                name="chevron-forward"
+                size={24}
+                color={COLORS.greyLight}
+                style={[styles.forwardIcon, { marginRight: 8 }]}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+
         {/* <View style={styles.availableBalanceContainer}>
           <View style={styles.availableBalanceLeftContainer}>
             <Text style={styles.availableBalanceText}>Balance</Text>

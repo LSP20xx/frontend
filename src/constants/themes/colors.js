@@ -27,6 +27,7 @@ export const COLORS = {
   green: "#27A69A",
   red: "#EF5450",
   input: "#f2f2f2",
+  greyBackground: "#E2E8ED",
 };
 
 export const LightTheme = {

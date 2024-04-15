@@ -69,7 +69,8 @@ export const getStyles = (theme) =>
     },
     addToFavoritesButton: {
       marginLeft: 6,
-      marginTop: 6,
+
+      marginTop: 3,
       fontFamily: "Uto-Bold",
     },
     showAllButton: {

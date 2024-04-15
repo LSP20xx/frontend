@@ -92,7 +92,7 @@ export const getStyles = (theme) =>
     },
     assetAmount: {
       fontSize: 52,
-      fontFamily: "Uto-Light",
+      fontFamily: "Uto-Regular",
       color: theme.text,
       width: "100%",
       textAlign: "right",
@@ -156,9 +156,7 @@ export const getStyles = (theme) =>
       width: 65,
       height: 55,
       borderRadius: 16,
-      borderWidth: 1,
-      borderColor: COLORS.greyLight,
-      backgroundColor: theme.background,
+      backgroundColor: theme.input,
       marginLeft: 20,
       flexDirection: "row",
       alignItems: "center",
@@ -222,13 +220,6 @@ export const getStyles = (theme) =>
       fontSize: 16,
       fontFamily: "Uto-Medium",
     },
-    separator: {
-      height: 1,
-      backgroundColor: theme.disabled,
-      marginBottom: 8,
-      marginHorizontal: 20,
-      width: "100%",
-    },
     recentTransfersContainer: {
       width: "90%",
       backgroundColor: theme.background,
@@ -242,6 +233,12 @@ export const getStyles = (theme) =>
       marginVertical: 16,
       marginHorizontal: 8,
       backgroundColor: theme.background,
+    },
+    separator: {
+      height: 20,
+      width: 2,
+      backgroundColor: "black",
+      marginLeft: 26,
     },
     screenTitleContainer: {
       width: "100%",
@@ -419,5 +416,91 @@ export const getStyles = (theme) =>
     selectedAsetSymbol: {
       marginLeft: 2,
       fontFamily: "Uto-Regular",
+      color: COLORS.greyLight,
+    },
+    assetSendSetup: {
+      paddingTop: 20,
+      paddingLeft: 20,
+    },
+    assetSendSetupRow: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 8,
+    },
+    assetSendSetupColumn: {
+      flexDirection: "row",
+      alignItems: "center",
+      borderRadius: 16,
+      backgroundColor: theme.input,
+      padding: 5,
+    },
+    walletIconContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: theme.input,
+      width: 30,
+      height: 30,
+      marginLeft: 12,
+      marginTop: 4,
+      marginRight: 6,
+      borderRadius: 15,
+      paddingLeft: 2,
+    },
+    walletRow: {
+      marginTop: 8,
+      flexDirection: "row",
+    },
+    toTitle: {
+      fontFamily: "Uto-Medium",
+    },
+    toAddress: {
+      fontFamily: "Uto-Light",
+    },
+    networkLabel: {
+      fontSize: 16,
+      color: COLORS.black,
+      marginHorizontal: 6,
+      fontFamily: "Uto-Regular",
+    },
+    networkName: {
+      fontSize: 16,
+      fontFamily: "Uto-Bold",
+      color: COLORS.black,
+    },
+    dropdownIcon: {
+      marginLeft: 4,
+    },
+    forwardIcon: {
+      marginLeft: 8,
+    },
+    infoIcon: {
+      marginLeft: 4,
+    },
+    availableBalanceContainer: {
+      justifyContent: "space-between",
+      alignItems: "center",
+      padding: 10,
+    },
+    amount: {
+      fontSize: 12,
+      fontFamily: "Uto-Bold",
+      color: "#000",
+    },
+    symbol: {
+      marginLeft: 2,
+      fontSize: 12,
+      fontFamily: "Uto-Bold",
+    },
+    available: {
+      fontSize: 12,
+      color: "#666",
+      fontFamily: "Uto-Medium",
+    },
+    icon: {
+      fontSize: 24,
+      color: "#000",
+      marginLeft: 4,
     },
   });
