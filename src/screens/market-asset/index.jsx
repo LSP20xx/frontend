@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Header } from "../../components/index";
 import { getStyles, styles } from "./styles";
@@ -11,6 +11,8 @@ import {
 import { useTheme } from "../../context/ThemeContext";
 import TradingViewSimpleChart from "../../components/trading-view-simple-chart";
 import { getCandlestickChart } from "../../store/actions";
+import { SafeAreaView } from "react-native-safe-area-context";
+import TradingViewLinearChart from "../../components/trading-view-linear-chart";
 
 const MarketAsset = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -61,7 +63,9 @@ const MarketAsset = ({ navigation }) => {
       <Header navigation={navigation} showBackButton={true} />
       <View style={styles.chartContainer}>
         {/* <BigLineChart symbol={selectedAsset.symbol} /> */}
-        <TradingViewSimpleChart />
+        <TradingViewLinearChart />
+
+        {/* <TradingViewSimpleChart /> */}
         <View style={styles.priceContainer}>
           <Text style={styles.symbolText}>{selectedAsset.symbol}</Text>
           <Text style={styles.nameText}>{selectedAsset.name}</Text>

@@ -6,7 +6,6 @@ export const getStyles = (theme) =>
   StyleSheet.create({
     container: {
       flex: 1,
-      justifyContent: "center",
       alignItems: "center",
       backgroundColor: theme.background,
     },
@@ -23,6 +22,7 @@ export const getStyles = (theme) =>
       textAlign: "center",
       color: theme.text,
     },
+    titleContainer: {},
     linkContainer: {
       justifyContent: "center",
       alignItems: "flex-end",
@@ -46,7 +46,7 @@ export const getStyles = (theme) =>
       fontSize: 14,
       color: COLORS.secondary,
       justifyContent: "center",
-      alignItems: "flex-end",
+      alignItems: "center",
       marginBottom: 16,
     },
     submitContainer: {

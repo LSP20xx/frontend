@@ -24,6 +24,7 @@ import {
 } from "../../store/actions";
 import { useTheme } from "../../context/ThemeContext";
 import { getStyles } from "./styles";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export const Verification = ({ navigation, route }) => {
   const {
@@ -226,16 +227,7 @@ export const Verification = ({ navigation, route }) => {
   return (
     <>
       {isLoading && <View style={overlayStyle} />}
-      <View style={styles.container}>
-        {canResend ? (
-          <TouchableOpacity onPress={resendCode} style={styles.resendButton}>
-            <Text style={styles.resendButtonText}>Reenviar código</Text>
-          </TouchableOpacity>
-        ) : (
-          <Text style={styles.timerText}>
-            Puede reenviarlo en: {timer} {timer === 1 ? "segundo" : "segundos"}
-          </Text>
-        )}
+      <SafeAreaView style={styles.container}>
         <View style={styles.headerContainer}>
           <TouchableOpacity
             onPress={onHandleOnBackPress}
@@ -243,9 +235,11 @@ export const Verification = ({ navigation, route }) => {
           >
             <Ionicons name="arrow-back-outline" style={styles.backIcon} />
           </TouchableOpacity>
-          <Text style={styles.title}>{title}</Text>
         </View>
+
         <View style={styles.content}>
+          <Text style={styles.title}>{title}</Text>
+
           <Text style={styles.verificationTitle}>{verificationMessage}</Text>
           <View style={styles.inputContainer}>
             {code.map((digit, index) => (
@@ -263,16 +257,21 @@ export const Verification = ({ navigation, route }) => {
           </View>
 
           <View style={styles.linkForgetPassword}>
-            <TouchableOpacity
-              style={styles.link}
-              onPress={onHandleForgetPassword}
-            >
-              <Text style={styles.linkText}>
-                ¿Método de verificación no disponible?
+            {canResend ? (
+              <TouchableOpacity
+                onPress={resendCode}
+                style={styles.resendButton}
+              >
+                <Text style={styles.resendButtonText}>Reenviar código</Text>
+              </TouchableOpacity>
+            ) : (
+              <Text style={styles.timerText}>
+                Puede reenviarlo en: {timer}{" "}
+                {timer === 1 ? "segundo" : "segundos"}
               </Text>
-            </TouchableOpacity>
+            )}
           </View>
-          <View style={styles.submitContainer}>
+          {/* <View style={styles.submitContainer}>
             <TouchableOpacity
               disabled={!isCodeComplete}
               onPress={onHandleVerification}
@@ -280,7 +279,7 @@ export const Verification = ({ navigation, route }) => {
             >
               <Text style={styles.buttonText}>{buttonTitle}</Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
           {verificationType === "send" && (
             <View style={styles.withdrawContainer}>
               <Text style={styles.withdrawTitle}>
@@ -325,7 +324,7 @@ export const Verification = ({ navigation, route }) => {
             </View>
           </View>
         </Modal>
-      </View>
+      </SafeAreaView>
     </>
   );
 };

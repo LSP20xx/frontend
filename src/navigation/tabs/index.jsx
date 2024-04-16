@@ -193,7 +193,7 @@ const TabsNavigator = () => {
               fill={theme.primaryLight}
             />
           ),
-          tabBarButton: (props) => <View {...props} enabled={true} />,
+          // tabBarButton: (props) => <View {...props} enabled={true} />,
         }}
       />
 

@@ -61,6 +61,7 @@ export const getCandlestickChart = (name, interval) => {
       const result = await response.json();
 
       if (result.length > 0) {
+        console.log("RESULT LINEAR", JSON.stringify(result));
         dispatch({
           type: GET_CANDLESTICK_CHART_SUCCESS,
           payload: result,

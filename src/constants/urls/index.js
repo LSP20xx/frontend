@@ -14,3 +14,5 @@ export const STORED_PRICES_URL = `http://172.28.160.1:8000/api/tokens/stored-pri
 export const FETCH_BLOCKCHAINS_URL = `http://172.28.160.1:8000/api/tokens/get-blockchains-for-tokens`;
 export const WITHDRAW_FROM_EVM_WALLET_URL = `http://172.28.160.1:8000/api/evm-wallet/withdraw`;
 export const GET_TRANSACTIONS_URL = `http://172.28.160.1:8000/api/transactions`;
+export const SET_EVM_FAVORITE_ADDRESS_URL = `http://172.28.160.1:8000/api/evm-wallet/save-favorite-address`;
+export const SET_UTXO_FAVORITE_ADDRESS_URL = `http://172.28.160.1:8000/api/utxo-wallet/save-favorite-address`;

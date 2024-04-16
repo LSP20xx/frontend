@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { COLORS } from "../../constants";
-import { Profile } from "../../screens";
+
 import UserConfig from "../../screens/user-config";
 import MyInformation from "../../screens/user-my-information";
 import LocalCurrency from "../../screens/user-local-currency";
@@ -12,21 +12,19 @@ import KYCStep1 from "../../screens/kyc-step-1";
 import KYCStep2 from "../../screens/kyc-step-2";
 import KYCStep3 from "../../screens/kyc-step-3";
 import KYCStep4 from "../../screens/kyc-step-4";
+import Wallet from "../../screens/wallet";
 
 const Stack = createNativeStackNavigator();
 
 const WalletNavigator = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Perfil"
+      initialRouteName="Wallet"
       screenOptions={{
-        headerStyle: {
-          backgroundColor: COLORS.primaryLight,
-        },
-        headerTintColor: COLORS.white,
+        headerShown: false,
       }}
     >
-      <Stack.Screen name="Perfil" component={Profile} />
+      <Stack.Screen name="Wallet" component={Wallet} />
       <Stack.Screen name="UserConfig" component={UserConfig} />
       <Stack.Screen name="UserMyInformation" component={MyInformation} />
       <Stack.Screen name="UserLocalCurrency" component={LocalCurrency} />

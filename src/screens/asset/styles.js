@@ -102,6 +102,15 @@ export const getStyles = (theme) =>
       marginTop: 20,
       paddingTop: 10,
     },
+    balanceDetails: {
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: theme.background,
+      height: 100,
+      paddingBottom: 20,
+      marginLeft: 20,
+    },
+
     sectionTitle: {
       fontSize: 20,
       color: theme.text,
@@ -120,13 +129,13 @@ export const getStyles = (theme) =>
       paddingTop: 6,
       marginLeft: 6,
     },
-    balanceDetails: {
-      flexDirection: "row",
-      alignItems: "center",
-      backgroundColor: theme.background,
-      height: 80,
+    balanceTitle: {
+      fontSize: 12,
+      fontFamily: "Uto-Light",
+      color: COLORS.greyLight,
+      textAlign: "left",
+      paddingTop: 10,
     },
-
     categoriesContainer: {
       flex: 1,
       flexDirection: "column",
@@ -155,27 +164,24 @@ export const getStyles = (theme) =>
       borderRadius: 5,
     },
     fiatSymbol: {
-      fontSize: 60,
+      fontSize: 70,
       fontFamily: "Uto-Light",
       color: theme.text,
       textAlign: "center",
-      bottom: 6,
     },
     fiatTicker: {
-      fontSize: 16,
-      fontFamily: "Uto-Medium",
-      color: COLORS.greyLight,
+      fontSize: 12,
+      fontFamily: "Uto-Light",
+      color: theme.text,
       textAlign: "center",
-      marginTop: 16,
-      marginLeft: 8,
+      marginTop: 52,
     },
     fiatConvertedAmount: {
-      fontSize: 52,
-      fontFamily: "Uto-Light",
+      fontSize: 70,
+      fontFamily: "Uto-Medium",
       color: theme.text,
       textAlign: "center",
       marginTop: 0,
-      paddingBottom: 10,
     },
     cryptoItem: {
       width: "100%",

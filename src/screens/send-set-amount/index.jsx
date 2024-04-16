@@ -51,6 +51,7 @@ const symbolImages = {
   doge: require("../../../assets/crypto-logos/doge.png"),
   usdt: require("../../../assets/crypto-logos/usdt.png"),
   ltc: require("../../../assets/crypto-logos/ltc.png"),
+  sol: require("../../../assets/crypto-logos/sol.png"),
 };
 
 const OdometerAnimation = ({ value }) => {

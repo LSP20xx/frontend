@@ -80,7 +80,7 @@ export const getStyles = (theme) =>
       paddingVertical: 5,
     },
     button: {
-      backgroundColor: COLORS.primaryMedium,
+      backgroundColor: "#EF8220",
       paddingVertical: 15,
       paddingHorizontal: 20,
       borderRadius: 8,
@@ -97,7 +97,7 @@ export const getStyles = (theme) =>
     buttonText: {
       fontFamily: "Uto-Medium",
       fontSize: 16,
-      color: COLORS.black,
+      color: COLORS.white,
     },
     buttonDisabled: {
       backgroundColor: "grey",

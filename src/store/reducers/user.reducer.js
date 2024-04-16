@@ -6,12 +6,16 @@ const {
   SEND_EMAIL,
   SEND_SMS,
   SET_SELECTED_ADDRESS,
+  SET_FAVORITE_ADDRESS,
+  FAVORITE_ADDRESS_SAVED_SUCCESSFULLY,
+  FAVORITE_ADDRESS_SAVE_FAILED,
 } = userTypes;
 
 const initialState = {
   user: null,
   isLoading: false,
   selectedAddress: null,
+  favoriteAddresses: [],
   error: null,
   hasError: false,
 };
@@ -49,6 +53,25 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         selectedAddress: action.item,
+      };
+    case SET_FAVORITE_ADDRESS:
+      return {
+        ...state,
+        favoriteAddresses: [...state.favoriteAddresses, action.payload],
+        isLoading: true,
+      };
+    case FAVORITE_ADDRESS_SAVED_SUCCESSFULLY:
+      return {
+        ...state,
+        favoriteAddresses: [...state.favoriteAddresses, action.payload],
+        isLoading: false,
+      };
+    case FAVORITE_ADDRESS_SAVE_FAILED:
+      return {
+        ...state,
+        error: action.payload,
+        hasError: true,
+        isLoading: false,
       };
     default:
       return state;

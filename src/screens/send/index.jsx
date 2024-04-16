@@ -28,7 +28,10 @@ import { formatBalance, formatFiatValue } from "../../utils/prices";
 import BigNumber from "bignumber.js";
 import { fetchBlockchains } from "../../store/actions/blockchains.action";
 import { validateAddress } from "../../utils/address";
-import { setSelectedAddress } from "../../store/actions/user.action";
+import {
+  setFavoriteAddress,
+  setSelectedAddress,
+} from "../../store/actions/user.action";
 import {
   getAssetAddress,
   getAssetBalance,
@@ -53,6 +56,7 @@ const symbolImages = {
   doge: require("../../../assets/crypto-logos/doge.png"),
   usdt: require("../../../assets/crypto-logos/usdt.png"),
   ltc: require("../../../assets/crypto-logos/ltc.png"),
+  sol: require("../../../assets/crypto-logos/sol.png"),
 };
 
 const OdometerAnimation = ({ value }) => {
@@ -133,6 +137,7 @@ const Send = ({ navigation }) => {
   const rotateValueHolder = useRef(new Animated.Value(0)).current;
   const { blockchains } = useSelector((state) => state.blockchains);
   const [selectedBlockchain, setSelectedBlockchain] = useState();
+  const [favoriteName, setFavoriteName] = useState();
   const [blockchainsWithFees, setBlockchainsWithFees] = useState([]);
   // const { blockchains } = useSelector((state) => state.blockchains);
   const supportedBlockchains = blockchains.filter(
@@ -146,6 +151,7 @@ const Send = ({ navigation }) => {
   const { selectedAddress } = useSelector((state) => state.user);
   const styles = getStyles(theme);
   const dispatch = useDispatch();
+  const { userId } = useSelector((state) => state.auth);
 
   useEffect(() => {
     const blockchainsWithCalculatedFees = blockchains
@@ -180,6 +186,9 @@ const Send = ({ navigation }) => {
     //   result = new BigNumber(amount).toFixed(selectedAsset.assetDecimals);
     // }
     if (!errorMessages[0]) {
+      if (favoriteName) {
+        setFavoriteAddress(userId, toAddress, favoriteName);
+      }
       navigation.navigate("SendSetAmount", {
         toAddress,
         fromAddress,
@@ -250,6 +259,10 @@ const Send = ({ navigation }) => {
     } else {
       dispatch(setSelectedAddress(null));
     }
+  };
+
+  const handleFavoriteNameChange = (name) => {
+    setFavoriteName(name);
   };
 
   const handleAmountChange = useCallback(
@@ -456,6 +469,7 @@ const Send = ({ navigation }) => {
           <TextInput
             ref={nameInputRef}
             placeholder="Nombre del favorito"
+            onChangeText={handleFavoriteNameChange}
             placeholderTextColor={theme.placeholder}
             style={styles.input}
           />

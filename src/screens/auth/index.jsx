@@ -80,7 +80,7 @@ const Auth = ({ navigation }) => {
   const styles = getStyles(theme);
 
   const title = isLogin ? "Iniciar sesión" : "Registrarse";
-  const buttonTitle = isLogin ? "Iniciar sesión" : "Registrarse";
+  const buttonTitle = isLogin ? "CONFIRMAR" : "Registrarse";
   const messageText = isLogin
     ? "¿No creaste una cuenta?"
     : "¿Ya creaste una cuenta?";

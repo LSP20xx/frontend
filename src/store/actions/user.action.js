@@ -1,4 +1,10 @@
-import { USER_INFO_URL, SEND_EMAIL_URL, SEND_SMS_URL } from "../../constants";
+import axios from "axios";
+import {
+  USER_INFO_URL,
+  SEND_EMAIL_URL,
+  SEND_SMS_URL,
+  SET_EVM_FAVORITE_ADDRESS_URL,
+} from "../../constants";
 import { userTypes } from "../types/user.types";
 const {
   GET_USER_INFO_BY_ID,
@@ -7,6 +13,9 @@ const {
   SEND_EMAIL,
   SEND_SMS,
   SET_SELECTED_ADDRESS,
+  SET_FAVORITE_ADDRESS,
+  FAVORITE_ADDRESS_SAVED_SUCCESSFULLY,
+  FAVORITE_ADDRESS_SAVE_FAILED,
 } = userTypes;
 
 export const getUserInfoById = (userId) => {
@@ -30,6 +39,53 @@ export const setSelectedAddress = (address) => {
     item: address,
   };
 };
+
+export const setFavoriteAddress =
+  (userId, address, name) => async (dispatch) => {
+    console.log("llega acá");
+    dispatch({
+      type: SET_FAVORITE_ADDRESS,
+      payload: { address, name },
+    });
+
+    console.log(userId, address, name);
+
+    const requestBody = {
+      address,
+      name,
+    };
+
+    try {
+      const response = await fetch(
+        SET_EVM_FAVORITE_ADDRESS_URL + `/${userId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to save favorite address");
+      }
+
+      const data = await response.json();
+      console.log("Favorite address saved successfully:", data);
+
+      dispatch({
+        type: FAVORITE_ADDRESS_SAVED_SUCCESSFULLY,
+        payload: data,
+      });
+    } catch (error) {
+      console.error("Failed to save favorite address:", error.message);
+      dispatch({
+        type: FAVORITE_ADDRESS_SAVE_FAILED,
+        payload: error.message,
+      });
+    }
+  };
 
 export const addUser = (user) => {
   return async (dispatch) => {

@@ -46,6 +46,7 @@ const AssetsList = ({ navigation, route, showBackButton }) => {
     doge: require("../../../assets/crypto-logos/doge.png"),
     usdc: require("../../../assets/crypto-logos/usdc.png"),
     ltc: require("../../../assets/crypto-logos/ltc.png"),
+    sol: require("../../../assets/crypto-logos/sol.png"),
   };
 
   const handleAssetPress = (id) => {
