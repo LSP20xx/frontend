@@ -36,7 +36,7 @@ const Assets = ({ navigation }) => {
 
   const handleAssetPress = (id) => {
     dispatch(selectAsset(id));
-    navigation.navigate("Asset");
+    navigation.navigate("MarketAsset");
   };
 
   useEffect(() => {

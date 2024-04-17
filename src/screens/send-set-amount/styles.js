@@ -209,7 +209,7 @@ export const getStyles = (theme) =>
       flex: 1,
     },
     button: {
-      backgroundColor: "#F8911A",
+      backgroundColor: "#F48421",
       padding: 10,
       alignItems: "center",
       borderRadius: 5,

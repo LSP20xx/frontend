@@ -80,7 +80,7 @@ export const getStyles = (theme) =>
       paddingVertical: 5,
     },
     button: {
-      backgroundColor: "#EF8220",
+      backgroundColor: "#F48421",
       paddingVertical: 15,
       paddingHorizontal: 20,
       borderRadius: 8,

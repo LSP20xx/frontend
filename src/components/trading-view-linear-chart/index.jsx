@@ -1,233 +1,253 @@
-import React, { useRef, useEffect, useState } from "react";
-import { ActivityIndicator, View } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, ActivityIndicator, StyleSheet } from "react-native";
 import { WebView } from "react-native-webview";
+import { useSelector } from "react-redux";
 import { useTheme } from "../../context/ThemeContext";
-import { getCandlestickChart } from "../../store/actions";
-import { useDispatch, useSelector } from "react-redux";
 
-// const ChartComponent = (props) => {
-//   const {
-//     data,
-//     colors: {
-//       backgroundColor = "white",
-//       lineColor = "#2962FF",
-//       textColor = "black",
-//       areaTopColor = "#2962FF",
-//       areaBottomColor = "rgba(41, 98, 255, 0.28)",
-//     } = {},
-//   } = props;
-
-//   const chartContainerRef = useRef();
-
-//   useEffect(() => {
-//     const handleResize = () => {
-//       chart.applyOptions({ width: chartContainerRef.current.clientWidth });
-//     };
-
-//     const chart = createChart(chartContainerRef.current, {
-//       layout: {
-//         background: { type: ColorType.Solid, color: backgroundColor },
-//         textColor,
-//       },
-//       width: chartContainerRef.current.clientWidth,
-//       height: 300,
-//     });
-//     chart.timeScale().fitContent();
-
-//     const newSeries = chart.addAreaSeries({
-//       lineColor,
-//       topColor: areaTopColor,
-//       bottomColor: areaBottomColor,
-//     });
-//     newSeries.setData(data);
-
-//     window.addEventListener("resize", handleResize);
-
-//     return () => {
-//       window.removeEventListener("resize", handleResize);
-
-//       chart.remove();
-//     };
-//   }, [
-//     data,
-//     backgroundColor,
-//     lineColor,
-//     textColor,
-//     areaTopColor,
-//     areaBottomColor,
-//   ]);
-
-//   return <div ref={chartContainerRef} />;
-// };
-
-// const initialData = [
-//   { time: "2018-12-22", value: 32.51 },
-//   { time: "2018-12-23", value: 31.11 },
-//   { time: "2018-12-24", value: 27.02 },
-//   { time: "2018-12-25", value: 27.32 },
-//   { time: "2018-12-26", value: 25.17 },
-//   { time: "2018-12-27", value: 28.89 },
-//   { time: "2018-12-28", value: 25.46 },
-//   { time: "2018-12-29", value: 23.92 },
-//   { time: "2018-12-30", value: 22.68 },
-//   { time: "2018-12-31", value: 22.67 },
-// ];
-
-const TradingViewSimpleChart = () => {
-  const webViewRef = useRef(null);
+const TradingViewChart = () => {
+  const [loading, setLoading] = useState(true);
+  const { candlestickChart } = useSelector((state) => state.assets);
   const { theme } = useTheme();
-  const { candlestickChart, loading } = useSelector((state) => state.assets);
+  const dayData = [
+    { time: "2018-10-19", value: 26.19 },
+    { time: "2018-10-22", value: 25.87 },
+    { time: "2018-10-23", value: 25.83 },
+    { time: "2018-10-24", value: 25.78 },
+    { time: "2018-10-25", value: 25.82 },
+    { time: "2018-10-26", value: 25.81 },
+    { time: "2018-10-29", value: 25.82 },
+    { time: "2018-10-30", value: 25.71 },
+    { time: "2018-10-31", value: 25.82 },
+    { time: "2018-11-01", value: 25.72 },
+    { time: "2018-11-02", value: 25.74 },
+    { time: "2018-11-05", value: 25.81 },
+    { time: "2018-11-06", value: 25.75 },
+    { time: "2018-11-07", value: 25.73 },
+    { time: "2018-11-08", value: 25.75 },
+    { time: "2018-11-09", value: 25.75 },
+    { time: "2018-11-12", value: 25.76 },
+    { time: "2018-11-13", value: 25.8 },
+    { time: "2018-11-14", value: 25.77 },
+    { time: "2018-11-15", value: 25.75 },
+    { time: "2018-11-16", value: 25.75 },
+    { time: "2018-11-19", value: 25.75 },
+    { time: "2018-11-20", value: 25.72 },
+    { time: "2018-11-21", value: 25.78 },
+    { time: "2018-11-23", value: 25.72 },
+    { time: "2018-11-26", value: 25.78 },
+    { time: "2018-11-27", value: 25.85 },
+    { time: "2018-11-28", value: 25.85 },
+    { time: "2018-11-29", value: 25.55 },
+    { time: "2018-11-30", value: 25.41 },
+    { time: "2018-12-03", value: 25.41 },
+    { time: "2018-12-04", value: 25.42 },
+    { time: "2018-12-06", value: 25.33 },
+    { time: "2018-12-07", value: 25.39 },
+    { time: "2018-12-10", value: 25.32 },
+    { time: "2018-12-11", value: 25.48 },
+    { time: "2018-12-12", value: 25.39 },
+    { time: "2018-12-13", value: 25.45 },
+    { time: "2018-12-14", value: 25.52 },
+    { time: "2018-12-17", value: 25.38 },
+    { time: "2018-12-18", value: 25.36 },
+    { time: "2018-12-19", value: 25.65 },
+    { time: "2018-12-20", value: 25.7 },
+    { time: "2018-12-21", value: 25.66 },
+    { time: "2018-12-24", value: 25.66 },
+    { time: "2018-12-26", value: 25.65 },
+    { time: "2018-12-27", value: 25.66 },
+    { time: "2018-12-28", value: 25.68 },
+    { time: "2018-12-31", value: 25.77 },
+    { time: "2019-01-02", value: 25.72 },
+    { time: "2019-01-03", value: 25.69 },
+    { time: "2019-01-04", value: 25.71 },
+    { time: "2019-01-07", value: 25.72 },
+    { time: "2019-01-08", value: 25.72 },
+    { time: "2019-01-09", value: 25.66 },
+    { time: "2019-01-10", value: 25.85 },
+    { time: "2019-01-11", value: 25.92 },
+    { time: "2019-01-14", value: 25.94 },
+    { time: "2019-01-15", value: 25.95 },
+    { time: "2019-01-16", value: 26.0 },
+    { time: "2019-01-17", value: 25.99 },
+    { time: "2019-01-18", value: 25.6 },
+    { time: "2019-01-22", value: 25.81 },
+    { time: "2019-01-23", value: 25.7 },
+    { time: "2019-01-24", value: 25.74 },
+    { time: "2019-01-25", value: 25.8 },
+    { time: "2019-01-28", value: 25.83 },
+    { time: "2019-01-29", value: 25.7 },
+    { time: "2019-01-30", value: 25.78 },
+    { time: "2019-01-31", value: 25.35 },
+    { time: "2019-02-01", value: 25.6 },
+    { time: "2019-02-04", value: 25.65 },
+    { time: "2019-02-05", value: 25.73 },
+    { time: "2019-02-06", value: 25.71 },
+    { time: "2019-02-07", value: 25.71 },
+    { time: "2019-02-08", value: 25.72 },
+    { time: "2019-02-11", value: 25.76 },
+    { time: "2019-02-12", value: 25.84 },
+    { time: "2019-02-13", value: 25.85 },
+    { time: "2019-02-14", value: 25.87 },
+    { time: "2019-02-15", value: 25.89 },
+    { time: "2019-02-19", value: 25.9 },
+    { time: "2019-02-20", value: 25.92 },
+    { time: "2019-02-21", value: 25.96 },
+    { time: "2019-02-22", value: 26.0 },
+    { time: "2019-02-25", value: 25.93 },
+    { time: "2019-02-26", value: 25.92 },
+    { time: "2019-02-27", value: 25.67 },
+    { time: "2019-02-28", value: 25.79 },
+    { time: "2019-03-01", value: 25.86 },
+    { time: "2019-03-04", value: 25.94 },
+    { time: "2019-03-05", value: 26.02 },
+    { time: "2019-03-06", value: 25.95 },
+    { time: "2019-03-07", value: 25.89 },
+    { time: "2019-03-08", value: 25.94 },
+    { time: "2019-03-11", value: 25.91 },
+    { time: "2019-03-12", value: 25.92 },
+    { time: "2019-03-13", value: 26.0 },
+    { time: "2019-03-14", value: 26.05 },
+    { time: "2019-03-15", value: 26.11 },
+    { time: "2019-03-18", value: 26.1 },
+    { time: "2019-03-19", value: 25.98 },
+    { time: "2019-03-20", value: 26.11 },
+    { time: "2019-03-21", value: 26.12 },
+    { time: "2019-03-22", value: 25.88 },
+    { time: "2019-03-25", value: 25.85 },
+    { time: "2019-03-26", value: 25.72 },
+    { time: "2019-03-27", value: 25.73 },
+    { time: "2019-03-28", value: 25.8 },
+    { time: "2019-03-29", value: 25.77 },
+    { time: "2019-04-01", value: 26.06 },
+    { time: "2019-04-02", value: 25.93 },
+    { time: "2019-04-03", value: 25.95 },
+    { time: "2019-04-04", value: 26.06 },
+    { time: "2019-04-05", value: 26.16 },
+    { time: "2019-04-08", value: 26.12 },
+    { time: "2019-04-09", value: 26.07 },
+    { time: "2019-04-10", value: 26.13 },
+    { time: "2019-04-11", value: 26.04 },
+    { time: "2019-04-12", value: 26.04 },
+    { time: "2019-04-15", value: 26.05 },
+    { time: "2019-04-16", value: 26.01 },
+    { time: "2019-04-17", value: 26.09 },
+    { time: "2019-04-18", value: 26.0 },
+    { time: "2019-04-22", value: 26.0 },
+    { time: "2019-04-23", value: 26.06 },
+    { time: "2019-04-24", value: 26.0 },
+    { time: "2019-04-25", value: 25.81 },
+    { time: "2019-04-26", value: 25.88 },
+    { time: "2019-04-29", value: 25.91 },
+    { time: "2019-04-30", value: 25.9 },
+    { time: "2019-05-01", value: 26.02 },
+    { time: "2019-05-02", value: 25.97 },
+    { time: "2019-05-03", value: 26.02 },
+    { time: "2019-05-06", value: 26.03 },
+    { time: "2019-05-07", value: 26.04 },
+    { time: "2019-05-08", value: 26.05 },
+    { time: "2019-05-09", value: 26.05 },
+    { time: "2019-05-10", value: 26.08 },
+    { time: "2019-05-13", value: 26.05 },
+    { time: "2019-05-14", value: 26.01 },
+    { time: "2019-05-15", value: 26.03 },
+    { time: "2019-05-16", value: 26.14 },
+    { time: "2019-05-17", value: 26.09 },
+    { time: "2019-05-20", value: 26.01 },
+    { time: "2019-05-21", value: 26.12 },
+    { time: "2019-05-22", value: 26.15 },
+    { time: "2019-05-23", value: 26.18 },
+    { time: "2019-05-24", value: 26.16 },
+    { time: "2019-05-28", value: 26.23 },
+  ];
+  useEffect(() => {
+    console.log("candlestickChart", JSON.stringify(candlestickChart));
+  });
 
-  {
-    loading && (
-      <ActivityIndicator
-        size="large"
-        color="#00ff00"
-        style={{
-          position: "absolute",
-          left: 0,
-          right: 0,
-          top: 0,
-          bottom: 0,
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      />
-    );
-  }
-
-  let filteredData =
-    candlestickChart.length > 0 ? candlestickChart[0].filteredData : null;
-
-  console.log("MODIFIED DATA *************", filteredData);
-
-  // const handleIncomingChartData = (data) => {
-  //   const formattedData = transformChartData(data);
-  //   webViewRef.current.postMessage(JSON.stringify(formattedData));
-  // };
-
-  // window.addEventListener("message", function (event) {
-  //   const data = JSON.parse(event.data);
-  //   candleSeries.update(data);
-  // });
-
-  // useEffect(() => {
-  //   if (candlestickChart.filteredData) {
-  //     webViewRef.current.postMessage(
-  //       JSON.stringify(candlestickChart.filteredData)
-  //     );
-  //   }
-  // }, [candlestickChart]);
-
-  const htmlContent = `<!DOCTYPE html>
-  <html>
-  <head>
-    <title>TradingView Chart</title>
-    <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
-    <style>
-      body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: ${
-        theme.background
-      }; }
-      #chart { width: 100%; height: 100%; }
-    </style>
-  </head>
-  <body>
-    <div id="chart"></div>
-    <script>
-
-    function setChartDimensions() {
-      const width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-      const height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-
-      return { width, height };
-    }
-    const { width, height } = setChartDimensions();
-    const chart = LightweightCharts.createChart(document.getElementById("chart"), { width, height,     layout: {
-      fontSize: 24,
-      textColor: '${theme.text}',
-      background: { color: '${theme.background}' }, 
-    },
-    grid: {
-      vertLines: {
-        color: '${theme.chartLine}',
-      },
-      horzLines: {
-        color: '${theme.chartLine}',
-      },
-    }, });
-    const candleSeries = chart.addCandlestickSeries();
-    const data = ${JSON.stringify(filteredData)};
-    
-    candleSeries.setData(data);
-
-    if (data.length) {
-      const endIndex = data.length - 1;
-      const startIndex = endIndex - 20;
-      const from = data[startIndex < 0 ? 0 : startIndex].time;
-      const to = data[endIndex].time;
-
-      chart.timeScale().setVisibleRange({ from, to });
-    }
-    
-
-        window.updateChartData = (data) => {
-          candleSeries.update(data);
+  // El HTML y JavaScript para el gráfico
+  const chartHTML = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Lightweight Chart</title>
+      <style>
+        body, html {
+          margin: 0;
+          padding: 0;
+          height: 100%;
+          overflow: hidden;
+          background-color: white;
+        }
+        #chart {
+          height: 100%;
+          width: 100%;
+        }
+        ${styles}  // Asegúrate de que los estilos se incluyen correctamente aquí
+      </style>
+      <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+    </head>
+    <body>
+      <div id="container"></div>
+      <script>
+        const chartOptions = {
+          width: window.innerWidth,
+          height: window.innerHeight,
+          layout: {
+            textColor: 'black',
+            background: { type: 'solid', color: '${theme.background}' },
+          },
+          grid: {
+            vertLines: { color: '${theme.background}' },
+            horzLines: { color: '${theme.background}' },
+          },
         };
-    </script>
-  </body>
-  </html>
+
+        const chart = LightweightCharts.createChart(document.getElementById('container'), chartOptions);
+        const lineSeries = chart.addLineSeries({ color: '${theme.primary}' });
+
+        const data = ${JSON.stringify(dayData)}; 
+        lineSeries.setData(data);
+
+        chart.timeScale().fitContent();
+
+        // Handling resize
+        window.addEventListener('resize', () => {
+          chart.applyOptions({ width: window.innerWidth, height: window.innerHeight });
+        });
+      </script>
+    </body>
+    </html>
   `;
 
-  // useEffect(() => {
-  //     // Aquí puedes suscribirte a WebSocketService y escuchar los datos OHLC.
-  //     // Suponiendo que tienes una función setupWebSocketListeners en tu servicio:
-  //     WebSocketService.setupWebSocketListeners(handleIncomingChartData);
-
-  //     return () => {
-  //         // No olvides limpiar y desconectar los listeners al desmontar el componente.
-  //         WebSocketService.disconnectWebSocketListeners(handleIncomingChartData);
-  //     };
-  // }, []);
-
-  // const handleIncomingChartData = (data) => {
-  //     const formattedData = transformChartData(data);
-  //     webViewRef.current.postMessage(JSON.stringify(formattedData));
-  // };
-
-  // const transformChartData = (data) => {
-  //     // Transforma los datos recibidos del WebSocket al formato esperado por el gráfico.
-  //     return data; // Este es solo un placeholder. Ajusta según sea necesario.
-  // };
-  useEffect(() => {
-    console.log("theme.background", theme.background);
-  }, [theme.background]);
   return (
-    <View style={{ height: 380 }}>
+    <View style={{ height: 450 }}>
       {loading && (
         <ActivityIndicator
           size="large"
-          color="#00ff00"
-          style={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            top: 0,
-            bottom: 0,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
+          color="#0000ff"
+          style={styles.activityIndicator}
         />
       )}
       <WebView
-        ref={webViewRef}
         originWhitelist={["*"]}
-        source={{ html: htmlContent }}
-        onMessage={(event) => {}}
+        source={{ html: chartHTML }}
+        onLoadEnd={() => setLoading(false)}
         javaScriptEnabled={true}
-        style={{ opacity: loading ? 0 : 1 }}
       />
     </View>
   );
 };
 
-export default TradingViewSimpleChart;
+const styles = StyleSheet.create({
+  activityIndicator: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
+
+export default TradingViewChart;

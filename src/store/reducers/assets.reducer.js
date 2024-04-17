@@ -173,7 +173,6 @@ const assetsReducer = (state = initialState, action) => {
         loading: false,
         error: action.payload,
       };
-
     case GET_STORED_PRICES:
       return {
         ...state,
