@@ -48,7 +48,7 @@ const ReviewScreen = ({ userInfo, idImageUri, videoUri, onSubmit }) => {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    paddingBottom: 50, // Espacio adicional para scrolling
+    paddingBottom: 50,
   },
   header: {
     fontSize: 22,

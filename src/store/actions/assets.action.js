@@ -37,6 +37,7 @@ export const getAssetsLittleLineCharts = () => {
     try {
       const response = await fetch(LITTLE_LINE_CHARTS_URL);
       const result = await response.json();
+      console.log("result", result);
 
       dispatch({
         type: GET_ASSETS_LITTLE_LINE_CHARTS,
@@ -61,7 +62,6 @@ export const getCandlestickChart = (name, interval) => {
       const result = await response.json();
 
       if (result.length > 0) {
-        console.log("RESULT LINEAR", JSON.stringify(result));
         dispatch({
           type: GET_CANDLESTICK_CHART_SUCCESS,
           payload: result,

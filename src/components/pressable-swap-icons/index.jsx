@@ -1,59 +1,48 @@
 import React, { useRef } from "react";
 import { View, TouchableOpacity, Animated } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
+import { SvgXml } from "react-native-svg";
 import { COLORS } from "../../constants";
 
-const AnimatedIcon = Animated.createAnimatedComponent(FontAwesome);
+const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 450.63 269.91"><defs><style>.cls-1{fill:#f18321;}</style></defs><path class="cls-1" d="M0,164.34a6.3,6.3,0,0,0,1.88,4.86l101.32,98.89A6.36,6.36,0,0,0,114,263.54V227.25a6.35,6.35,0,0,1,6.35-6.35H444.28a6.35,6.35,0,0,0,6.35-6.36v-50.2Z"/><path class="cls-1" d="M450.63,105.57a6.33,6.33,0,0,0-1.89-4.86L347.42,1.82a6.34,6.34,0,0,0-10.78,4.54v36.3A6.35,6.35,0,0,1,330.29,49H6.35A6.35,6.35,0,0,0,0,55.36v50.21Z"/></svg>`;
 
 const PressableSwapIcons = ({ onPress }) => {
-  // Usamos useRef para mantener el valor actual de la rotación en grados.
   const rotationDegrees = useRef(0);
-
-  // Valor animado para controlar la rotación.
   const rotateAnim = useRef(new Animated.Value(0)).current;
 
-  // Función para iniciar la animación de rotación.
   const animatePress = () => {
-    // Calculamos los nuevos grados de rotación: sumamos 180 para cada clic.
     rotationDegrees.current += 180;
-
-    // Iniciamos la animación hacia los nuevos grados de rotación.
     Animated.timing(rotateAnim, {
       toValue: rotationDegrees.current,
       duration: 300,
       useNativeDriver: true,
     }).start();
+
     if (onPress) {
       onPress();
     }
   };
 
-  // Interpolamos el valor animado para obtener la rotación en el eje Y como una cadena de texto.
   const rotateY = rotateAnim.interpolate({
-    inputRange: [0, 360], // Asumimos un rango de entrada que cubre una rotación completa para simplificar.
-    outputRange: ["0deg", "360deg"], // Mapeamos este rango a grados de rotación.
-    extrapolate: "extend", // Permitimos valores fuera del rango de entrada.
+    inputRange: [0, 360],
+    outputRange: ["0deg", "360deg"],
   });
 
   return (
     <View
       style={{
-        flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
         marginRight: 4,
       }}
     >
       <TouchableOpacity onPress={animatePress}>
-        <AnimatedIcon
-          name="exchange"
-          size={16}
-          color={COLORS.primaryLight}
+        <Animated.View
           style={{
-            // Aplicamos la transformación de rotación en Y usando la interpolación.
-            transform: [{ rotateY: rotateY }],
+            transform: [{ rotateY }],
           }}
-        />
+        >
+          <SvgXml xml={svgContent} width="50" height="50" fill={COLORS.black} />
+        </Animated.View>
       </TouchableOpacity>
     </View>
   );

@@ -13,12 +13,20 @@ import TradingViewSimpleChart from "../../components/trading-view-simple-chart";
 import { getCandlestickChart } from "../../store/actions";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TradingViewLinearChart from "../../components/trading-view-linear-chart";
+import BigLineChart from "../../components/big-line-chart";
 
 const MarketAsset = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { assets, selectedAsset, balances, storedPrices } = useSelector(
-    (state) => state.assets
-  );
+  const {
+    assets,
+    selectedAsset,
+    balances,
+    storedPrices,
+    candle,
+    candlestickChart,
+  } = useSelector((state) => state.assets);
+  let filteredData =
+    candlestickChart.length > 0 ? candlestickChart[0].filteredData : null;
   const { verified } = useSelector((state) => state.auth);
   const { blockchains } = useSelector((state) => state.blockchains);
   const assetBalance = balances.find(
@@ -53,19 +61,11 @@ const MarketAsset = ({ navigation }) => {
     return `${value < 0 ? "-" : "+"}$${formattedValue}`;
   };
 
-  useEffect(() => {
-    console.log("ASSET BALANCE", assetBalance);
-    console.log("asset", asset);
-  }, [assetBalance, asset]);
-
   return (
     <SafeAreaView style={styles.container}>
       <Header navigation={navigation} showBackButton={true} />
       <View style={styles.chartContainer}>
         {/* <BigLineChart symbol={selectedAsset.symbol} /> */}
-        <TradingViewLinearChart />
-
-        {/* <TradingViewSimpleChart /> */}
         <View style={styles.priceContainer}>
           <Text style={styles.symbolText}>{selectedAsset.symbol}</Text>
           <Text style={styles.nameText}>{selectedAsset.name}</Text>
@@ -81,6 +81,10 @@ const MarketAsset = ({ navigation }) => {
           </Text>
         </View>
       </View>
+      {/* <BigLineChart symbol={selectedAsset.symbol} data={filteredData} /> */}
+
+      <TradingViewLinearChart />
+
       <View style={styles.temporalitiesContainer}>
         {["● LIVE", ...temporalities].map((temporality) => (
           <TouchableOpacity

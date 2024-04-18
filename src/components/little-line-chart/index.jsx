@@ -13,6 +13,7 @@ const dataFiles = {
   LTC: "#325F9F",
   DOGE: "#C3A835",
   USDC: "#2E74BA",
+  SOL: "#000000",
 };
 
 const screenWidth = 75;
@@ -37,7 +38,6 @@ const LittleLineChart = ({ symbol, last7DaysData }) => {
       ((item.close - minValue) / (maxValue - minValue)) * screenHeight,
   }));
 
-  // Modificación para utilizar curvas Bézier
   let pathData = data.reduce((acc, point, index, points) => {
     if (index === 0) {
       return `M ${point.x},${point.y}`;
@@ -48,7 +48,6 @@ const LittleLineChart = ({ symbol, last7DaysData }) => {
     return `${acc} Q ${prevPoint.x},${prevPoint.y} ${midX},${midY}`;
   }, "");
 
-  // Añadir el último punto
   if (data.length > 1) {
     const lastPoint = data[data.length - 1];
     pathData += ` T ${lastPoint.x},${lastPoint.y}`;

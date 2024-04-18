@@ -18,6 +18,6 @@ export const formatFiatValue = (value, decimals = 2) => {
 };
 
 export const formatBalance = (value, decimals = 18) => {
-  if (!value) return "0";
+  if (!value) return "0.0000";
   return new BigNumber(value).toFixed(decimals, BigNumber.ROUND_DOWN);
 };

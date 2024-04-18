@@ -255,7 +255,7 @@ export const getStyles = (theme) =>
     percentageStyle: {
       fontSize: 12,
       fontFamily: "Uto-Light",
-      color: COLORS.greyLight,
+      color: COLORS.green,
       marginRight: 4,
     },
   });

@@ -50,7 +50,7 @@ const Navbar = ({ navigation }) => {
     {
       text: "Cambiar",
       icon: "swap-horizontal-sharp",
-      route: "WalletTab",
+      route: "Convert",
       disabled: true,
       function: getExchangeButtonSvg(),
     },

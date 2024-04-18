@@ -6,15 +6,12 @@ export const getStyles = (theme) =>
     container: {
       flex: 1,
       backgroundColor: theme.background,
-      justifyContent: "space-between", // Alinea el contenido al principio y el botón al final.
-    },
-    scrollContainer: {
+      justifyContent: "space-between",
       flex: 1,
     },
     buttonContainer: {
-      padding: 10,
       borderTopWidth: 1,
-      borderColor: COLORS.primaryLight,
+      borderColor: COLORS.black,
       alignItems: "center",
       justifyContent: "center",
     },
@@ -69,8 +66,7 @@ export const getStyles = (theme) =>
     },
     addToFavoritesButton: {
       marginLeft: 6,
-
-      marginTop: 3,
+      marginTop: 6,
       fontFamily: "Uto-Bold",
     },
     showAllButton: {
@@ -88,18 +84,15 @@ export const getStyles = (theme) =>
     assetAmountContainerTop: {
       flexDirection: "row",
       alignItems: "center",
-      justifyContent: "flex-end",
       height: "50%",
     },
     assetAmount: {
       fontSize: 52,
-      fontFamily: "Uto-Light",
+      fontFamily: "Uto-Regular",
       color: theme.text,
-      width: "100%",
-      textAlign: "right",
+      textAlign: "left",
     },
     selectedAssetSymbol: {
-      fontSize: 16,
       fontFamily: "Uto-Medium",
       color: COLORS.greyLight,
       textAlign: "center",
@@ -108,22 +101,22 @@ export const getStyles = (theme) =>
     },
     calculatedAssetAmountContainer: {
       flexDirection: "row",
-      alignItems: "center",
+      alignItems: "flex-start",
       justifyContent: "flex-end",
-      paddingLeft: 20,
+      marginRight: 45,
       height: "50%",
     },
     calculatedAssetAmountColumn: {
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
+      flexDirection: "row",
+      alignItems: "flex-start",
+      justifyContent: "space-between",
       height: 20,
     },
     calculatedAssetAmount: {
       fontSize: 14,
       fontFamily: "Uto-Medium",
-      color: COLORS.primaryDark,
-      textAlign: "center",
+      color: COLORS.greyLight,
+      textAlign: "left",
     },
     withdrawFeeContainer: {
       flexDirection: "row",
@@ -158,10 +151,9 @@ export const getStyles = (theme) =>
       width: 65,
       height: 55,
       borderRadius: 16,
-      borderWidth: 1,
-      borderColor: COLORS.greyLight,
-      backgroundColor: theme.background,
+      backgroundColor: theme.input,
       marginLeft: 20,
+      marginTop: 28,
       flexDirection: "row",
       alignItems: "center",
     },
@@ -218,18 +210,12 @@ export const getStyles = (theme) =>
       alignItems: "center",
       borderRadius: 5,
       width: "80%",
+      marginTop: 20,
     },
     buttonText: {
       color: COLORS.white,
       fontSize: 16,
       fontFamily: "Uto-Medium",
-    },
-    separator: {
-      height: 1,
-      backgroundColor: theme.disabled,
-      marginBottom: 8,
-      marginHorizontal: 20,
-      width: "100%",
     },
     recentTransfersContainer: {
       width: "90%",
@@ -244,6 +230,12 @@ export const getStyles = (theme) =>
       marginVertical: 16,
       marginHorizontal: 8,
       backgroundColor: theme.background,
+    },
+    separator: {
+      height: 20,
+      width: 2,
+      backgroundColor: "black",
+      marginLeft: 26,
     },
     screenTitleContainer: {
       width: "100%",
@@ -261,37 +253,32 @@ export const getStyles = (theme) =>
     },
     exampleAddressText: {
       fontFamily: "Uto-Light",
-      fontSize: 11,
+      fontSize: 12,
       color: COLORS.grey,
       paddingBottom: 30,
       marginHorizontal: 28,
-      marginTop: 4,
     },
     maxButton: {
-      backgroundColor: COLORS.greyLight,
       paddingHorizontal: 20,
       paddingVertical: 5,
       borderRadius: 5,
-      marginLeft: 12,
       justifyContent: "center",
       alignItems: "center",
-      marginTop: 26,
+      marginTop: 20,
       width: 80,
     },
 
     maxButtonPressed: {
-      backgroundColor: COLORS.primary,
       paddingHorizontal: 20,
       paddingVertical: 5,
       borderRadius: 5,
-      marginLeft: 12,
       justifyContent: "center",
       alignItems: "center",
-      marginTop: 26,
+      marginTop: 20,
       width: 80,
     },
     maxButtonText: {
-      color: COLORS.white,
+      color: theme.text,
       fontSize: 14,
       fontFamily: "Uto-Medium",
     },
@@ -418,5 +405,166 @@ export const getStyles = (theme) =>
     verifiedIcon: {
       marginBottom: 28,
       paddingLeft: 24,
+    },
+    selectedAsetSymbol: {
+      fontFamily: "Uto-Regular",
+      color: COLORS.greyLight,
+      marginLeft: 2,
+    },
+    assetSendSetup: {
+      paddingTop: 20,
+      paddingLeft: 20,
+    },
+    assetSendSetupRow: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 8,
+    },
+    assetSendSetupColumn: {
+      flexDirection: "row",
+      alignItems: "center",
+      borderRadius: 16,
+      backgroundColor: theme.input,
+      padding: 5,
+    },
+    walletIconContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: theme.input,
+      width: 30,
+      height: 30,
+      marginLeft: 12,
+      marginTop: 4,
+      marginRight: 6,
+      borderRadius: 15,
+      paddingLeft: 2,
+    },
+    walletRow: {
+      marginTop: 8,
+      flexDirection: "row",
+    },
+    toTitle: {
+      fontFamily: "Uto-Medium",
+    },
+    toAddress: {
+      fontFamily: "Uto-Light",
+    },
+    networkLabel: {
+      fontSize: 16,
+      color: COLORS.black,
+      marginHorizontal: 6,
+      fontFamily: "Uto-Regular",
+    },
+    networkName: {
+      fontSize: 16,
+      fontFamily: "Uto-Bold",
+      color: COLORS.black,
+    },
+    dropdownIcon: {
+      marginLeft: 4,
+    },
+    forwardIcon: {
+      marginLeft: 8,
+    },
+    infoIcon: {
+      marginLeft: 4,
+    },
+    availableBalanceContainer: {
+      justifyContent: "space-between",
+      alignItems: "center",
+      padding: 10,
+    },
+    amount: {
+      fontSize: 12,
+      fontFamily: "Uto-Bold",
+      color: "#000",
+    },
+    symbol: {
+      marginLeft: 2,
+      fontSize: 12,
+      fontFamily: "Uto-Bold",
+    },
+    available: {
+      fontSize: 12,
+      color: "#666",
+      fontFamily: "Uto-Medium",
+    },
+    icon: {
+      fontSize: 24,
+      color: "#000",
+      marginLeft: 4,
+    },
+    row: {
+      flexDirection: "row",
+    },
+    columnOne: {
+      width: "70%",
+    },
+    columnTwo: {
+      width: "30%",
+    },
+    maxButtonTextOnPressed: {
+      color: theme.primaryLight,
+      fontSize: 14,
+      fontFamily: "Uto-Medium",
+    },
+    convertContainer: {
+      borderWidth: 1,
+      borderColor: COLORS.black,
+      borderRadius: 16,
+      height: 450,
+      marginHorizontal: 20,
+      marginTop: 16,
+    },
+    firstAssetContainer: {
+      height: "40%",
+    },
+    secondAssetContainer: {
+      height: "40%",
+      borderTopColor: COLORS.black,
+      borderTopWidth: 1,
+    },
+    convertTitle: {
+      marginLeft: 16,
+      marginTop: 16,
+      fontSize: 14,
+      fontFamily: "Uto-Medium",
+      color: COLORS.greyLight,
+    },
+    selectAsset: {
+      width: 160,
+      height: 50,
+      marginTop: 8,
+      marginLeft: 16,
+      borderColor: COLORS.greyLight,
+      borderWidth: 1,
+      borderRadius: 80,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      paddingRight: 8,
+    },
+    assetName: {
+      fontFamily: "Uto-Medium",
+      fontSize: 20,
+    },
+    inputContainer: {
+      height: "50%", // Esto establece la altura del contenedor a la mitad de su contenedor padre
+      justifyContent: "flex-end", // Alinea los hijos (TextInput en este caso) a la derecha
+    },
+    textInput: {
+      height: "100%",
+      textAlign: "right",
+      fontSize: 40,
+      fontFamily: "Uto-Medium",
+      marginRight: 20,
+      color: COLORS.greyLight,
+    },
+    messageContainer: {
+      borderTopColor: COLORS.black,
+      borderTopWidth: 1,
+      height: "20%",
     },
   });

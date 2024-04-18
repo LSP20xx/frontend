@@ -30,6 +30,7 @@ const Wallet = ({ navigation }) => {
     eth: require("../../../assets/crypto-logos/eth.png"),
     doge: require("../../../assets/crypto-logos/doge.png"),
     usdc: require("../../../assets/crypto-logos/usdc.png"),
+    usdt: require("../../../assets/crypto-logos/usdt.png"),
     ltc: require("../../../assets/crypto-logos/ltc.png"),
     sol: require("../../../assets/crypto-logos/sol.png"),
   };
@@ -57,7 +58,83 @@ const Wallet = ({ navigation }) => {
       </View>
       <Navbar navigation={navigation} />
       <View style={styles.sectionContainer}>
-        <ScrollView style={styles.scrollView}></ScrollView>
+        <ScrollView style={styles.scrollView}>
+          <View style={styles.sectionComponent}>
+            <View style={styles.titleAndLiquidityBalance}>
+              <Text style={styles.titleStyle}>Cash</Text>
+              <View style={styles.liquidityBalanceAndFiatSymbolContainer}>
+                <Text style={styles.liquidityBalance}>$200.00</Text>
+                <Text style={styles.liquidityFiatSymbol}> USD</Text>
+              </View>
+              <View style={styles.row}>
+                <View style={styles.leftContainer}>
+                  <Image
+                    source={require("../../../assets/icons/dollar-circle.png")}
+                    style={styles.logo}
+                  />
+                  <Text style={styles.liquiditySymbol}>USD</Text>
+                </View>
+              </View>
+
+              <View style={styles.leftContainer}>
+                <Image source={symbolImages["usdc"]} style={styles.logo} />
+                <Text style={styles.liquiditySymbol}>USDC</Text>
+                <Text style={styles.liquidityInterest}>4.00% interés</Text>
+              </View>
+              <View style={styles.leftContainer}>
+                <Image source={symbolImages["usdt"]} style={styles.logo} />
+                <Text style={styles.liquiditySymbol}>USDT</Text>
+                <Text style={styles.liquidityInterest}>3.00% interés</Text>
+              </View>
+
+              {/* <View style={styles.rightContainer}>
+                <Image
+                  source={require("../../../assets/icons/dollar-circle.png")}
+                  style={styles.categoryImage}
+                  resizeMode="stretch"
+                />
+                <Text style={styles.liquiditySymbol}>USD</Text>
+              </View> */}
+            </View>
+
+            <View style={styles.leftContainer}>
+              {/* <Text style={styles.titleStyle}>Cash</Text> */}
+            </View>
+
+            <View style={styles.rightContainer}>
+              {/* <Text style={styles.amountStyle}>$0.00</Text>
+              <Text style={styles.percentageStyle}>4.00% Interés</Text> */}
+            </View>
+          </View>
+          <View style={styles.sectionComponent}>
+            <View style={styles.titleAndLiquidityBalance}>
+              <Text style={styles.titleStyle}>Crypto</Text>
+              <View style={styles.liquidityBalanceAndFiatSymbolContainer}>
+                <Text style={styles.liquidityBalance}>
+                  $
+                  {totalBalance
+                    ? new BigNumber(totalBalance).toFixed(2)
+                    : "0.00"}
+                </Text>
+                <Text style={styles.liquidityFiatSymbol}> USD</Text>
+              </View>
+            </View>
+            {/* <View style={styles.leftContainer}>
+              <Image
+                source={require("../../../assets/icons/billete-circle.png")}
+                style={styles.categoryImage}
+                resizeMode="stretch"
+              />
+              <Text style={styles.titleStyle}>Crypto</Text>
+            </View>
+
+            <View style={styles.rightContainer}>
+              <Text style={styles.amountStyle}>
+                ${totalBalance ? formatFiatValue(totalBalance, 2) : "0.00"}
+              </Text>
+            </View> */}
+          </View>
+        </ScrollView>
 
         {/* <View style={styles.categoriesContainer}>
           <View style={styles.row}>

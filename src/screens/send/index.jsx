@@ -793,7 +793,7 @@ const Send = ({ navigation }) => {
           onPress={handleSendPress}
           disabled={!!errorMessages[0]}
         >
-          <Text style={styles.buttonText}>Confirmar</Text>
+          <Text style={styles.buttonText}>CONFIRMAR</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

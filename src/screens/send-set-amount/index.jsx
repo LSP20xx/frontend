@@ -54,6 +54,15 @@ const symbolImages = {
   sol: require("../../../assets/crypto-logos/sol.png"),
 };
 
+const dataFiles = {
+  BTC: "#F7941C",
+  ETH: "#5F73B7",
+  LTC: "#325F9F",
+  DOGE: "#C3A835",
+  USDC: "#2E74BA",
+  SOL: "#000000",
+};
+
 const OdometerAnimation = ({ value }) => {
   const digits = value.toString().split("");
 
@@ -355,164 +364,188 @@ const SendSetAmount = ({ route, navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <Header navigation={navigation} showBackButton={true} />
+      <View style={styles.row}>
+        <View style={styles.columnOne}>
+          <View style={styles.titleContainer}>
+            <Text style={styles.sectionTitle}>
+              Cantidad de {selectedAsset.symbol} a enviar
+            </Text>
+          </View>
+          <View style={styles.subtitleContainer}>
+            <Text style={styles.sectionSubtitle}>
+              Ingresa la cantidad a enviar
+            </Text>
+          </View>
+        </View>
+        <View style={styles.columnTwo}>
+          <TouchableOpacity
+            style={styles.selectedAssetImageContainer}
+            onPress={() =>
+              navigation.navigate("SendList", {
+                mode: "enviar",
+              })
+            }
+          >
+            <Image
+              source={symbolImages[selectedAsset.symbol.toLowerCase()]}
+              style={styles.selectedAssetImage}
+            />
+            <Ionicons name="chevron-down" size={24} color={COLORS.greyLight} />
+          </TouchableOpacity>
+        </View>
+      </View>
 
-      <View style={styles.titleContainer}>
-        <Text style={styles.sectionTitle}>
-          Cantidad de {selectedAsset.symbol} a enviar
-        </Text>
-      </View>
-      <View style={styles.subtitleContainer}>
-        <Text style={styles.sectionSubtitle}>Ingresa la cantidad a enviar</Text>
-      </View>
       <ScrollView contentContainerStyle={{ maxHeight: 600 }}>
         <View style={styles.assetConversionContainer}>
           {blockchainId && toAddress && (
             <>
               <View style={styles.assetConversionContainerFirstColumn}>
                 <View style={styles.assetAmountContainerTop}>
-                  {onMaxPress ? (
-                    <TextInput
-                      ref={assetAmountInputRef}
-                      style={[styles.assetAmount, { fontSize: fontSize }]}
-                      selectionColor={COLORS.primaryDark}
-                      autoFocus={true}
-                      keyboardType="decimal-pad"
-                      value={
-                        isFiatPrimary
-                          ? new BigNumber(balance)
-                              .minus(withdrawFee)
-                              .times(assetFiatValue)
-                              .toFixed(2)
-                          : new BigNumber(balance)
-                              .minus(withdrawFee)
-                              .toFixed(selectedAsset.assetDecimals)
-                      }
-                      onChangeText={(text) => {
-                        setOnMaxPress(!onMaxPress);
-                        setAmount(text);
-                      }}
-                    />
-                  ) : (
-                    <TextInput
-                      ref={assetAmountInputRef}
-                      style={[styles.assetAmount, { fontSize: fontSize }]}
-                      selectionColor={COLORS.primaryDark}
-                      autoFocus={true}
-                      keyboardType="decimal-pad"
-                      value={amount}
-                      onChangeText={handleAmountChange}
-                    />
-                  )}
-                  <Text
-                    style={[styles.selectedAsetSymbol, { fontSize: fontSize }]}
-                  >
-                    {isFiatPrimary
-                      ? fiatSymbol.toUpperCase()
-                      : selectedAsset.symbol.toUpperCase()}
-                  </Text>
-                </View>
+                  <View style={styles.row}>
+                    <View style={styles.columnOne}>
+                      <View style={styles.row}>
+                        {onMaxPress ? (
+                          <TextInput
+                            ref={assetAmountInputRef}
+                            style={[styles.assetAmount, { fontSize: fontSize }]}
+                            selectionColor={COLORS.primaryDark}
+                            autoFocus={true}
+                            keyboardType="decimal-pad"
+                            value={
+                              isFiatPrimary
+                                ? new BigNumber(balance)
+                                    .minus(withdrawFee)
+                                    .times(assetFiatValue)
+                                    .toFixed(2)
+                                : new BigNumber(balance)
+                                    .minus(withdrawFee)
+                                    .toFixed(selectedAsset.assetDecimals)
+                            }
+                            onChangeText={(text) => {
+                              setOnMaxPress(!onMaxPress);
+                              setAmount(text);
+                            }}
+                          />
+                        ) : (
+                          <TextInput
+                            ref={assetAmountInputRef}
+                            style={[styles.assetAmount, { fontSize: fontSize }]}
+                            selectionColor={COLORS.primaryDark}
+                            autoFocus={true}
+                            keyboardType="decimal-pad"
+                            value={amount}
+                            onChangeText={handleAmountChange}
+                          />
+                        )}
+                        <Text
+                          style={[
+                            styles.selectedAsetSymbol,
+                            { fontSize: fontSize },
+                          ]}
+                        >
+                          {isFiatPrimary
+                            ? fiatSymbol.toUpperCase()
+                            : selectedAsset.symbol.toUpperCase()}
+                        </Text>
+                      </View>
+                    </View>
+                    <View style={styles.columnTwo}>
+                      {onMaxPress ? (
+                        <TouchableOpacity
+                          style={styles.maxButtonPressed}
+                          onPress={() => {
+                            setOnMaxPress(!onMaxPress);
+                            // adjustFontSizeAndMargin(calculatedBalance);
+                          }}
+                        >
+                          <Text style={styles.maxButtonTextOnPressed}>Máx</Text>
+                        </TouchableOpacity>
+                      ) : (
+                        <TouchableOpacity
+                          style={styles.maxButton}
+                          onPress={() => {
+                            setOnMaxPress(!onMaxPress);
+                            setAmount(
+                              isFiatPrimary
+                                ? new BigNumber(balance)
+                                    .minus(withdrawFee)
+                                    .times(assetFiatValue)
+                                    .toFixed(2)
+                                : new BigNumber(balance)
+                                    .minus(withdrawFee)
+                                    .toFixed(selectedAsset.assetDecimals)
+                            );
+                            adjustFontSizeAndMargin(
+                              isFiatPrimary
+                                ? new BigNumber(balance)
+                                    .minus(withdrawFee)
+                                    .times(assetFiatValue)
+                                    .toFixed(2)
+                                : new BigNumber(balance)
+                                    .minus(withdrawFee)
+                                    .toFixed(selectedAsset.assetDecimals)
+                            );
 
-                <View style={styles.calculatedAssetAmountContainer}>
-                  <PressableSwapIcons
-                    onPress={() => {
-                      handleIconAnimation();
-                      handleSwapValues();
-                      adjustFontSizeAndMargin(calculatedAmount);
-                    }}
-                  />
-                  <View style={styles.calculatedAssetAmountColumn}>
-                    {onMaxPress ? (
-                      <Text style={styles.calculatedAssetAmount}>
-                        {isFiatPrimary
-                          ? new BigNumber(balance)
-                              .minus(withdrawFee)
-                              .toFixed(selectedAsset.assetDecimals)
-                          : new BigNumber(balance)
-                              .minus(withdrawFee)
-                              .times(assetFiatValue)
-                              .toFixed(2)}{" "}
-                        {isFiatPrimary
-                          ? selectedAsset.symbol.toUpperCase()
-                          : fiatSymbol.toUpperCase()}
-                      </Text>
-                    ) : (
-                      <Text style={styles.calculatedAssetAmount}>
-                        {calculatedAmount}{" "}
-                        {isFiatPrimary
-                          ? selectedAsset.symbol.toUpperCase()
-                          : fiatSymbol.toUpperCase()}
-                      </Text>
-                    )}
+                            // setOnMaxPress(!onMaxPress);
+                            // setAmount(calculatedBalance);
+                            // adjustFontSizeAndMargin(calculatedBalance);
+                          }}
+                        >
+                          <Text style={styles.maxButtonText}>Máx</Text>
+                        </TouchableOpacity>
+                      )}
+                    </View>
                   </View>
                 </View>
-              </View>
-              <View style={styles.assetConversionContainerSecondColumn}>
-                <TouchableOpacity
-                  style={styles.selectedAssetImageContainer}
-                  onPress={() =>
-                    navigation.navigate("SendList", {
-                      mode: "enviar",
-                    })
-                  }
-                >
-                  <Image
-                    source={symbolImages[selectedAsset.symbol.toLowerCase()]}
-                    style={styles.selectedAssetImage}
-                  />
-                  <Ionicons
-                    name="chevron-down"
-                    size={24}
-                    color={COLORS.greyLight}
-                  />
-                </TouchableOpacity>
-                {onMaxPress ? (
-                  <TouchableOpacity
-                    style={styles.maxButtonPressed}
-                    onPress={() => {
-                      setOnMaxPress(!onMaxPress);
-                      // adjustFontSizeAndMargin(calculatedBalance);
-                    }}
-                  >
-                    <Text style={styles.maxButtonText}>Max</Text>
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    style={styles.maxButton}
-                    onPress={() => {
-                      setOnMaxPress(!onMaxPress);
-                      setAmount(
-                        isFiatPrimary
-                          ? new BigNumber(balance)
-                              .minus(withdrawFee)
-                              .times(assetFiatValue)
-                              .toFixed(2)
-                          : new BigNumber(balance)
-                              .minus(withdrawFee)
-                              .toFixed(selectedAsset.assetDecimals)
-                      );
-                      adjustFontSizeAndMargin(
-                        isFiatPrimary
-                          ? new BigNumber(balance)
-                              .minus(withdrawFee)
-                              .times(assetFiatValue)
-                              .toFixed(2)
-                          : new BigNumber(balance)
-                              .minus(withdrawFee)
-                              .toFixed(selectedAsset.assetDecimals)
-                      );
 
-                      // setOnMaxPress(!onMaxPress);
-                      // setAmount(calculatedBalance);
-                      // adjustFontSizeAndMargin(calculatedBalance);
-                    }}
-                  >
-                    <Text style={styles.maxButtonText}>Max</Text>
-                  </TouchableOpacity>
-                )}
+                <View style={styles.calculatedAssetAmountColumn}>
+                  {onMaxPress ? (
+                    <Text
+                      style={[
+                        styles.calculatedAssetAmount,
+                        { color: dataFiles[selectedAsset.symbol] },
+                      ]}
+                    >
+                      {isFiatPrimary
+                        ? new BigNumber(balance)
+                            .minus(withdrawFee)
+                            .toFixed(selectedAsset.assetDecimals)
+                        : new BigNumber(balance)
+                            .minus(withdrawFee)
+                            .times(assetFiatValue)
+                            .toFixed(2)}{" "}
+                      {isFiatPrimary
+                        ? selectedAsset.symbol.toUpperCase()
+                        : fiatSymbol.toUpperCase()}
+                    </Text>
+                  ) : (
+                    <Text
+                      style={[
+                        styles.calculatedAssetAmount,
+                        { color: dataFiles[selectedAsset.symbol] },
+                      ]}
+                    >
+                      {calculatedAmount}{" "}
+                      {isFiatPrimary
+                        ? selectedAsset.symbol.toUpperCase()
+                        : fiatSymbol.toUpperCase()}
+                    </Text>
+                  )}
+                  <View style={styles.calculatedAssetAmountContainer}>
+                    <PressableSwapIcons
+                      onPress={() => {
+                        handleIconAnimation();
+                        handleSwapValues();
+                        adjustFontSizeAndMargin(calculatedAmount);
+                      }}
+                    />
+                  </View>
+                </View>
               </View>
             </>
           )}
         </View>
+
         <View style={styles.assetSendSetup}>
           <View style={styles.assetSendSetupRow}>
             <TouchableOpacity style={styles.assetSendSetupColumn}>
@@ -666,7 +699,7 @@ const SendSetAmount = ({ route, navigation }) => {
           onPress={handleSendPress}
           disabled={!!errorMessages[0]}
         >
-          <Text style={styles.buttonText}>Confirmar</Text>
+          <Text style={styles.buttonText}>CONTINUAR</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

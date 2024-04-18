@@ -68,7 +68,7 @@ export const getStyles = (theme) =>
     },
     balance: {
       fontSize: 14,
-      fontWeight: "bold",
+      fontFamily: "Uto-Bold",
       textAlign: "center",
       color: theme.text,
     },

@@ -7,7 +7,6 @@ export const processKrakenData = (data) => {
       let transformedCurrencyPair = currencyPair;
       if (currencyPair.includes("XBT")) {
         transformedCurrencyPair = transformedCurrencyPair.replace("XBT", "BTC");
-        console.log("TICKER", data);
       }
       if (currencyPair.includes("XDG")) {
         transformedCurrencyPair = transformedCurrencyPair.replace(

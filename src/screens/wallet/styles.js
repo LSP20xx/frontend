@@ -28,12 +28,10 @@ export const getStyles = (theme) =>
       alignItems: "center",
     },
     titleStyle: {
-      fontSize: 24,
-      fontFamily: "Uto-Medium",
-      color: theme.text,
+      fontSize: 16,
+      fontFamily: "Uto-Bold",
+      color: COLORS.primaryDark,
       textAlign: "left",
-      marginHorizontal: 8,
-      marginVertical: 16,
     },
     scrollView: {
       flex: 1,
@@ -54,16 +52,16 @@ export const getStyles = (theme) =>
       borderRadius: 3,
     },
     sectionComponent: {
-      height: 90,
-      maxHeight: 90,
+      height: 220,
+      maxHeight: 220,
       paddingTop: 10,
       backgroundColor: theme.background,
-      marginTop: 28,
+      marginTop: 14,
       marginHorizontal: 12,
+      paddingLeft: 20,
       flex: 1,
       flexDirection: "row",
       justifyContent: "space-between",
-      alignItems: "center",
       padding: 10,
       borderRadius: 16,
       ...Platform.select({
@@ -83,7 +81,6 @@ export const getStyles = (theme) =>
       width: "98%",
       backgroundColor: theme.background,
       flex: 1,
-      marginTop: 16,
     },
     priceRow: {
       flexDirection: "row",
@@ -184,7 +181,7 @@ export const getStyles = (theme) =>
     },
     leftContainer: {
       flexDirection: "row",
-      alignItems: "flex-start",
+      alignItems: "center",
       flex: 1,
     },
     middleContainer: {
@@ -194,7 +191,7 @@ export const getStyles = (theme) =>
       flex: 1,
     },
     rightContainer: {
-      alignItems: "flex-end",
+      alignItems: "center",
       flexDirection: "column",
     },
     priceFiatAmount: {
@@ -257,5 +254,32 @@ export const getStyles = (theme) =>
       fontFamily: "Uto-Light",
       color: COLORS.greyLight,
       marginRight: 4,
+    },
+    liquidityBalance: {
+      fontSize: 18,
+      color: theme.text,
+      fontFamily: "Uto-Regular",
+    },
+    liquidityBalanceAndFiatSymbolContainer: {
+      flexDirection: "row",
+    },
+    liquidityFiatSymbol: {
+      fontFamily: "Uto-Regular",
+      fontSize: 12,
+      color: theme.greyLight,
+      marginTop: 6,
+    },
+    liquiditySymbol: {
+      fontFamily: "Uto-Bold",
+      fontSize: 18,
+      marginLeft: 8,
+      marginTop: 8,
+    },
+    liquidityInterest: {
+      fontSize: 12,
+      fontFamily: "Uto-Light",
+      color: COLORS.green,
+      marginTop: 10,
+      marginLeft: 6,
     },
   });

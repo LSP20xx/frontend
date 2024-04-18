@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,12 +14,12 @@ import {
 import { selectAsset } from "../../store/actions";
 import { useTheme } from "../../context/ThemeContext";
 import { SafeAreaView } from "react-native-safe-area-context";
+import LittleLineChart from "../../components/little-line-chart";
 
 const AssetsList = ({ navigation, route, showBackButton }) => {
   const dispatch = useDispatch();
-  const { assets, storedPrices, balances } = useSelector(
-    (state) => state.assets
-  );
+  const { assets, assetsLittleLineCharts, storedPrices, balances } =
+    useSelector((state) => state.assets);
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
@@ -60,6 +60,10 @@ const AssetsList = ({ navigation, route, showBackButton }) => {
     }
   };
 
+  useEffect(() => {
+    console.log("assets", assets);
+  }, [assets]);
+
   return (
     <SafeAreaView style={styles.container}>
       <Header
@@ -73,80 +77,166 @@ const AssetsList = ({ navigation, route, showBackButton }) => {
         <View style={styles.subtitleContainer}>
           <Text style={styles.sectionSubtitle}>{subtitle}</Text>
         </View>
-        <ScrollView style={styles.listScrolLView}>
-          {assets.map((item) => {
-            // const assetChartData = assetsLittleLineCharts.find(
-            //   (chartData) =>
-            //     chartData.assetName.toLowerCase() === item.name.toLowerCase()
-            // );
-
-            const balance = balances.find(
-              (balance) => balance.symbol === item.symbol
-            );
-
-            const assetStoredPrice = storedPrices.find(
-              (storedPrice) =>
-                storedPrice.assetName.toLowerCase() === item.name.toLowerCase()
-            );
-
-            const displayPrice = item.fiatValue
-              ? item.fiatValue
-              : assetStoredPrice?.price;
-
-            let priceVariation;
-
-            if (item.fiatValue && item.opening24h) {
-              const currentPrice = parseFloat(item.fiatValue);
-              const openingPrice = parseFloat(item.opening24h);
-              priceVariation = calculatePriceVariation(
-                currentPrice,
-                openingPrice
+        {mode === "markets" ? (
+          <ScrollView style={styles.popularScrolLView}>
+            {assets.map((item) => {
+              const assetChartData = assetsLittleLineCharts.find(
+                (chartData) =>
+                  chartData.assetName.toLowerCase() === item.name.toLowerCase()
               );
-              variationColor = priceVariation >= 0 ? COLORS.green : "red";
-            } else if (assetStoredPrice?.priceVariation) {
-              priceVariation = assetStoredPrice.priceVariation;
-              variationColor =
-                parseFloat(priceVariation) >= 0 ? COLORS.green : "red";
-            } else {
-              priceVariation = "0.00";
-              variationColor = "grey";
-            }
 
-            return (
-              <TouchableOpacity
-                key={item.id}
-                style={styles.cryptoItem}
-                onPress={() => handleAssetPress(item.id)}
-                disabled={item.disabled}
-              >
-                <View style={styles.leftContainer}>
-                  <Image
-                    source={symbolImages[item.symbol.toLowerCase()]}
-                    style={styles.logo}
-                  />
-                  <View style={styles.textContainer}>
-                    <Text style={styles.cryptoName}>{item.name}</Text>
-                    <Text style={styles.cryptoSymbol}>
-                      ${formatFiatValue(displayPrice, item.priceDecimals)}
+              const assetStoredPrice = storedPrices.find(
+                (storedPrice) =>
+                  storedPrice.assetName.toLowerCase() ===
+                  item.name.toLowerCase()
+              );
+
+              const displayPrice = item.fiatValue
+                ? item.fiatValue
+                : assetStoredPrice?.price;
+
+              let priceVariation;
+              let variationColor;
+
+              if (item.fiatValue && item.opening24h) {
+                const currentPrice = parseFloat(item.fiatValue);
+                const openingPrice = parseFloat(item.opening24h);
+                priceVariation = calculatePriceVariation(
+                  currentPrice,
+                  openingPrice
+                );
+                variationColor = priceVariation >= 0 ? COLORS.green : "red";
+              } else if (assetStoredPrice?.priceVariation) {
+                priceVariation = assetStoredPrice.priceVariation;
+                variationColor =
+                  parseFloat(priceVariation) >= 0 ? COLORS.green : "red";
+              } else {
+                priceVariation = "0.00";
+                variationColor = "grey";
+              }
+
+              return (
+                <TouchableOpacity
+                  key={item.id}
+                  style={styles.cryptoItem}
+                  onPress={() => handleAssetPress(item.id)}
+                  disabled={false}
+                >
+                  <View style={styles.leftContainer}>
+                    <Image
+                      source={symbolImages[item.symbol.toLowerCase()]}
+                      style={styles.logo}
+                    />
+                    <View style={styles.textContainer}>
+                      <Text style={styles.cryptoName}>{item.name}</Text>
+                      <Text style={styles.cryptoSymbol}>
+                        {item.symbol.toUpperCase()}
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={styles.middleContainer}>
+                    {assetChartData ? (
+                      <LittleLineChart
+                        symbol={item.symbol}
+                        last7DaysData={assetChartData.last7DaysData}
+                      />
+                    ) : null}
+                  </View>
+                  <View style={styles.rightContainer}>
+                    <View style={styles.priceRow}>
+                      <Text style={styles.priceFiatAmount}>$</Text>
+                      <Text style={styles.price}>
+                        {formatFiatValue(displayPrice, item.priceDecimals)}
+                      </Text>
+                    </View>
+                    <Text style={[styles.variation, { color: variationColor }]}>
+                      {priceVariation >= 0 && "+"}
+                      {priceVariation}%
                     </Text>
                   </View>
-                </View>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        ) : (
+          <ScrollView style={styles.listScrolLView}>
+            {assets.map((item) => {
+              // const assetChartData = assetsLittleLineCharts.find(
+              //   (chartData) =>
+              //     chartData.assetName.toLowerCase() === item.name.toLowerCase()
+              // );
 
-                <View style={styles.rightContainer}>
-                  <View style={styles.amountRow}>
-                    <Text style={styles.amount}>
-                      {formatBalance(balance?.balance, item.assetDecimals)}{" "}
-                      {item.symbol}
+              const balance = balances.find(
+                (balance) => balance.symbol === item.symbol
+              );
+
+              console.log("balance", balance);
+
+              const assetStoredPrice = storedPrices.find(
+                (storedPrice) =>
+                  storedPrice.assetName.toLowerCase() ===
+                  item.name.toLowerCase()
+              );
+
+              const displayPrice = item.fiatValue
+                ? item.fiatValue
+                : assetStoredPrice?.price;
+
+              let priceVariation;
+
+              if (item.fiatValue && item.opening24h) {
+                const currentPrice = parseFloat(item.fiatValue);
+                const openingPrice = parseFloat(item.opening24h);
+                priceVariation = calculatePriceVariation(
+                  currentPrice,
+                  openingPrice
+                );
+                variationColor = priceVariation >= 0 ? COLORS.green : "red";
+              } else if (assetStoredPrice?.priceVariation) {
+                priceVariation = assetStoredPrice.priceVariation;
+                variationColor =
+                  parseFloat(priceVariation) >= 0 ? COLORS.green : "red";
+              } else {
+                priceVariation = "0.00";
+                variationColor = "grey";
+              }
+
+              return (
+                <TouchableOpacity
+                  key={item.id}
+                  style={styles.cryptoItem}
+                  onPress={() => handleAssetPress(item.id)}
+                  disabled={item.disabled}
+                >
+                  <View style={styles.leftContainer}>
+                    <Image
+                      source={symbolImages[item.symbol.toLowerCase()]}
+                      style={styles.logo}
+                    />
+                    <View style={styles.textContainer}>
+                      <Text style={styles.cryptoName}>{item.name}</Text>
+                      <Text style={styles.cryptoSymbol}>
+                        ${formatFiatValue(displayPrice, item.priceDecimals)}
+                      </Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.rightContainer}>
+                    <View style={styles.amountRow}>
+                      <Text style={styles.amount}>
+                        {formatBalance(balance?.balance, item.assetDecimals)}{" "}
+                        {item.symbol}
+                      </Text>
+                    </View>
+                    <Text style={styles.calculatedBalance}>
+                      ${formatFiatValue(balance?.calculatedBalance)}
                     </Text>
                   </View>
-                  <Text style={styles.calculatedBalance}>
-                    ${formatFiatValue(balance?.calculatedBalance)}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            );
-          })}
-        </ScrollView>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        )}
       </View>
     </SafeAreaView>
   );

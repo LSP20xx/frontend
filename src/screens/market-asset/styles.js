@@ -139,10 +139,8 @@ export const getStyles = (theme) =>
     chartContainer: {
       position: "relative",
       width: "100%",
-      height: 200,
     },
     priceContainer: {
-      position: "absolute",
       marginLeft: 32,
       top: 20,
       alignItems: "center",

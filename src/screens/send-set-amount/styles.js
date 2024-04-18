@@ -87,15 +87,13 @@ export const getStyles = (theme) =>
     assetAmountContainerTop: {
       flexDirection: "row",
       alignItems: "center",
-      justifyContent: "flex-end",
       height: "50%",
     },
     assetAmount: {
       fontSize: 52,
       fontFamily: "Uto-Regular",
       color: theme.text,
-      width: "100%",
-      textAlign: "right",
+      textAlign: "left",
     },
     selectedAssetSymbol: {
       fontFamily: "Uto-Medium",
@@ -106,22 +104,22 @@ export const getStyles = (theme) =>
     },
     calculatedAssetAmountContainer: {
       flexDirection: "row",
-      alignItems: "center",
+      alignItems: "flex-start",
       justifyContent: "flex-end",
-      paddingLeft: 20,
+      marginRight: 45,
       height: "50%",
     },
     calculatedAssetAmountColumn: {
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
+      flexDirection: "row",
+      alignItems: "flex-start",
+      justifyContent: "space-between",
       height: 20,
     },
     calculatedAssetAmount: {
       fontSize: 14,
       fontFamily: "Uto-Medium",
-      color: COLORS.primaryDark,
-      textAlign: "center",
+      color: COLORS.greyLight,
+      textAlign: "left",
     },
     withdrawFeeContainer: {
       flexDirection: "row",
@@ -158,6 +156,7 @@ export const getStyles = (theme) =>
       borderRadius: 16,
       backgroundColor: theme.input,
       marginLeft: 20,
+      marginTop: 28,
       flexDirection: "row",
       alignItems: "center",
     },
@@ -216,7 +215,7 @@ export const getStyles = (theme) =>
       width: "80%",
     },
     buttonText: {
-      color: COLORS.black,
+      color: COLORS.white,
       fontSize: 16,
       fontFamily: "Uto-Medium",
     },
@@ -262,30 +261,26 @@ export const getStyles = (theme) =>
       marginHorizontal: 28,
     },
     maxButton: {
-      backgroundColor: COLORS.greyLight,
       paddingHorizontal: 20,
       paddingVertical: 5,
       borderRadius: 5,
-      marginLeft: 12,
       justifyContent: "center",
       alignItems: "center",
-      marginTop: 26,
+      marginTop: 20,
       width: 80,
     },
 
     maxButtonPressed: {
-      backgroundColor: COLORS.primary,
       paddingHorizontal: 20,
       paddingVertical: 5,
       borderRadius: 5,
-      marginLeft: 12,
       justifyContent: "center",
       alignItems: "center",
-      marginTop: 26,
+      marginTop: 20,
       width: 80,
     },
     maxButtonText: {
-      color: COLORS.white,
+      color: theme.text,
       fontSize: 14,
       fontFamily: "Uto-Medium",
     },
@@ -414,9 +409,9 @@ export const getStyles = (theme) =>
       paddingLeft: 24,
     },
     selectedAsetSymbol: {
-      marginLeft: 2,
       fontFamily: "Uto-Regular",
       color: COLORS.greyLight,
+      marginLeft: 2,
     },
     assetSendSetup: {
       paddingTop: 20,
@@ -502,5 +497,19 @@ export const getStyles = (theme) =>
       fontSize: 24,
       color: "#000",
       marginLeft: 4,
+    },
+    row: {
+      flexDirection: "row",
+    },
+    columnOne: {
+      width: "70%",
+    },
+    columnTwo: {
+      width: "30%",
+    },
+    maxButtonTextOnPressed: {
+      color: theme.primaryLight,
+      fontSize: 14,
+      fontFamily: "Uto-Medium",
     },
   });

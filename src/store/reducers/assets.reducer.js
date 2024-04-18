@@ -166,7 +166,6 @@ const assetsReducer = (state = initialState, action) => {
         loading: false,
         candlestickChart: action.payload,
       };
-
     case GET_CANDLESTICK_CHART_FAILURE:
       return {
         ...state,

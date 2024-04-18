@@ -12,16 +12,6 @@ export const ASSETS = [
     assetDecimals: 8,
     priceDecimals: 2,
   },
-  // {
-  //   id: "1",
-  //   name: "US Dollar",
-  //   symbol: "USD",
-  //   amount: 0.0,
-  //   fiatValue: 0.0,
-  //   logo: "https://upload.wikimedia.org/wikipedia/commons/8/88/United-states_flag_icon_round.svg",
-  //   address: "14fYB93AzSvc4TatnLJVKMnPAiXYBRgQ6M",
-  //   disabled: true,
-  // },
   {
     id: "2",
     name: "Ethereum",
@@ -32,7 +22,7 @@ export const ASSETS = [
     highest24h: 0.0,
     logo: "https://cryptologos.cc/logos/ethereum-eth-logo.png?v=002",
     disabled: false,
-    assetDecimals: 8,
+    assetDecimals: 4,
     priceDecimals: 2,
   },
   {
@@ -45,7 +35,7 @@ export const ASSETS = [
     highest24h: 0.0,
     logo: "https://cryptologos.cc/logos/solana-sol-logo.png?v=002",
     disabled: false,
-    assetDecimals: 6,
+    assetDecimals: 4,
     priceDecimals: 2,
   },
   {
@@ -58,7 +48,7 @@ export const ASSETS = [
     highest24h: 0.0,
     logo: "https://cryptologos.cc/logos/dogecoin-doge-logo.png?v=002",
     disabled: false,
-    assetDecimals: 8,
+    assetDecimals: 4,
     priceDecimals: 4,
   },
   {
@@ -71,7 +61,7 @@ export const ASSETS = [
     highest24h: 0.0,
     logo: "https://cryptologos.cc/logos/litecoin-ltc-logo.png?v=002",
     disabled: false,
-    assetDecimals: 8,
+    assetDecimals: 4,
     priceDecimals: 2,
   },
 ];
