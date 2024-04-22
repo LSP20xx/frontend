@@ -15,6 +15,7 @@ import { selectAsset } from "../../store/actions";
 import { useTheme } from "../../context/ThemeContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LittleLineChart from "../../components/little-line-chart";
+import BigNumber from "bignumber.js";
 
 const AssetsList = ({ navigation, route, showBackButton }) => {
   const dispatch = useDispatch();
@@ -99,8 +100,8 @@ const AssetsList = ({ navigation, route, showBackButton }) => {
               let variationColor;
 
               if (item.fiatValue && item.opening24h) {
-                const currentPrice = parseFloat(item.fiatValue);
-                const openingPrice = parseFloat(item.opening24h);
+                const currentPrice = new BigNumber(item.fiatValue);
+                const openingPrice = new BigNumber(item.opening24h);
                 priceVariation = calculatePriceVariation(
                   currentPrice,
                   openingPrice
@@ -185,8 +186,8 @@ const AssetsList = ({ navigation, route, showBackButton }) => {
               let priceVariation;
 
               if (item.fiatValue && item.opening24h) {
-                const currentPrice = parseFloat(item.fiatValue);
-                const openingPrice = parseFloat(item.opening24h);
+                const currentPrice = new BigNumber(item.fiatValue);
+                const openingPrice = new BigNumber(item.opening24h);
                 priceVariation = calculatePriceVariation(
                   currentPrice,
                   openingPrice
@@ -229,7 +230,10 @@ const AssetsList = ({ navigation, route, showBackButton }) => {
                       </Text>
                     </View>
                     <Text style={styles.calculatedBalance}>
-                      ${formatFiatValue(balance?.calculatedBalance)}
+                      $
+                      {balance?.calculatedBalance
+                        ? new BigNumber(balance?.calculatedBalance).toFixed(2)
+                        : "0.00"}
                     </Text>
                   </View>
                 </TouchableOpacity>

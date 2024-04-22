@@ -354,7 +354,7 @@ const Convert = ({ route, navigation }) => {
               />
             </TouchableOpacity>
             <View style={styles.inputContainer}>
-              <TextInput style={styles.textInput}></TextInput>
+              <TextInput style={styles.textInput} value={"0"}></TextInput>
             </View>
           </View>
           <View style={styles.secondAssetContainer}>
@@ -373,7 +373,7 @@ const Convert = ({ route, navigation }) => {
               />
             </TouchableOpacity>
             <View style={styles.inputContainer}>
-              <TextInput style={styles.textInput}></TextInput>
+              <TextInput style={styles.textInput} value={"0"}></TextInput>
             </View>
           </View>
           <View style={styles.buttonContainer}>

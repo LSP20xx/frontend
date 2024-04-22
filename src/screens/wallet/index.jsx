@@ -52,7 +52,9 @@ const Wallet = ({ navigation }) => {
       <View style={styles.balanceDetails}>
         <Text style={styles.fiatSymbol}>$</Text>
         <Text style={styles.fiatConvertedAmount}>
-          {totalBalance ? new BigNumber(totalBalance).toFixed(2) : "0.00"}
+          {totalBalance
+            ? new BigNumber(totalBalance).plus(200).toFixed(2)
+            : "0.00"}
         </Text>
         <Text style={styles.fiatTicker}> USD</Text>
       </View>
@@ -73,6 +75,14 @@ const Wallet = ({ navigation }) => {
                     style={styles.logo}
                   />
                   <Text style={styles.liquiditySymbol}>USD</Text>
+                  <Text
+                    style={[
+                      styles.liquidityBalance,
+                      { marginLeft: 180, marginTop: 8 },
+                    ]}
+                  >
+                    $100.00
+                  </Text>
                 </View>
               </View>
 
@@ -80,11 +90,27 @@ const Wallet = ({ navigation }) => {
                 <Image source={symbolImages["usdc"]} style={styles.logo} />
                 <Text style={styles.liquiditySymbol}>USDC</Text>
                 <Text style={styles.liquidityInterest}>4.00% interés</Text>
+                <Text
+                  style={[
+                    styles.liquidityBalance,
+                    { marginLeft: 90, marginTop: 8 },
+                  ]}
+                >
+                  $50.00
+                </Text>
               </View>
               <View style={styles.leftContainer}>
                 <Image source={symbolImages["usdt"]} style={styles.logo} />
                 <Text style={styles.liquiditySymbol}>USDT</Text>
                 <Text style={styles.liquidityInterest}>3.00% interés</Text>
+                <Text
+                  style={[
+                    styles.liquidityBalance,
+                    { marginLeft: 95, marginTop: 8 },
+                  ]}
+                >
+                  $50.00
+                </Text>
               </View>
 
               {/* <View style={styles.rightContainer}>
@@ -106,7 +132,7 @@ const Wallet = ({ navigation }) => {
               <Text style={styles.percentageStyle}>4.00% Interés</Text> */}
             </View>
           </View>
-          <View style={styles.sectionComponent}>
+          <View style={styles.sectionCryptoComponent}>
             <View style={styles.titleAndLiquidityBalance}>
               <Text style={styles.titleStyle}>Crypto</Text>
               <View style={styles.liquidityBalanceAndFiatSymbolContainer}>
@@ -117,6 +143,51 @@ const Wallet = ({ navigation }) => {
                     : "0.00"}
                 </Text>
                 <Text style={styles.liquidityFiatSymbol}> USD</Text>
+              </View>
+              <View style={styles.row}>
+                <View style={styles.leftContainer}>
+                  <Image source={symbolImages["btc"]} style={styles.logo} />
+
+                  <Text style={styles.liquiditySymbol}>BTC</Text>
+                  <Text
+                    style={[
+                      styles.liquidityBalance,
+                      { marginLeft: 198, marginTop: 8 },
+                    ]}
+                  >
+                    $0.00
+                  </Text>
+                </View>
+              </View>
+
+              <View style={styles.leftContainer}>
+                <Image source={symbolImages["eth"]} style={styles.logo} />
+                <Text style={styles.liquiditySymbol}>ETH</Text>
+                <Text style={styles.liquidityInterest}>2.75% interés</Text>
+                <Text
+                  style={[
+                    styles.liquidityBalance,
+                    { marginLeft: 116, marginTop: 8 },
+                  ]}
+                >
+                  $
+                  {totalBalance
+                    ? new BigNumber(totalBalance).toFixed(2)
+                    : "0.00"}{" "}
+                </Text>
+              </View>
+              <View style={styles.leftContainer}>
+                <Image source={symbolImages["sol"]} style={styles.logo} />
+                <Text style={styles.liquiditySymbol}>SOL</Text>
+                <Text style={styles.liquidityInterest}>4.75% interés</Text>
+                <Text
+                  style={[
+                    styles.liquidityBalance,
+                    { marginLeft: 118, marginTop: 8 },
+                  ]}
+                >
+                  $0.00
+                </Text>
               </View>
             </View>
             {/* <View style={styles.leftContainer}>

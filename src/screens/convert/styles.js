@@ -11,7 +11,7 @@ export const getStyles = (theme) =>
     },
     buttonContainer: {
       borderTopWidth: 1,
-      borderColor: COLORS.black,
+      borderColor: "#E5E5E5",
       alignItems: "center",
       justifyContent: "center",
     },
@@ -512,7 +512,7 @@ export const getStyles = (theme) =>
     },
     convertContainer: {
       borderWidth: 1,
-      borderColor: COLORS.black,
+      borderColor: "#E5E5E5",
       borderRadius: 16,
       height: 450,
       marginHorizontal: 20,
@@ -523,7 +523,7 @@ export const getStyles = (theme) =>
     },
     secondAssetContainer: {
       height: "40%",
-      borderTopColor: COLORS.black,
+      borderTopColor: "#E5E5E5",
       borderTopWidth: 1,
     },
     convertTitle: {

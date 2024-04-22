@@ -87,23 +87,23 @@ const TabsNavigator = () => {
   return (
     <BottomTab.Navigator
       initialRouteName="Home"
-      screenOptions={{
+      screenOptions={({ route }) => ({
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: theme.background,
+          backgroundColor: "#EFEFEF",
           fontSize: 20,
           height: 60,
         },
         tabBarActiveTintColor: theme.primaryLight,
         tabBarInactiveTintColor: theme.primary,
-        tabBarInactiveBackgroundColor: theme.background,
+        tabBarActiveBackgroundColor: theme.background,
         tabBarLabelStyle: {
           fontSize: 12,
           color: theme.black,
           fontFamily: "Uto-Medium",
           marginBottom: 2,
         },
-      }}
+      })}
     >
       <BottomTab.Screen
         name="HomeTab"

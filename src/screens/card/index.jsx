@@ -1,12 +1,6 @@
 import { Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-const Card = ({ title, description }) => (
-  <View>
-    <View>
-      <Text>{title}</Text>
-      <Text>{description}</Text>
-    </View>
-  </View>
-);
+const Card = () => <SafeAreaView></SafeAreaView>;
 
 export default Card;

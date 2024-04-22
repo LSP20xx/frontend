@@ -23,6 +23,7 @@ import {
 import { UPDATE_FORM, onInputChange } from "../../utils/forms";
 import CountryPicker from "react-native-country-picker-modal";
 import { useTheme } from "../../context/ThemeContext";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const initialState = {
   email: { value: "", error: "", touched: false, hasError: true },
@@ -160,7 +161,7 @@ const Auth = ({ navigation }) => {
   return (
     <>
       {isLoading && <View style={overlayStyle} />}
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         {isLogoVisible && (
           <View style={styles.centerContainer}>
             <Image
@@ -272,7 +273,7 @@ const Auth = ({ navigation }) => {
             </View>
           </View>
         </Modal>
-      </View>
+      </SafeAreaView>
     </>
   );
 };

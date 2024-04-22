@@ -51,7 +51,9 @@ const Assets = ({ navigation }) => {
       <View style={styles.balanceDetails}>
         <Text style={styles.fiatSymbol}>$</Text>
         <Text style={styles.fiatConvertedAmount}>
-          {totalBalance ? new BigNumber(totalBalance).toFixed(2) : "0.00"}
+          {totalBalance
+            ? new BigNumber(totalBalance).plus(200).toFixed(2)
+            : "0.00"}
         </Text>
         <Text style={styles.fiatTicker}> USD</Text>
       </View>
@@ -69,7 +71,7 @@ const Assets = ({ navigation }) => {
             </View>
 
             <View style={styles.rightContainer}>
-              <Text style={styles.amountStyle}>$0.00</Text>
+              <Text style={styles.amountStyle}>$200.00</Text>
               <Text style={styles.percentageStyle}>4.00% Interés</Text>
             </View>
           </View>
@@ -85,7 +87,8 @@ const Assets = ({ navigation }) => {
 
             <View style={styles.rightContainer}>
               <Text style={styles.amountStyle}>
-                ${totalBalance ? formatFiatValue(totalBalance, 2) : "0.00"}
+                $
+                {totalBalance ? new BigNumber(totalBalance).toFixed(2) : "0.00"}
               </Text>
             </View>
           </View>

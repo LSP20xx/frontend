@@ -77,6 +77,32 @@ export const getStyles = (theme) =>
         },
       }),
     },
+    sectionCryptoComponent: {
+      height: 220,
+      maxHeight: 300,
+      paddingTop: 10,
+      backgroundColor: theme.background,
+      marginTop: 14,
+      marginHorizontal: 12,
+      paddingLeft: 20,
+      flex: 1,
+      flexDirection: "row",
+      justifyContent: "space-between",
+      padding: 10,
+      borderRadius: 16,
+      ...Platform.select({
+        ios: {
+          shadowColor: theme.shadow,
+          shadowOffset: { width: 10, height: 10 },
+          shadowOpacity: 0.5,
+          shadowRadius: 5,
+        },
+        android: {
+          elevation: 10,
+          shadowColor: theme.shadow,
+        },
+      }),
+    },
     sectionContainer: {
       width: "98%",
       backgroundColor: theme.background,

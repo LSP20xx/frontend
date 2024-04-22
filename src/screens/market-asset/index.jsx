@@ -12,21 +12,12 @@ import { useTheme } from "../../context/ThemeContext";
 import TradingViewSimpleChart from "../../components/trading-view-simple-chart";
 import { getCandlestickChart } from "../../store/actions";
 import { SafeAreaView } from "react-native-safe-area-context";
-import TradingViewLinearChart from "../../components/trading-view-linear-chart";
-import BigLineChart from "../../components/big-line-chart";
 
 const MarketAsset = ({ navigation }) => {
   const dispatch = useDispatch();
-  const {
-    assets,
-    selectedAsset,
-    balances,
-    storedPrices,
-    candle,
-    candlestickChart,
-  } = useSelector((state) => state.assets);
-  let filteredData =
-    candlestickChart.length > 0 ? candlestickChart[0].filteredData : null;
+  const { assets, selectedAsset, balances, storedPrices } = useSelector(
+    (state) => state.assets
+  );
   const { verified } = useSelector((state) => state.auth);
   const { blockchains } = useSelector((state) => state.blockchains);
   const assetBalance = balances.find(
@@ -44,7 +35,7 @@ const MarketAsset = ({ navigation }) => {
   const description = blockchains.find(
     (blockchain) => blockchain.tokenSymbol === selectedAsset.symbol
   )?.description;
-  const temporalities = ["1m", "5m", "15m", "1h", "4h", "1d", "1w", "1M"];
+  const temporalities = ["1m", "5m", "15m", "1h", "4h", "1d", ">", "1M"];
   const [selectedTemporality, setSelectedTemporality] = useState("1d");
 
   const { theme } = useTheme();
@@ -61,11 +52,16 @@ const MarketAsset = ({ navigation }) => {
     return `${value < 0 ? "-" : "+"}$${formattedValue}`;
   };
 
+  useEffect(() => {
+    console.log("ASSET BALANCE", assetBalance);
+    console.log("asset", asset);
+  }, [assetBalance, asset]);
+
   return (
     <SafeAreaView style={styles.container}>
       <Header navigation={navigation} showBackButton={true} />
+
       <View style={styles.chartContainer}>
-        {/* <BigLineChart symbol={selectedAsset.symbol} /> */}
         <View style={styles.priceContainer}>
           <Text style={styles.symbolText}>{selectedAsset.symbol}</Text>
           <Text style={styles.nameText}>{selectedAsset.name}</Text>
@@ -80,11 +76,9 @@ const MarketAsset = ({ navigation }) => {
             {formatPriceWithSymbol(priceDifference)} ({priceVariation}%)
           </Text>
         </View>
+        {/* <BigLineChart symbol={selectedAsset.symbol} /> */}
+        <TradingViewSimpleChart />
       </View>
-      {/* <BigLineChart symbol={selectedAsset.symbol} data={filteredData} /> */}
-
-      <TradingViewLinearChart />
-
       <View style={styles.temporalitiesContainer}>
         {["● LIVE", ...temporalities].map((temporality) => (
           <TouchableOpacity
@@ -136,13 +130,12 @@ const MarketAsset = ({ navigation }) => {
           <Text style={styles.buttonText}>Vender</Text>
         </TouchableOpacity>
       </View>
-
-      <View style={styles.aboutContainer}>
+      {/* <View style={styles.aboutContainer}>
         <Text style={styles.aboutTitle}>Acerca</Text>
         <Text style={styles.aboutText}>
           {description || "No hay descripción disponible"}
         </Text>
-      </View>
+      </View> */}
     </SafeAreaView>
   );
 };

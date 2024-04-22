@@ -145,6 +145,7 @@ export const getStyles = (theme) =>
       top: 20,
       alignItems: "center",
       alignItems: "flex-start",
+      zIndex: 200,
     },
     priceText: {
       fontSize: 30,
@@ -166,7 +167,7 @@ export const getStyles = (theme) =>
     },
     actionButtonsContainer: {
       position: "absolute",
-      bottom: 130,
+      bottom: 60,
       flexDirection: "row",
       justifyContent: "space-between",
       width: "85%",
@@ -240,7 +241,8 @@ export const getStyles = (theme) =>
       paddingVertical: 10,
       width: "80%",
       position: "absolute",
-      bottom: 220,
+      bottom: 180,
+      zIndex: 20,
       left: 0,
       right: 0,
     },
@@ -269,7 +271,7 @@ export const getStyles = (theme) =>
     },
     balanceContainer: {
       position: "absolute",
-      bottom: 180,
+      bottom: 130,
       left: 0,
       right: 0,
       flexDirection: "row",

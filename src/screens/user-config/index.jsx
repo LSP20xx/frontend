@@ -4,7 +4,6 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import {
   Alert,
   Image,
-  SafeAreaView,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -16,6 +15,7 @@ import { Header } from "../../components/index";
 import { getStyles } from "./styles";
 import { COLORS } from "../../constants";
 import { useTheme } from "../../context/ThemeContext";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const UserConfig = ({ navigation, showBackButton }) => {
   const { firstName, lastName, verified, verificationMethods } = useSelector(
