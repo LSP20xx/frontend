@@ -33,6 +33,7 @@ const initialState = {
   phoneNumber: null,
   verified: false,
   verificationMethods: [],
+  termsAndConditionsAccepted: false,
   hasError: false,
 };
 
@@ -80,6 +81,7 @@ const authReducer = (state = initialState, action) => {
         phoneNumber: action.phoneNumber,
         verified: action.verified,
         verificationMethods: action.verificationMethods,
+        termsAndConditionsAccepted: action.termsAndConditionsAccepted,
         isLoading: false,
         error: null,
         hasError: false,

@@ -1,6 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import TabsNavigator from "./tabs";
 import AuthNavigator from "./auth";
+import TermsNavigator from "./terms";
 import { useEffect, useState } from "react";
 import webSocketService from "../services/websocketService";
 import { useDispatch } from "react-redux";
@@ -12,7 +13,9 @@ import {
 } from "../store/actions";
 
 const Navigation = () => {
-  const { userId } = useSelector((state) => state.auth);
+  const { userId, termsAndConditionsAccepted } = useSelector(
+    (state) => state.auth
+  );
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
@@ -151,7 +154,15 @@ const Navigation = () => {
 
   return (
     <NavigationContainer>
-      {userId ? <TabsNavigator /> : <AuthNavigator />}
+      {userId ? (
+        termsAndConditionsAccepted ? (
+          <TabsNavigator />
+        ) : (
+          <TermsNavigator />
+        )
+      ) : (
+        <AuthNavigator />
+      )}
     </NavigationContainer>
   );
 };

@@ -1,10 +1,9 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
 import HomeNavigator from "../wallet";
 import MarketsNavigator from "../markets";
 import WalletNavigator from "../profile";
 import CardNavigator from "../card";
-import { View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { SvgXml } from "react-native-svg";
 import { useTheme } from "../../context/ThemeContext";
 
@@ -32,7 +31,7 @@ const getMarketsIconSvg = (isFocused, primaryColor) => {
     </g>
   </svg>`;
 };
-const getHomeIconSvg = (color) => {
+const getHomeIconSvg = () => {
   return `
   <svg id="Capa_2" data-name="Capa 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 58.76 63.22">
   <defs>
@@ -51,7 +50,7 @@ const getHomeIconSvg = (color) => {
 </svg>`;
 };
 
-const getCardIconSvg = (color) => {
+const getCardIconSvg = () => {
   return `
   <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 83.83 65.09" style="enable-background:new 0 0 83.83 65.09;" xml:space="preserve">
 <style type="text/css">
@@ -65,7 +64,7 @@ const getCardIconSvg = (color) => {
 </svg>`;
 };
 
-const getWalletIconSvg = (color) => {
+const getWalletIconSvg = () => {
   return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 64.38 85.66" style="enable-background:new 0 0 64.38 85.66;" xml:space="preserve">
   <style type="text/css">
     .st0{fill:#ED8423;}
@@ -77,6 +76,24 @@ const getWalletIconSvg = (color) => {
   </g>
   </svg>
 `;
+};
+
+const curveSvg = (isFocused, color) => {
+  if (!isFocused) return null;
+
+  return `
+  <svg xmlns="http://www.w3.org/2000/svg" id="Capa_1" data-name="Capa 1" viewBox="0 0 247 130.5">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: ${color};
+        stroke: #dbdbdb;
+        stroke-miterlimit: 10;
+      }
+    </style>
+  </defs>
+  <path class="cls-1" d="M243.27.52c-10.98.26-21.53,4.45-29.72,11.84-8.27,7.75-13.37,18.29-14.3,29.59v.71c0,15.26-.14,29.8-.14,45.06-.07,22.81-18.55,41.28-41.36,41.35h-69.76c-1.34,0-2.67-.07-3.98-.2-20.94-2.06-37.31-19.68-37.38-41.15v-45.72c-.93-11.32-6.04-21.89-14.34-29.64C24.11,4.97,13.57.78,2.6.52H.5v129.48h245.5l.5-129.5-3.23.02Z"/>
+</svg>`;
 };
 
 const BottomTab = createBottomTabNavigator();
@@ -116,14 +133,71 @@ const TabsNavigator = () => {
             fontFamily: "Uto-Medium",
             marginBottom: 2,
           },
-          tabBarIcon: ({ focused, color, size }) => (
-            <SvgXml
-              xml={getHomeIconSvg(color)}
-              width={45}
-              height={35}
-              stroke={theme.primaryLight}
-              strokeWidth={6}
-            />
+          tabBarButton: (props) => (
+            <>
+              <TouchableOpacity {...props}>
+                {props.accessibilityState.selected ? (
+                  <>
+                    <View
+                      style={{
+                        zIndex: 20,
+                      }}
+                    >
+                      <SvgXml
+                        xml={getHomeIconSvg()}
+                        width={45}
+                        height={35}
+                        stroke={theme.primaryLight}
+                        strokeWidth={6}
+                      />
+                    </View>
+
+                    <View
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        width: "100%",
+                        height: "100%",
+                      }}
+                    >
+                      <SvgXml
+                        xml={curveSvg(true, "#EFEFEF")}
+                        width="100%"
+                        height="100%"
+                        stroke="#EFEFEF"
+                        strokeWidth={6}
+                        fill="#EFEFEF"
+                      />
+                    </View>
+                  </>
+                ) : (
+                  <View
+                    style={{
+                      zIndex: 20,
+                    }}
+                  >
+                    <SvgXml
+                      xml={getHomeIconSvg()}
+                      width={45}
+                      height={35}
+                      stroke={theme.primaryLight}
+                      strokeWidth={6}
+                    />
+                  </View>
+                )}
+                <Text
+                  style={{
+                    color: theme.text,
+                    fontSize: 12,
+                    fontFamily: "Uto-Medium",
+                    marginBottom: 2,
+                    paddingTop: 4,
+                  }}
+                >
+                  Home
+                </Text>
+              </TouchableOpacity>
+            </>
           ),
         }}
       />
@@ -147,6 +221,71 @@ const TabsNavigator = () => {
               strokeWidth={6}
             />
           ),
+          tabBarButton: (props) => (
+            <>
+              <TouchableOpacity {...props}>
+                {props.accessibilityState.selected ? (
+                  <>
+                    <View
+                      style={{
+                        zIndex: 20,
+                      }}
+                    >
+                      <SvgXml
+                        xml={getMarketsIconSvg()}
+                        width={45}
+                        height={45}
+                        stroke={theme.primaryLight}
+                        strokeWidth={6}
+                      />
+                    </View>
+
+                    <View
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        width: "100%",
+                        height: "100%",
+                      }}
+                    >
+                      <SvgXml
+                        xml={curveSvg(true, "#EFEFEF")}
+                        width="100%"
+                        height="100%"
+                        stroke="#EFEFEF"
+                        strokeWidth={6}
+                        fill="#EFEFEF"
+                      />
+                    </View>
+                  </>
+                ) : (
+                  <View
+                    style={{
+                      zIndex: 20,
+                    }}
+                  >
+                    <SvgXml
+                      xml={getMarketsIconSvg()}
+                      width={45}
+                      height={45}
+                      stroke={theme.primaryLight}
+                      strokeWidth={6}
+                    />
+                  </View>
+                )}
+                <Text
+                  style={{
+                    color: theme.text,
+                    fontSize: 12,
+                    fontFamily: "Uto-Medium",
+                    marginBottom: 2,
+                  }}
+                >
+                  Mercado
+                </Text>
+              </TouchableOpacity>
+            </>
+          ),
         }}
       />
 
@@ -161,16 +300,71 @@ const TabsNavigator = () => {
             fontFamily: "Uto-Medium",
             marginBottom: 2,
           },
-          tabBarIcon: ({ focused, color, size }) => (
-            <SvgXml
-              xml={getWalletIconSvg(color)}
-              width={40}
-              height={40}
-              stroke={theme.white}
-              fill={theme.primaryLight}
-            />
+          tabBarButton: (props) => (
+            <>
+              <TouchableOpacity {...props}>
+                {props.accessibilityState.selected ? (
+                  <>
+                    <View
+                      style={{
+                        zIndex: 20,
+                      }}
+                    >
+                      <SvgXml
+                        xml={getWalletIconSvg()}
+                        width={40}
+                        height={40}
+                        stroke={theme.white}
+                        fill={theme.primaryLight}
+                      />
+                    </View>
+
+                    <View
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        width: "100%",
+                        height: "100%",
+                      }}
+                    >
+                      <SvgXml
+                        xml={curveSvg(true, "#EFEFEF")}
+                        width="100%"
+                        height="100%"
+                        stroke="#EFEFEF"
+                        strokeWidth={6}
+                        fill="#EFEFEF"
+                      />
+                    </View>
+                  </>
+                ) : (
+                  <View
+                    style={{
+                      zIndex: 20,
+                    }}
+                  >
+                    <SvgXml
+                      xml={getWalletIconSvg()}
+                      width={40}
+                      height={40}
+                      stroke={theme.white}
+                      fill={theme.primaryLight}
+                    />
+                  </View>
+                )}
+                <Text
+                  style={{
+                    color: theme.text,
+                    fontSize: 12,
+                    fontFamily: "Uto-Medium",
+                    marginBottom: 2,
+                  }}
+                >
+                  Wallet
+                </Text>
+              </TouchableOpacity>
+            </>
           ),
-          // tabBarButton: (props) => <View {...props} enabled={true} />,
         }}
       />
 
@@ -194,7 +388,71 @@ const TabsNavigator = () => {
               strokeWidth={6}
             />
           ),
-          // tabBarButton: (props) => <View {...props} enabled={true} />,
+          tabBarButton: (props) => (
+            <>
+              <TouchableOpacity {...props}>
+                {props.accessibilityState.selected ? (
+                  <>
+                    <View
+                      style={{
+                        zIndex: 20,
+                      }}
+                    >
+                      <SvgXml
+                        xml={getCardIconSvg()}
+                        width={45}
+                        height={45}
+                        stroke={theme.primaryLight}
+                        strokeWidth={6}
+                      />
+                    </View>
+
+                    <View
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        width: "100%",
+                        height: "100%",
+                      }}
+                    >
+                      <SvgXml
+                        xml={curveSvg(true, "#EFEFEF")}
+                        width="100%"
+                        height="100%"
+                        stroke="#EFEFEF"
+                        strokeWidth={6}
+                        fill="#EFEFEF"
+                      />
+                    </View>
+                  </>
+                ) : (
+                  <View
+                    style={{
+                      zIndex: 20,
+                    }}
+                  >
+                    <SvgXml
+                      xml={getCardIconSvg()}
+                      width={45}
+                      height={45}
+                      stroke={theme.primaryLight}
+                      strokeWidth={6}
+                    />
+                  </View>
+                )}
+                <Text
+                  style={{
+                    color: theme.text,
+                    fontSize: 12,
+                    fontFamily: "Uto-Medium",
+                    marginBottom: 2,
+                  }}
+                >
+                  Tarjeta
+                </Text>
+              </TouchableOpacity>
+            </>
+          ),
         }}
       />
     </BottomTab.Navigator>

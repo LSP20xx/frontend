@@ -62,6 +62,7 @@ export const signUpWithEmail = ({ email, tempId }) => {
         email: data.email,
         verified: data.verified,
         verificationMethods: data.verificationMethods,
+        termsAndConditionsAccepted: data.termsAndConditionsAccepted,
       });
     } catch (error) {
       dispatch({
@@ -104,6 +105,7 @@ export const signUpWithPhoneNumber = ({ phoneNumber, tempId }) => {
         email: data.email,
         verified: data.verified,
         verificationMethods: data.verificationMethods,
+        termsAndConditionsAccepted: data.termsAndConditionsAccepted,
       });
     } catch (error) {
       dispatch({
