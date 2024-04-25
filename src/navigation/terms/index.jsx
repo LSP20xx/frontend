@@ -6,12 +6,11 @@ const Stack = createNativeStackNavigator();
 const TermsNavigator = () => {
   const { theme, toggleTheme } = useTheme();
   return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="TermsAndConditions"
-        component={TermsAndConditions}
-        options={{ title: "Accept Terms" }}
-      />
+    <Stack.Navigator
+      initialRouteName="TermsAndConditions"
+      screenOptions={{ headerShown: false }}
+    >
+      <Stack.Screen name="TermsAndConditions" component={TermsAndConditions} />
     </Stack.Navigator>
   );
 };
