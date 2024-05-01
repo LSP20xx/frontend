@@ -154,7 +154,7 @@ const Navigation = () => {
 
   return (
     <NavigationContainer>
-      {userId ? (
+      {/* {userId ? (
         termsAndConditionsAccepted ? (
           <TabsNavigator />
         ) : (
@@ -162,7 +162,8 @@ const Navigation = () => {
         )
       ) : (
         <AuthNavigator />
-      )}
+      )} */}
+      {userId ? <TabsNavigator /> : <AuthNavigator />}
     </NavigationContainer>
   );
 };

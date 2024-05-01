@@ -18,6 +18,7 @@ const initialState = {
   error: null,
   balances: [],
   selectedAsset: null,
+  assetWithMaxCalculatedBalance: null,
   assetsLittleLineCharts: [],
   candlestickChart: [],
   storedPrices: [],
@@ -112,16 +113,25 @@ const assetsReducer = (state = initialState, action) => {
         return { ...balance, calculatedBalance };
       });
 
-      // Calcular el balance total utilizando la función correcta.
       const totalBalance = calculateTotalBalance(updatedBalances);
       if (isNaN(totalBalance)) {
         console.error(`NaN detected in total balance`);
       }
 
+      const assetWithMaxCalculatedBalance = updatedBalances.reduce(
+        (maxAsset, asset) => {
+          return asset.calculatedBalance > maxAsset.calculatedBalance
+            ? asset
+            : maxAsset;
+        },
+        { calculatedBalance: 0 }
+      );
+
       return {
         ...state,
         balances: updatedBalances,
         totalBalance,
+        assetWithMaxCalculatedBalance,
       };
     }
 

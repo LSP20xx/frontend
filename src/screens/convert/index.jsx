@@ -38,6 +38,7 @@ import { useTheme } from "../../context/ThemeContext";
 import PressableSwapIcons from "../../components/pressable-swap-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Navbar from "../../components/navbar";
+import { ReactNativeModal as RNModal } from "react-native-modal";
 
 BigNumber.config({ DECIMAL_PLACES: 18 });
 
@@ -75,6 +76,15 @@ const Convert = ({ route, navigation }) => {
     getAssetBalance(state, selectedAsset.symbol)
   );
 
+  // const assetsWithBalances = assets.map((asset) => {
+  //   const balanceData = balances.find((bal) => bal.symbol === asset.symbol);
+  //   return {
+  //     ...asset,
+  //     balance: balanceData ? balanceData.balance : "0",
+  //     calculatedBalance: balanceData ? balanceData.calculatedBalance : "0",
+  //   };
+  // });
+
   const fromAddress = useSelector((state) =>
     getAssetAddress(state, selectedAsset.symbol)
   );
@@ -87,11 +97,26 @@ const Convert = ({ route, navigation }) => {
     getAssetFiatValue(state, selectedAsset.symbol)
   );
 
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const toggleModal = () => {
+    setIsModalVisible(!isModalVisible);
+  };
+
   useEffect(() => {
     console.log("balance", balance);
   }, [balance]);
 
+  useEffect(() => {
+    console.log("balances", balances);
+  }, [balances]);
+
   useEffect(() => {}, [assetFiatValue]);
+  useEffect(() => {
+    console.log("selectedAsset", selectedAsset);
+  }, [selectedAsset]);
+
+  selectedAsset;
 
   const fiatSymbol = "USD";
   const [amount, setAmount] = useState("");
@@ -341,7 +366,7 @@ const Convert = ({ route, navigation }) => {
         <View style={styles.convertContainer}>
           <View style={styles.firstAssetContainer}>
             <Text style={styles.convertTitle}>Quiero vender</Text>
-            <TouchableOpacity style={styles.selectAsset}>
+            <TouchableOpacity style={styles.selectAsset} onPress={toggleModal}>
               <Image
                 source={symbolImages[selectedAsset.symbol.toLowerCase()]}
                 style={styles.selectedAssetImage}
@@ -354,7 +379,12 @@ const Convert = ({ route, navigation }) => {
               />
             </TouchableOpacity>
             <View style={styles.inputContainer}>
-              <TextInput style={styles.textInput} value={"0"}></TextInput>
+              <TextInput
+                style={styles.textInput}
+                value={new BigNumber(balance).toFixed(
+                  selectedAsset.assetDecimals
+                )}
+              ></TextInput>
             </View>
           </View>
           <View style={styles.secondAssetContainer}>
@@ -383,6 +413,39 @@ const Convert = ({ route, navigation }) => {
           </View>
         </View>
       </ScrollView>
+      <RNModal
+        isVisible={isModalVisible}
+        swipeDirection={["up", "left", "right"]}
+        onSwipeComplete={toggleModal}
+        style={styles.modal}
+      >
+        <View style={styles.modalContentContainer}>
+          <TouchableOpacity onPress={toggleModal} style={styles.closeModal}>
+            <Ionicons name="close" size={24} color={COLORS.greyLight} />
+          </TouchableOpacity>
+          {/* {assetsWithBalances.map((asset) => (
+            <TouchableOpacity style={styles.modalContent} key={asset.id}>
+              <View style={{ flexDirection: "row", gap: 8 }}>
+                <Image
+                  source={symbolImages[assetsWithBalances.symbol.toLowerCase()]}
+                  style={styles.selectedAssetImage}
+                />
+                <Text style={[styles.assetName, { marginTop: 2 }]}>
+                  {assetsWithBalances.name}
+                </Text>
+              </View>
+              <View style={{ flexDirection: "row", gap: 8 }}>
+                <Text style={[styles.assetBalance, { marginTop: 2 }]}>
+                  {new BigNumber(assetsWithBalances.balance).toFixed(
+                    assetsWithBalances.assetDecimals
+                  )}{" "}
+                  {assetsWithBalances.symbol}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          ))} */}
+        </View>
+      </RNModal>
     </SafeAreaView>
   );
 };

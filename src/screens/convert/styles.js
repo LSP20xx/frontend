@@ -550,6 +550,11 @@ export const getStyles = (theme) =>
       fontFamily: "Uto-Medium",
       fontSize: 20,
     },
+    assetBalance: {
+      fontFamily: "Uto-Regular",
+      fontSize: 16,
+      paddingTop: 4,
+    },
     inputContainer: {
       height: "50%", // Esto establece la altura del contenedor a la mitad de su contenedor padre
       justifyContent: "flex-end", // Alinea los hijos (TextInput en este caso) a la derecha
@@ -566,5 +571,27 @@ export const getStyles = (theme) =>
       borderTopColor: COLORS.black,
       borderTopWidth: 1,
       height: "20%",
+    },
+    modal: {
+      justifyContent: "flex-end",
+      margin: 0,
+    },
+    modalContent: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      gap: 8,
+      marginVertical: 16,
+    },
+    modalContentContainer: {
+      backgroundColor: theme.background,
+      backgroundColor: theme.background,
+      padding: 32,
+      marginHorizontal: 8,
+      borderTopLeftRadius: 16,
+      borderTopRightRadius: 16,
+    },
+    closeModal: {
+      flexDirection: "row",
+      justifyContent: "flex-end",
     },
   });
