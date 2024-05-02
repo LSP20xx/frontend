@@ -33,12 +33,15 @@ import {
   getAssetBalance,
   getAssetFiatValue,
   getCalculatedBalance,
+  getAssetsBalances,
+  getERC20TokensBalances,
 } from "../../store/selectors/assets.selector";
 import { useTheme } from "../../context/ThemeContext";
 import PressableSwapIcons from "../../components/pressable-swap-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Navbar from "../../components/navbar";
 import { ReactNativeModal as RNModal } from "react-native-modal";
+import { selectCalculatedAsset } from "../../store/actions";
 
 BigNumber.config({ DECIMAL_PLACES: 18 });
 
@@ -55,28 +58,31 @@ const symbolImages = {
   usdc: require("../../../assets/crypto-logos/usdc.png"),
   ltc: require("../../../assets/crypto-logos/ltc.png"),
   sol: require("../../../assets/crypto-logos/sol.png"),
-};
-
-const dataFiles = {
-  BTC: "#F7941C",
-  ETH: "#5F73B7",
-  LTC: "#325F9F",
-  DOGE: "#C3A835",
-  USDC: "#2E74BA",
-  SOL: "#000000",
+  usd: require("../../../assets/crypto-logos/usd.png"),
 };
 
 const Convert = ({ route, navigation }) => {
   const { toAddress } = route.params;
+  const dispatch = useDispatch();
+  const {
+    assets,
+    selectedAsset,
+    selectedCalculatedAsset,
+    balances,
+    fiatBalances,
+    tokensBalances,
+  } = useSelector((state) => state.assets);
 
-  const { assets, selectedAsset, balances } = useSelector(
-    (state) => state.assets
-  );
   const balance = useSelector((state) =>
     getAssetBalance(state, selectedAsset.symbol)
   );
 
+  useEffect(() => {
+    console.log("fiatBalances", fiatBalances);
+  }, [fiatBalances]);
+
   // const assetsWithBalances = assets.map((asset) => {
+
   //   const balanceData = balances.find((bal) => bal.symbol === asset.symbol);
   //   return {
   //     ...asset,
@@ -111,14 +117,16 @@ const Convert = ({ route, navigation }) => {
     console.log("balances", balances);
   }, [balances]);
 
-  useEffect(() => {}, [assetFiatValue]);
+  useEffect(() => {
+    dispatch(selectCalculatedAsset("USD"));
+  }, []);
+
   useEffect(() => {
     console.log("selectedAsset", selectedAsset);
   }, [selectedAsset]);
 
-  selectedAsset;
-
   const fiatSymbol = "USD";
+  const calculatedBalanceSymbol = "USD";
   const [amount, setAmount] = useState("");
   const [blockchainId, setBlockchainId] = useState("");
   const [blockchainName, setBlockchainName] = useState("");
@@ -147,91 +155,91 @@ const Convert = ({ route, navigation }) => {
 
   const styles = getStyles(theme);
 
-  useEffect(() => {
-    const blockchainsWithCalculatedFees = blockchains
-      .filter((blockchain) => blockchain.tokenSymbol === selectedAsset.symbol)
-      .map((blockchain) => ({
-        ...blockchain,
-        calculatedWithdrawFee: new BigNumber(blockchain.withdrawFee)
-          .times(assetFiatValue)
-          .toFixed(2),
-      }));
+  // useEffect(() => {
+  //   const blockchainsWithCalculatedFees = blockchains
+  //     .filter((blockchain) => blockchain.tokenSymbol === selectedAsset.symbol)
+  //     .map((blockchain) => ({
+  //       ...blockchain,
+  //       calculatedWithdrawFee: new BigNumber(blockchain.withdrawFee)
+  //         .times(assetFiatValue)
+  //         .toFixed(2),
+  //     }));
 
-    setBlockchainsWithFees(blockchainsWithCalculatedFees);
-  }, [blockchains, selectedAsset, assetFiatValue]);
+  //   setBlockchainsWithFees(blockchainsWithCalculatedFees);
+  // }, [blockchains, selectedAsset, assetFiatValue]);
 
-  const handleSendPress = () => {
-    let result;
-    if (isFiatPrimary && onMaxPress) {
-      result = new BigNumber(balance).toFixed(selectedAsset.assetDecimals);
-    } else if (isFiatPrimary && !onMaxPress) {
-      result = new BigNumber(calculatedAmount).toFixed(
-        selectedAsset.assetDecimals
-      );
-    } else if (!isFiatPrimary && onMaxPress) {
-      result = new BigNumber(balance).toFixed(selectedAsset.assetDecimals);
-    } else if (!isFiatPrimary && !onMaxPress) {
-      result = new BigNumber(amount).toFixed(selectedAsset.assetDecimals);
-    }
-    if (!errorMessages[0]) {
-      navigation.navigate("Verification", {
-        toAddress,
-        fromAddress,
-        // amount: Result,
-        amount: 0,
-        coin: selectedAsset.symbol,
-        selectedBlockchain,
-        verificationType: "send",
-        blockchainId,
-      });
-    }
-  };
+  // const handleSendPress = () => {
+  //   let result;
+  //   if (isFiatPrimary && onMaxPress) {
+  //     result = new BigNumber(balance).toFixed(selectedAsset.assetDecimals);
+  //   } else if (isFiatPrimary && !onMaxPress) {
+  //     result = new BigNumber(calculatedAmount).toFixed(
+  //       selectedAsset.assetDecimals
+  //     );
+  //   } else if (!isFiatPrimary && onMaxPress) {
+  //     result = new BigNumber(balance).toFixed(selectedAsset.assetDecimals);
+  //   } else if (!isFiatPrimary && !onMaxPress) {
+  //     result = new BigNumber(amount).toFixed(selectedAsset.assetDecimals);
+  //   }
+  //   if (!errorMessages[0]) {
+  //     navigation.navigate("Verification", {
+  //       toAddress,
+  //       fromAddress,
+  //       // amount: Result,
+  //       amount: 0,
+  //       coin: selectedAsset.symbol,
+  //       selectedBlockchain,
+  //       verificationType: "send",
+  //       blockchainId,
+  //     });
+  //   }
+  // };
 
-  const validateFields = useCallback(() => {
-    let error = "";
-    /*  if (
-      /*  (!selectedBlockchain) {
-      error = "Por favor, selecciona una red.";
-    } else if  toAddress.trim() === ""
-    ) {
-      error = "Por favor, ingresa la dirección de envío.";
-    } else if (!isValidAddress) {
-      error = "La dirección es inválida.";
-    } */ if (amount.trim() === "") {
-      error = "El monto no puede estar vacío.";
-    } else {
-      let amountBN;
-      if (isFiatPrimary) {
-        amountBN = new BigNumber(calculatedAmount);
-      } else {
-        amountBN = new BigNumber(amount || 0);
-      }
-      const balanceBN = new BigNumber(balance || 0);
-      const withdrawFeeBN = new BigNumber(withdrawFee || 0);
-      const totalDeduction = amountBN.plus(withdrawFeeBN);
-      if (!totalDeduction.isLessThanOrEqualTo(balanceBN)) {
-        error =
-          "El monto más la comisión de retiro excede el saldo disponible.";
-      }
-      console.log("amount", amountBN.toString());
-      console.log("balance", balanceBN.toString());
-      console.log("withdrawFee", withdrawFeeBN.toString());
-      console.log("totalDeduction", totalDeduction.toString());
-      console.log(
-        "isLessThanOrEqualTo",
-        totalDeduction.isLessThanOrEqualTo(balanceBN)
-      );
-    }
-    setErrorMessages([error]);
-    return error === "";
-  }, [
-    selectedBlockchain,
-    toAddress,
-    isValidAddress,
-    amount,
-    withdrawFee,
-    balance,
-  ]);
+  // const validateFields = useCallback(() => {
+  //   let error = "";
+  //   /*  if (
+  //     /*  (!selectedBlockchain) {
+  //     error = "Por favor, selecciona una red.";
+  //   } else if  toAddress.trim() === ""
+  //   ) {
+  //     error = "Por favor, ingresa la dirección de envío.";
+  //   } else if (!isValidAddress) {
+  //     error = "La dirección es inválida.";
+  //   } */ if (amount.trim() === "") {
+  //     error = "El monto no puede estar vacío.";
+  //   } else {
+  //     let amountBN;
+  //     if (isFiatPrimary) {
+  //       amountBN = new BigNumber(calculatedAmount);
+  //     } else {
+  //       amountBN = new BigNumber(amount || 0);
+  //     }
+  //     const balanceBN = new BigNumber(balance || 0);
+  //     const withdrawFeeBN = new BigNumber(withdrawFee || 0);
+  //     const totalDeduction = amountBN.plus(withdrawFeeBN);
+  //     if (!totalDeduction.isLessThanOrEqualTo(balanceBN)) {
+  //       error =
+  //         "El monto más la comisión de retiro excede el saldo disponible.";
+  //     }
+  //     console.log("amount", amountBN.toString());
+  //     console.log("balance", balanceBN.toString());
+  //     console.log("withdrawFee", withdrawFeeBN.toString());
+  //     console.log("totalDeduction", totalDeduction.toString());
+  //     console.log(
+  //       "isLessThanOrEqualTo",
+  //       totalDeduction.isLessThanOrEqualTo(balanceBN)
+  //     );
+  //   }
+  //   setErrorMessages([error]);
+  //   return error === "";
+  // }, [
+  //   selectedBlockchain,
+  //   toAddress,
+  //   isValidAddress,
+  //   amount,
+  //   withdrawFee,
+  //   balance,
+  // ]);
 
   // const handleAddressChange = (address) => {
   //   const trimmedAddress = address.trim();
@@ -324,22 +332,22 @@ const Convert = ({ route, navigation }) => {
     console.log("fromAddress", fromAddress);
   }, [balance]);
 
-  useEffect(() => {
-    validateFields();
-  }, [
-    toAddress,
-    amount,
-    selectedBlockchain,
-    withdrawFee,
-    balance,
-    validateFields,
-  ]);
+  // useEffect(() => {
+  //   validateFields();
+  // }, [
+  //   toAddress,
+  //   amount,
+  //   selectedBlockchain,
+  //   withdrawFee,
+  //   balance,
+  //   validateFields,
+  // ]);
 
-  useEffect(() => {
-    setCalculatedWithdrawFees(
-      new BigNumber(withdrawFee).times(assetFiatValue).toFixed(2)
-    );
-  }, [withdrawFee, assetFiatValue]);
+  // useEffect(() => {
+  //   setCalculatedWithdrawFees(
+  //     new BigNumber(withdrawFee).times(assetFiatValue).toFixed(2)
+  //   );
+  // }, [withdrawFee, assetFiatValue]);
 
   // useEffect(() => {
   //   const calculatedBalanceBN = new BigNumber(calculatedBalance).toFixed(2);
@@ -347,11 +355,11 @@ const Convert = ({ route, navigation }) => {
   //   adjustFontSizeAndMargin(calculatedBalanceBN);
   // }, [selectedAsset.assetDecimals]);
 
-  useEffect(() => {
-    if (isAddingFavorite && isValidAddress) {
-      nameInputRef.current && nameInputRef.current.focus();
-    }
-  }, [isAddingFavorite, isValidAddress]);
+  // useEffect(() => {
+  //   if (isAddingFavorite && isValidAddress) {
+  //     nameInputRef.current && nameInputRef.current.focus();
+  //   }
+  // }, [isAddingFavorite, isValidAddress]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -423,27 +431,98 @@ const Convert = ({ route, navigation }) => {
           <TouchableOpacity onPress={toggleModal} style={styles.closeModal}>
             <Ionicons name="close" size={24} color={COLORS.greyLight} />
           </TouchableOpacity>
-          {/* {assetsWithBalances.map((asset) => (
-            <TouchableOpacity style={styles.modalContent} key={asset.id}>
-              <View style={{ flexDirection: "row", gap: 8 }}>
-                <Image
-                  source={symbolImages[assetsWithBalances.symbol.toLowerCase()]}
-                  style={styles.selectedAssetImage}
-                />
-                <Text style={[styles.assetName, { marginTop: 2 }]}>
-                  {assetsWithBalances.name}
-                </Text>
-              </View>
-              <View style={{ flexDirection: "row", gap: 8 }}>
-                <Text style={[styles.assetBalance, { marginTop: 2 }]}>
-                  {new BigNumber(assetsWithBalances.balance).toFixed(
-                    assetsWithBalances.assetDecimals
-                  )}{" "}
-                  {assetsWithBalances.symbol}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          ))} */}
+          {fiatBalances
+            .sort((a, b) =>
+              new BigNumber(b.calculatedBalance)
+                .minus(new BigNumber(a.calculatedBalance))
+                .toNumber()
+            )
+            .map((fiatWallet) => {
+              if (fiatWallet.currencySymbol === selectedAsset.symbol) {
+                return null;
+              }
+
+              return (
+                <TouchableOpacity
+                  style={styles.modalContent}
+                  key={fiatWallet.id}
+                >
+                  <View style={{ flexDirection: "row", gap: 8 }}>
+                    <Image
+                      source={
+                        symbolImages[fiatWallet.currencySymbol.toLowerCase()]
+                      }
+                      style={styles.selectedAssetImage}
+                    />
+                    <Text style={[styles.assetName, { marginTop: 2 }]}>
+                      {fiatWallet.currencyName}
+                    </Text>
+                  </View>
+                  <View style={{ flexDirection: "row", gap: 8 }}>
+                    <Text style={[styles.assetBalance, { marginTop: 2 }]}>
+                      {new BigNumber(fiatWallet.balance).toFixed(2)}{" "}
+                      {fiatWallet.currencySymbol}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
+          {tokensBalances.map((balance) => {
+            return (
+              <TouchableOpacity style={styles.modalContent} key={balance.id}>
+                <View style={{ flexDirection: "row", gap: 8 }}>
+                  <Image
+                    source={symbolImages[balance.symbol.toLowerCase()]}
+                    style={styles.selectedAssetImage}
+                  />
+                  <Text style={[styles.assetName, { marginTop: 2 }]}>
+                    {balance.symbol}
+                  </Text>
+                </View>
+                <View style={{ flexDirection: "row", gap: 8 }}>
+                  <Text style={[styles.assetBalance, { marginTop: 2 }]}>
+                    {new BigNumber(balance.balance).toFixed(
+                      balance.assetDecimals
+                    )}{" "}
+                    {balance.symbol}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            );
+          })}
+          {balances
+            .sort((a, b) =>
+              new BigNumber(b.calculatedBalance)
+                .minus(new BigNumber(a.calculatedBalance))
+                .toNumber()
+            )
+            .map((balance) => {
+              if (balance.symbol === selectedAsset.symbol) {
+                return null;
+              }
+
+              return (
+                <TouchableOpacity style={styles.modalContent} key={balance.id}>
+                  <View style={{ flexDirection: "row", gap: 8 }}>
+                    <Image
+                      source={symbolImages[balance.symbol.toLowerCase()]}
+                      style={styles.selectedAssetImage}
+                    />
+                    <Text style={[styles.assetName, { marginTop: 2 }]}>
+                      {balance.symbol}
+                    </Text>
+                  </View>
+                  <View style={{ flexDirection: "row", gap: 8 }}>
+                    <Text style={[styles.assetBalance, { marginTop: 2 }]}>
+                      {new BigNumber(balance.balance).toFixed(
+                        balance.assetDecimals
+                      )}{" "}
+                      {balance.symbol}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
         </View>
       </RNModal>
     </SafeAreaView>

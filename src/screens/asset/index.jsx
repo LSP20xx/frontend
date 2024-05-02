@@ -49,6 +49,7 @@ const Asset = ({ navigation }) => {
     usdt: require("../../../assets/crypto-logos/usdt.png"),
     ltc: require("../../../assets/crypto-logos/ltc.png"),
     sol: require("../../../assets/crypto-logos/sol.png"),
+    usd: require("../../../assets/crypto-logos/usd.png"),
   };
 
   const handleAssetPress = (id) => {

@@ -48,6 +48,7 @@ const AssetsList = ({ navigation, route, showBackButton }) => {
     usdc: require("../../../assets/crypto-logos/usdc.png"),
     ltc: require("../../../assets/crypto-logos/ltc.png"),
     sol: require("../../../assets/crypto-logos/sol.png"),
+    usd: require("../../../assets/crypto-logos/usd.png"),
   };
 
   const handleAssetPress = (id) => {
@@ -81,6 +82,7 @@ const AssetsList = ({ navigation, route, showBackButton }) => {
         {mode === "markets" ? (
           <ScrollView style={styles.popularScrolLView}>
             {assets.map((item) => {
+              if (item.isLiquidity) return;
               const assetChartData = assetsLittleLineCharts.find(
                 (chartData) =>
                   chartData.assetName.toLowerCase() === item.name.toLowerCase()
@@ -162,6 +164,8 @@ const AssetsList = ({ navigation, route, showBackButton }) => {
         ) : (
           <ScrollView style={styles.listScrolLView}>
             {assets.map((item) => {
+              if (item.isLiquidity) return;
+
               // const assetChartData = assetsLittleLineCharts.find(
               //   (chartData) =>
               //     chartData.assetName.toLowerCase() === item.name.toLowerCase()

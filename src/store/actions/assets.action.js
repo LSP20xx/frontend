@@ -8,6 +8,7 @@ import {
 
 const {
   SELECT_ASSET,
+  SELECT_CALCULATED_ASSET,
   UPDATE_ASSETS_PRICES,
   UPDATE_BALANCES,
   GET_ASSETS_LITTLE_LINE_CHARTS,
@@ -22,6 +23,13 @@ export const selectAsset = (id) => {
   return {
     type: SELECT_ASSET,
     id: id,
+  };
+};
+
+export const selectCalculatedAsset = (symbol) => {
+  return {
+    type: SELECT_CALCULATED_ASSET,
+    symbol: symbol,
   };
 };
 

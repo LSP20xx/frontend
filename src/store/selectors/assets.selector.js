@@ -27,3 +27,10 @@ export const getAssetFiatValue = (state, assetSymbol) => {
   );
   return asset.fiatValue;
 };
+
+export const getERC20TokensBalances = (state, assetSymbol) => {
+  const tokensBalances = state.assets.balances.find(
+    (balance) => balance.symbol === assetSymbol
+  );
+  return tokensBalances.tokens;
+};

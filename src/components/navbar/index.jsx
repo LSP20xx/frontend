@@ -2,16 +2,22 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import React, { useEffect } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { getStyles, styles } from "./styles";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useTheme } from "../../context/ThemeContext";
 import ReceiveIcon from "../../../assets/icons/receive-icon.svg";
 import SendIcon from "../../../assets/icons/send-icon.svg";
 import ExchangeIcon from "../../../assets/icons/exchange-icon.svg";
 
 import { SvgXml } from "react-native-svg";
+import { selectAsset } from "../../store/actions";
 
 const Navbar = ({ navigation }) => {
   const { verified } = useSelector((state) => state.auth);
+  const { selectedAsset, assetWithMaxCalculatedBalance } = useSelector(
+    (state) => state.assets
+  );
+  const dispatch = useDispatch();
+
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
@@ -72,9 +78,20 @@ const Navbar = ({ navigation }) => {
         <View style={styles.navItemContainer} key={index}>
           <TouchableOpacity
             style={verified ? styles.navItem : styles.navItemDisabled}
-            onPress={() =>
-              navigation.navigate(item.route, { mode: item.text.toLowerCase() })
-            }
+            onPress={() => {
+              console.log("SELECTED ASSET", selectedAsset);
+              console.log("item", item);
+              console.log(
+                "assetWithMaxCalculatedBalance.id",
+                assetWithMaxCalculatedBalance.id
+              );
+              if (selectedAsset === null)
+                dispatch(selectAsset(assetWithMaxCalculatedBalance.id));
+
+              navigation.navigate(item.route, {
+                mode: item.text.toLowerCase(),
+              });
+            }}
             disabled={!verified}
           >
             <SvgXml

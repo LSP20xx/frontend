@@ -1,13 +1,16 @@
 import { assetsTypes } from "../types";
 import { ASSETS } from "../../constants/data/assets";
 import BigNumber from "bignumber.js";
+import { selectCalculatedAsset } from "../actions";
 const {
   SELECT_ASSET,
+  SELECT_CALCULATED_ASSET,
   UPDATE_ASSETS_PRICES,
   GET_ASSETS_LITTLE_LINE_CHARTS,
   GET_CANDLESTICK_CHART_REQUEST,
   GET_CANDLESTICK_CHART_SUCCESS,
   GET_CANDLESTICK_CHART_FAILURE,
+  GET_FIAT_CURRENCIES,
   GET_STORED_PRICES,
   UPDATE_BALANCES,
 } = assetsTypes;
@@ -17,7 +20,10 @@ const initialState = {
   loading: false,
   error: null,
   balances: [],
+  fiatBalances: [],
+  tokensBalances: [],
   selectedAsset: null,
+  selectedCalculatedAsset: null,
   assetWithMaxCalculatedBalance: null,
   assetsLittleLineCharts: [],
   candlestickChart: [],
@@ -48,6 +54,11 @@ const calculateTotalBalance = (balances) => {
 const assetsReducer = (state = initialState, action) => {
   switch (action.type) {
     case SELECT_ASSET:
+      if (action.id === null)
+        return {
+          ...state,
+          selectedAsset: null,
+        };
       const indexAsset = state.assets
         .map((asset) => asset.id)
         .indexOf(action.id);
@@ -59,6 +70,23 @@ const assetsReducer = (state = initialState, action) => {
         ...state,
         selectedAsset: state.assets[indexAsset],
       };
+    case SELECT_CALCULATED_ASSET:
+      if (action.symbol === null)
+        return {
+          ...state,
+          selectedCalculatedAsset: null,
+        };
+      const indexCalculatedAsset = state.assets
+        .map((asset) => asset.symbol)
+        .indexOf(action.symbol);
+
+      console.log("state.assets", state.assets);
+      if (indexCalculatedAsset === -1) return state;
+      return {
+        ...state,
+        selectedCalculatedAsset: state.assets[indexCalculatedAsset],
+      };
+
     case UPDATE_ASSETS_PRICES:
       let pricesChanged = false;
       const updatedAssets = state.assets.map((asset) => {
@@ -110,28 +138,44 @@ const assetsReducer = (state = initialState, action) => {
             `NaN detected in calculated balance for balance: ${balance.balance}, fiatValue: ${fiatValue}`
           );
         }
-        return { ...balance, calculatedBalance };
+        console.log(asset.assetDecimals);
+        return {
+          ...balance,
+          calculatedBalance,
+          assetDecimals: asset.assetDecimals,
+          assetName: asset.assetName,
+          id: asset.id,
+        };
       });
+
+      const tokensBalances = updatedBalances.find(
+        (balance) => balance.symbol === "ETH"
+      );
+      console.log("tokensBalances", tokensBalances);
 
       const totalBalance = calculateTotalBalance(updatedBalances);
       if (isNaN(totalBalance)) {
         console.error(`NaN detected in total balance`);
       }
-
+      console.log("Updated Balances:", updatedBalances);
       const assetWithMaxCalculatedBalance = updatedBalances.reduce(
         (maxAsset, asset) => {
-          return asset.calculatedBalance > maxAsset.calculatedBalance
-            ? asset
-            : maxAsset;
+          const maxBalance = new BigNumber(maxAsset.calculatedBalance);
+          const currentBalance = new BigNumber(asset.calculatedBalance);
+
+          return currentBalance.isGreaterThan(maxBalance) ? asset : maxAsset;
         },
-        { calculatedBalance: 0 }
+        { calculatedBalance: new BigNumber(0) }
       );
+      console.log("Max Asset:", assetWithMaxCalculatedBalance);
 
       return {
         ...state,
         balances: updatedBalances,
         totalBalance,
         assetWithMaxCalculatedBalance,
+        fiatBalances: updatedBalances[0].fiatWallets,
+        tokensBalances: tokensBalances.tokens,
       };
     }
 
