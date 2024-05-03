@@ -254,6 +254,14 @@ const Convert = ({ route, navigation }) => {
   //   setIsValidAddress(isValid);
   // };
 
+  useEffect(() => {
+    console.log("selectedCalculatedAsset", selectedCalculatedAsset);
+  }, [selectedCalculatedAsset]);
+
+  useEffect(() => {
+    selectCalculatedAsset("USD");
+  }, []);
+
   const handleAmountChange = useCallback(
     (text) => {
       const newText = text
@@ -309,13 +317,7 @@ const Convert = ({ route, navigation }) => {
         : amountBN.div(assetFiatValue).toFixed(selectedAsset.assetDecimals);
       setCalculatedAmount(calculatedValue);
     }
-  }, [
-    amount,
-    isFiatPrimary,
-    assetFiatValue,
-    selectedAsset.assetDecimals,
-    selectedCalculatedAsset,
-  ]);
+  }, [amount, isFiatPrimary, assetFiatValue, selectedAsset.assetDecimals]);
 
   const handleSwapValues = () => {
     setIsAmountPrimary((current) => !current);
@@ -361,11 +363,11 @@ const Convert = ({ route, navigation }) => {
   //   );
   // }, [withdrawFee, assetFiatValue]);
 
-  useEffect(() => {
-    const calculatedBalanceBN = new BigNumber(calculatedBalance).toFixed(2);
-    setAmount(calculatedBalanceBN);
-    // adjustFontSizeAndMargin(calculatedBalanceBN);
-  }, [selectedAsset.assetDecimals]);
+  // useEffect(() => {
+  //   const calculatedBalanceBN = new BigNumber(calculatedBalance).toFixed(2);
+  //   setAmount(calculatedBalanceBN);
+  //   adjustFontSizeAndMargin(calculatedBalanceBN);
+  // }, [selectedAsset.assetDecimals]);
 
   // useEffect(() => {
   //   if (isAddingFavorite && isValidAddress) {
@@ -467,8 +469,7 @@ const Convert = ({ route, navigation }) => {
                   style={styles.modalContent}
                   key={fiatWallet.id}
                   onPress={() => {
-                    dispatch(selectCalculatedAsset(balance.symbol));
-                    toggleModal();
+                    dispatch(selectAsset(symbolsWithId[fiatWallet.symbol]));
                   }}
                 >
                   <View style={{ flexDirection: "row", gap: 8 }}>
@@ -493,14 +494,7 @@ const Convert = ({ route, navigation }) => {
             })}
           {tokensBalances.map((balance) => {
             return (
-              <TouchableOpacity
-                style={styles.modalContent}
-                key={balance.id}
-                onPress={() => {
-                  dispatch(selectCalculatedAsset(balance.symbol));
-                  toggleModal();
-                }}
-              >
+              <TouchableOpacity style={styles.modalContent} key={balance.id}>
                 <View style={{ flexDirection: "row", gap: 8 }}>
                   <Image
                     source={symbolImages[balance.symbol.toLowerCase()]}
@@ -533,15 +527,7 @@ const Convert = ({ route, navigation }) => {
               }
 
               return (
-                <TouchableOpacity
-                  style={styles.modalContent}
-                  key={balance.id}
-                  // onPress={() => {
-                  //   dispatch(
-                  //     selectCalculatedAsset(fiatWallet.symbol)
-                  //   );
-                  // }}
-                >
+                <TouchableOpacity style={styles.modalContent} key={balance.id}>
                   <View style={{ flexDirection: "row", gap: 8 }}>
                     <Image
                       source={symbolImages[balance.symbol.toLowerCase()]}
