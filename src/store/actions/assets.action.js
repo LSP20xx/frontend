@@ -20,6 +20,7 @@ const {
 } = assetsTypes;
 
 export const selectAsset = (id) => {
+  console.log("llega acá a select");
   return {
     type: SELECT_ASSET,
     id: id,
@@ -27,6 +28,7 @@ export const selectAsset = (id) => {
 };
 
 export const selectCalculatedAsset = (symbol) => {
+  console.log("llega a selectCalculatedAsset");
   return {
     type: SELECT_CALCULATED_ASSET,
     symbol: symbol,

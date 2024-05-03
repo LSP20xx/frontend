@@ -41,7 +41,7 @@ import PressableSwapIcons from "../../components/pressable-swap-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Navbar from "../../components/navbar";
 import { ReactNativeModal as RNModal } from "react-native-modal";
-import { selectCalculatedAsset } from "../../store/actions";
+import { selectAsset, selectCalculatedAsset } from "../../store/actions";
 
 BigNumber.config({ DECIMAL_PLACES: 18 });
 
@@ -73,6 +73,12 @@ const Convert = ({ route, navigation }) => {
     tokensBalances,
   } = useSelector((state) => state.assets);
 
+  const symbolsWithId = assets.reduce((acc, asset) => {
+    acc[asset.symbol] = asset.id;
+    return acc;
+  }, {});
+
+  console.log("symbolsWithId", symbolsWithId);
   const balance = useSelector((state) =>
     getAssetBalance(state, selectedAsset.symbol)
   );
@@ -303,7 +309,13 @@ const Convert = ({ route, navigation }) => {
         : amountBN.div(assetFiatValue).toFixed(selectedAsset.assetDecimals);
       setCalculatedAmount(calculatedValue);
     }
-  }, [amount, isFiatPrimary, assetFiatValue, selectedAsset.assetDecimals]);
+  }, [
+    amount,
+    isFiatPrimary,
+    assetFiatValue,
+    selectedAsset.assetDecimals,
+    selectedCalculatedAsset,
+  ]);
 
   const handleSwapValues = () => {
     setIsAmountPrimary((current) => !current);
@@ -349,11 +361,11 @@ const Convert = ({ route, navigation }) => {
   //   );
   // }, [withdrawFee, assetFiatValue]);
 
-  // useEffect(() => {
-  //   const calculatedBalanceBN = new BigNumber(calculatedBalance).toFixed(2);
-  //   setAmount(calculatedBalanceBN);
-  //   adjustFontSizeAndMargin(calculatedBalanceBN);
-  // }, [selectedAsset.assetDecimals]);
+  useEffect(() => {
+    const calculatedBalanceBN = new BigNumber(calculatedBalance).toFixed(2);
+    setAmount(calculatedBalanceBN);
+    // adjustFontSizeAndMargin(calculatedBalanceBN);
+  }, [selectedAsset.assetDecimals]);
 
   // useEffect(() => {
   //   if (isAddingFavorite && isValidAddress) {
@@ -397,13 +409,16 @@ const Convert = ({ route, navigation }) => {
           </View>
           <View style={styles.secondAssetContainer}>
             <Text style={styles.convertTitle}>Quiero comprar</Text>
-            <TouchableOpacity style={styles.selectAsset}>
+            <TouchableOpacity style={styles.selectAsset} onPress={toggleModal}>
               <Image
-                source={symbolImages["usdc"]}
+                source={
+                  symbolImages[selectedCalculatedAsset.symbol.toLowerCase()]
+                }
                 style={styles.selectedAssetImage}
               />
-              <Text style={styles.assetName}>USDC</Text>
-
+              <Text style={styles.assetName}>
+                {selectedCalculatedAsset.symbol}
+              </Text>
               <Ionicons
                 name="chevron-down"
                 size={24}
@@ -411,7 +426,12 @@ const Convert = ({ route, navigation }) => {
               />
             </TouchableOpacity>
             <View style={styles.inputContainer}>
-              <TextInput style={styles.textInput} value={"0"}></TextInput>
+              <TextInput
+                style={styles.textInput}
+                value={new BigNumber(calculatedBalance).toFixed(
+                  selectedCalculatedAsset.assetDecimals
+                )}
+              ></TextInput>
             </View>
           </View>
           <View style={styles.buttonContainer}>
@@ -446,6 +466,10 @@ const Convert = ({ route, navigation }) => {
                 <TouchableOpacity
                   style={styles.modalContent}
                   key={fiatWallet.id}
+                  onPress={() => {
+                    dispatch(selectCalculatedAsset(balance.symbol));
+                    toggleModal();
+                  }}
                 >
                   <View style={{ flexDirection: "row", gap: 8 }}>
                     <Image
@@ -469,7 +493,14 @@ const Convert = ({ route, navigation }) => {
             })}
           {tokensBalances.map((balance) => {
             return (
-              <TouchableOpacity style={styles.modalContent} key={balance.id}>
+              <TouchableOpacity
+                style={styles.modalContent}
+                key={balance.id}
+                onPress={() => {
+                  dispatch(selectCalculatedAsset(balance.symbol));
+                  toggleModal();
+                }}
+              >
                 <View style={{ flexDirection: "row", gap: 8 }}>
                   <Image
                     source={symbolImages[balance.symbol.toLowerCase()]}
@@ -502,7 +533,15 @@ const Convert = ({ route, navigation }) => {
               }
 
               return (
-                <TouchableOpacity style={styles.modalContent} key={balance.id}>
+                <TouchableOpacity
+                  style={styles.modalContent}
+                  key={balance.id}
+                  // onPress={() => {
+                  //   dispatch(
+                  //     selectCalculatedAsset(fiatWallet.symbol)
+                  //   );
+                  // }}
+                >
                   <View style={{ flexDirection: "row", gap: 8 }}>
                     <Image
                       source={symbolImages[balance.symbol.toLowerCase()]}
