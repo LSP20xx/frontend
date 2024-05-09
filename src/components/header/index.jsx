@@ -296,7 +296,7 @@ const Header = ({ navigation, showBackButton, isHome, isUserConfig }) => {
           <View>
             <Text style={styles.totalBalance}>BALANCE TOTAL</Text>
             <Text style={styles.balance}>
-              ${new BigNumber(totalBalance).plus(200).toFixed(2)} USD
+              ${new BigNumber(totalBalance).toFixed(2)} USD
             </Text>
           </View>
         ) : (

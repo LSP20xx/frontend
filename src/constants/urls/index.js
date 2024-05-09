@@ -10,6 +10,7 @@ export const VERIFY_SMS_URL = `http://172.28.160.1:8000/api/verification/verify-
 export const VERIFY_EMAIL_URL = `http://172.28.160.1:8000/api/verification/verify-email-code`;
 export const LITTLE_LINE_CHARTS_URL = `http://172.28.160.1:8000/api/tokens/little-line-charts`;
 export const CANDLESTICK_CHART_URL = `http://172.28.160.1:8000/api/tokens/candlestick-chart`;
+export const LINEAR_CHART_URL = `http://172.28.160.1:8000/api/tokens/linear-chart`;
 export const STORED_PRICES_URL = `http://172.28.160.1:8000/api/tokens/stored-prices`;
 export const FETCH_BLOCKCHAINS_URL = `http://172.28.160.1:8000/api/tokens/get-blockchains-for-tokens`;
 export const WITHDRAW_FROM_EVM_WALLET_URL = `http://172.28.160.1:8000/api/evm-wallet/withdraw`;

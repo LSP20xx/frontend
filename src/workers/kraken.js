@@ -15,9 +15,15 @@ export const processKrakenData = (data) => {
         );
       }
 
+      console.log(
+        "parseFloat(currencyInfo.s[0])",
+        parseFloat(currencyInfo.s[0])
+      );
+
       return {
         symbol: transformedCurrencyPair,
         fiatValue: parseFloat(currencyInfo.c[0]),
+        spreadValue: parseFloat(currencyInfo.s[0]),
         lowest24h: parseFloat(currencyInfo.l[1]),
         highest24h: parseFloat(currencyInfo.h[1]),
         opening24h: parseFloat(currencyInfo.o[1]),

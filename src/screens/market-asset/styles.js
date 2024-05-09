@@ -239,7 +239,7 @@ export const getStyles = (theme) =>
       flexDirection: "row",
       justifyContent: "space-between",
       paddingVertical: 10,
-      width: "80%",
+      width: "100%",
       position: "absolute",
       bottom: 180,
       zIndex: 20,

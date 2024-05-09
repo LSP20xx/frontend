@@ -10,6 +10,9 @@ const {
   GET_CANDLESTICK_CHART_REQUEST,
   GET_CANDLESTICK_CHART_SUCCESS,
   GET_CANDLESTICK_CHART_FAILURE,
+  GET_LINEAR_CHART_REQUEST,
+  GET_LINEAR_CHART_SUCCESS,
+  GET_LINEAR_CHART_FAILURE,
   GET_FIAT_CURRENCIES,
   GET_STORED_PRICES,
   UPDATE_BALANCES,
@@ -27,6 +30,7 @@ const initialState = {
   assetWithMaxCalculatedBalance: null,
   assetsLittleLineCharts: [],
   candlestickChart: [],
+  linearChart: [],
   storedPrices: [],
   totalBalance: 0,
 };
@@ -91,16 +95,24 @@ const assetsReducer = (state = initialState, action) => {
       let pricesChanged = false;
       const updatedAssets = state.assets.map((asset) => {
         if (action.payload.symbol === `${asset.symbol}/USD`) {
-          const { fiatValue, highest24h, lowest24h, opening24h } =
+          const { spreadValue, fiatValue, highest24h, lowest24h, opening24h } =
             action.payload;
           if (
             asset.fiatValue !== fiatValue ||
             asset.highest24h !== highest24h ||
             asset.lowest24h !== lowest24h ||
-            asset.opening24h !== opening24h
+            asset.opening24h !== opening24h ||
+            asset.spreadValue !== spreadValue
           ) {
             pricesChanged = true;
-            return { ...asset, fiatValue, highest24h, lowest24h, opening24h };
+            return {
+              ...asset,
+              fiatValue,
+              spreadValue,
+              highest24h,
+              lowest24h,
+              opening24h,
+            };
           }
         }
         return asset;
@@ -126,6 +138,7 @@ const assetsReducer = (state = initialState, action) => {
         totalBalance: calculateTotalBalance(updatedBalances),
       };
     case UPDATE_BALANCES: {
+      console.log("updated balance", action.payload);
       const updatedBalances = action.payload.map((balance) => {
         const asset = state.assets.find((a) => a.symbol === balance.symbol);
         const fiatValue = asset ? asset.fiatValue : "1";
@@ -174,8 +187,6 @@ const assetsReducer = (state = initialState, action) => {
         balances: updatedBalances,
         totalBalance,
         assetWithMaxCalculatedBalance,
-        fiatBalances: updatedBalances[0].fiatWallets,
-        tokensBalances: tokensBalances.tokens,
       };
     }
 
@@ -221,6 +232,23 @@ const assetsReducer = (state = initialState, action) => {
         candlestickChart: action.payload,
       };
     case GET_CANDLESTICK_CHART_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case GET_LINEAR_CHART_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case GET_LINEAR_CHART_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        linearChart: action.payload,
+      };
+    case GET_LINEAR_CHART_FAILURE:
       return {
         ...state,
         loading: false,

@@ -12,7 +12,6 @@ const dataFiles = {
   ETH: "#5F73B7",
   LTC: "#325F9F",
   DOGE: "#C3A835",
-  USDC: "#2E74BA",
   SOL: "#000000",
 };
 

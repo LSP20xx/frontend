@@ -13,8 +13,9 @@ export const getStyles = (theme) =>
     },
     buttonContainer: {
       padding: 10,
-      borderTopWidth: 1,
-      borderColor: COLORS.primaryLight,
+      borderColor: "#E5E5E5",
+      borderWidth: 1,
+
       alignItems: "center",
       justifyContent: "center",
     },

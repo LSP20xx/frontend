@@ -10,8 +10,9 @@ import {
 } from "../../utils/prices";
 import { useTheme } from "../../context/ThemeContext";
 import TradingViewSimpleChart from "../../components/trading-view-simple-chart";
-import { getCandlestickChart } from "../../store/actions";
+import { getCandlestickChart, getLinearChart } from "../../store/actions";
 import { SafeAreaView } from "react-native-safe-area-context";
+import TradingViewLinearChart from "../../components/trading-view-linear-chart";
 
 const MarketAsset = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -35,17 +36,35 @@ const MarketAsset = ({ navigation }) => {
   const description = blockchains.find(
     (blockchain) => blockchain.tokenSymbol === selectedAsset.symbol
   )?.description;
-  const temporalities = ["1m", "5m", "15m", "1h", "4h", "1d", ">", "1M"];
+  const [isSimpleMode, setIsSimpleMode] = useState(true);
+  const advancedTemporalities = [
+    "1m",
+    "5m",
+    "15m",
+    "1h",
+    "4h",
+    "1d",
+    ">",
+    "1M",
+  ];
+  const simpleTemporalities = ["● LIVE", "1d", "7d", "30d", "TODO"];
   const [selectedTemporality, setSelectedTemporality] = useState("1d");
 
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
   useEffect(() => {
-    dispatch(
-      getCandlestickChart(selectedAsset.name.toLowerCase(), selectedTemporality)
-    );
-  }, [selectedAsset, selectedTemporality]);
+    if (isSimpleMode) {
+      dispatch(getLinearChart(selectedAsset.symbol.toUpperCase()));
+    } else {
+      dispatch(
+        getCandlestickChart(
+          selectedAsset.name.toLowerCase(),
+          selectedTemporality
+        )
+      );
+    }
+  }, [selectedAsset, selectedTemporality, isSimpleMode]);
 
   const formatPriceWithSymbol = (value) => {
     const formattedValue = formatFiatValue(Math.abs(value));
@@ -77,32 +96,36 @@ const MarketAsset = ({ navigation }) => {
           </Text>
         </View>
         {/* <BigLineChart symbol={selectedAsset.symbol} /> */}
-        <TradingViewSimpleChart />
+        {isSimpleMode ? (
+          <TradingViewLinearChart symbol={selectedAsset.symbol} />
+        ) : (
+          <TradingViewSimpleChart />
+        )}
       </View>
       <View style={styles.temporalitiesContainer}>
-        {["● LIVE", ...temporalities].map((temporality) => (
-          <TouchableOpacity
-            key={temporality}
-            style={
-              temporality === selectedTemporality
-                ? styles.temporalityButtonSelected
-                : styles.temporalityButton
-            }
-            onPress={() => {
-              setSelectedTemporality(temporality);
-            }}
-          >
-            <Text
+        {(isSimpleMode ? simpleTemporalities : advancedTemporalities).map(
+          (temporality) => (
+            <TouchableOpacity
+              key={temporality}
               style={
                 temporality === selectedTemporality
-                  ? styles.temporalityTextSelected
-                  : styles.temporalityText
+                  ? styles.temporalityButtonSelected
+                  : styles.temporalityButton
               }
+              onPress={() => setSelectedTemporality(temporality)}
             >
-              {temporality}
-            </Text>
-          </TouchableOpacity>
-        ))}
+              <Text
+                style={
+                  temporality === selectedTemporality
+                    ? styles.temporalityTextSelected
+                    : styles.temporalityText
+                }
+              >
+                {temporality}
+              </Text>
+            </TouchableOpacity>
+          )
+        )}
       </View>
       <View style={styles.balanceContainer}>
         <View style={styles.column}>

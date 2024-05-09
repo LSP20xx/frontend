@@ -81,7 +81,7 @@ const Auth = ({ navigation }) => {
   const styles = getStyles(theme);
 
   const title = isLogin ? "Iniciar sesión" : "Registrarse";
-  const buttonTitle = isLogin ? "CONFIRMAR" : "Registrarse";
+  const buttonTitle = isLogin ? "CONFIRMAR" : "CONFIRMAR";
   const messageText = isLogin
     ? "¿No creaste una cuenta?"
     : "¿Ya creaste una cuenta?";

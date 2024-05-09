@@ -2,6 +2,7 @@ import { assetsTypes } from "../types";
 import {
   LITTLE_LINE_CHARTS_URL,
   CANDLESTICK_CHART_URL,
+  LINEAR_CHART_URL,
   GET_TRANSACTIONS_URL,
   STORED_PRICES_URL,
 } from "../../constants";
@@ -15,6 +16,9 @@ const {
   GET_CANDLESTICK_CHART_SUCCESS,
   GET_CANDLESTICK_CHART_REQUEST,
   GET_CANDLESTICK_CHART_FAILURE,
+  GET_LINEAR_CHART_SUCCESS,
+  GET_LINEAR_CHART_REQUEST,
+  GET_LINEAR_CHART_FAILURE,
   GET_STORED_PRICES,
   GET_TRANSACTIONS,
 } = assetsTypes;
@@ -80,6 +84,33 @@ export const getCandlestickChart = (name, interval) => {
     } catch (error) {
       dispatch({
         type: GET_CANDLESTICK_CHART_FAILURE,
+        payload: { error: error },
+      });
+      console.log(error);
+    }
+  };
+};
+
+export const getLinearChart = (symbol) => {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: GET_LINEAR_CHART_REQUEST,
+      });
+      console.log("symbol", symbol);
+      const response = await fetch(`${LINEAR_CHART_URL}/${symbol}`);
+      const result = await response.json();
+      console.log("result **", result);
+
+      if (result.length > 0) {
+        dispatch({
+          type: GET_LINEAR_CHART_SUCCESS,
+          payload: result,
+        });
+      }
+    } catch (error) {
+      dispatch({
+        type: GET_LINEAR_CHART_FAILURE,
         payload: { error: error },
       });
       console.log(error);

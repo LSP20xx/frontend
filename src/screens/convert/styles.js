@@ -7,13 +7,12 @@ export const getStyles = (theme) =>
       flex: 1,
       backgroundColor: theme.background,
       justifyContent: "space-between",
-      flex: 1,
     },
     buttonContainer: {
-      borderTopWidth: 1,
-      borderColor: "#E5E5E5",
       alignItems: "center",
       justifyContent: "center",
+      height: "20%",
+      marginHorizontal: 16,
     },
     contactsContainer: {
       width: "100%",
@@ -340,11 +339,10 @@ export const getStyles = (theme) =>
     },
     availableBalanceContainer: {
       width: "100%",
-      backgroundColor: theme.background,
-      paddingHorizontal: 72,
-      marginBottom: 20,
+      backgroundColor: theme.input,
       justifyContent: "space-between",
       flexDirection: "row",
+      borderRadius: 16,
     },
     availableBalanceLeftContainer: {
       flexDirection: "column",
@@ -513,18 +511,23 @@ export const getStyles = (theme) =>
     convertContainer: {
       borderWidth: 1,
       borderColor: "#E5E5E5",
-      borderRadius: 16,
-      height: 450,
+      borderTopLeftRadius: 16,
+      borderTopEndRadius: 16,
+      borderBottomLeftRadius: 16,
+      borderBottomEndRadius: 16,
+      height: "80%",
       marginHorizontal: 20,
       marginTop: 16,
     },
     firstAssetContainer: {
       height: "40%",
     },
+    balanceRow: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+    },
     secondAssetContainer: {
       height: "40%",
-      borderTopColor: "#E5E5E5",
-      borderTopWidth: 1,
     },
     convertTitle: {
       marginLeft: 16,
@@ -536,11 +539,9 @@ export const getStyles = (theme) =>
     selectAsset: {
       width: 160,
       height: 50,
-      marginTop: 8,
       marginLeft: 16,
-      borderColor: COLORS.greyLight,
-      borderWidth: 1,
-      borderRadius: 80,
+      borderRadius: 16,
+      backgroundColor: theme.input,
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
@@ -556,8 +557,9 @@ export const getStyles = (theme) =>
       paddingTop: 4,
     },
     inputContainer: {
-      height: "50%", // Esto establece la altura del contenedor a la mitad de su contenedor padre
-      justifyContent: "flex-end", // Alinea los hijos (TextInput en este caso) a la derecha
+      height: "50%",
+      justifyContent: "flex-end",
+      marginTop: 8,
     },
     textInput: {
       height: "100%",
@@ -566,6 +568,7 @@ export const getStyles = (theme) =>
       fontFamily: "Uto-Medium",
       marginRight: 20,
       color: COLORS.greyLight,
+      paddingBottom: 32,
     },
     messageContainer: {
       borderTopColor: COLORS.black,
@@ -593,5 +596,23 @@ export const getStyles = (theme) =>
     closeModal: {
       flexDirection: "row",
       justifyContent: "flex-end",
+    },
+    swapLineContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      width: "100%",
+    },
+    line: {
+      flex: 1,
+      height: 1,
+      borderColor: "#E5E5E5",
+      borderWidth: 1,
+    },
+    iconContainer: {
+      width: 40,
+      height: 40,
+      justifyContent: "center",
+      alignItems: "center",
+      marginHorizontal: 32,
     },
   });

@@ -18,12 +18,25 @@ import { useTheme } from "../../context/ThemeContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const Wallet = ({ navigation }) => {
-  const { assets, assetsLittleLineCharts, storedPrices, totalBalance } =
-    useSelector((state) => state.assets);
+  const {
+    assets,
+    assetsLittleLineCharts,
+    storedPrices,
+    totalBalance,
+    balances,
+  } = useSelector((state) => state.assets);
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
   const dispatch = useDispatch();
+
+  const usdBalance = balances.find((balance) => balance.symbol === "USD");
+  const usdcBalance = balances.find((balance) => balance.symbol === "USDC");
+  const usdtBalance = balances.find((balance) => balance.symbol === "USDT");
+
+  const cashBalance = new BigNumber(usdBalance.balance)
+    .plus(usdcBalance.balance)
+    .plus(usdtBalance.balance);
 
   const symbolImages = {
     btc: require("../../../assets/crypto-logos/btc.png"),
@@ -53,9 +66,7 @@ const Wallet = ({ navigation }) => {
       <View style={styles.balanceDetails}>
         <Text style={styles.fiatSymbol}>$</Text>
         <Text style={styles.fiatConvertedAmount}>
-          {totalBalance
-            ? new BigNumber(totalBalance).plus(200).toFixed(2)
-            : "0.00"}
+          {totalBalance ? new BigNumber(totalBalance).toFixed(2) : "0.00"}
         </Text>
         <Text style={styles.fiatTicker}> USD</Text>
       </View>
@@ -66,7 +77,9 @@ const Wallet = ({ navigation }) => {
             <View style={styles.titleAndLiquidityBalance}>
               <Text style={styles.titleStyle}>Cash</Text>
               <View style={styles.liquidityBalanceAndFiatSymbolContainer}>
-                <Text style={styles.liquidityBalance}>$200.00</Text>
+                <Text style={styles.liquidityBalance}>
+                  ${cashBalance.toFixed(2)}
+                </Text>
                 <Text style={styles.liquidityFiatSymbol}> USD</Text>
               </View>
               <View style={styles.row}>
@@ -79,10 +92,10 @@ const Wallet = ({ navigation }) => {
                   <Text
                     style={[
                       styles.liquidityBalance,
-                      { marginLeft: 180, marginTop: 8 },
+                      { marginLeft: 198, marginTop: 8 },
                     ]}
                   >
-                    $100.00
+                    ${new BigNumber(usdBalance.calculatedBalance).toFixed(2)}
                   </Text>
                 </View>
               </View>
@@ -94,10 +107,10 @@ const Wallet = ({ navigation }) => {
                 <Text
                   style={[
                     styles.liquidityBalance,
-                    { marginLeft: 90, marginTop: 8 },
+                    { marginLeft: 100, marginTop: 8 },
                   ]}
                 >
-                  $50.00
+                  ${new BigNumber(usdcBalance.calculatedBalance).toFixed(2)}
                 </Text>
               </View>
               <View style={styles.leftContainer}>
@@ -107,10 +120,10 @@ const Wallet = ({ navigation }) => {
                 <Text
                   style={[
                     styles.liquidityBalance,
-                    { marginLeft: 95, marginTop: 8 },
+                    { marginLeft: 103, marginTop: 8 },
                   ]}
                 >
-                  $50.00
+                  ${new BigNumber(usdtBalance.calculatedBalance).toFixed(2)}
                 </Text>
               </View>
 
