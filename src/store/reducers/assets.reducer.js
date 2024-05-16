@@ -16,6 +16,7 @@ const {
   GET_FIAT_CURRENCIES,
   GET_STORED_PRICES,
   UPDATE_BALANCES,
+  CONVERT_ASSETS,
 } = assetsTypes;
 
 const initialState = {
@@ -33,6 +34,8 @@ const initialState = {
   linearChart: [],
   storedPrices: [],
   totalBalance: 0,
+  totalLiquidityBalance: 0,
+  totalNonLiquidityBalance: 0,
 };
 
 const calculateBalanceValue = (balanceAmount, fiatValue) => {
@@ -58,6 +61,7 @@ const calculateTotalBalance = (balances) => {
 const assetsReducer = (state = initialState, action) => {
   switch (action.type) {
     case SELECT_ASSET:
+      console.log("action", action);
       if (action.id === null)
         return {
           ...state,
@@ -75,6 +79,7 @@ const assetsReducer = (state = initialState, action) => {
         selectedAsset: state.assets[indexAsset],
       };
     case SELECT_CALCULATED_ASSET:
+      console.log("SELECTED CALCULATED", SELECT_CALCULATED_ASSET);
       if (action.symbol === null)
         return {
           ...state,
@@ -131,11 +136,33 @@ const assetsReducer = (state = initialState, action) => {
         };
       });
 
+      const totalLiquidityBalance = updatedBalances
+        .reduce((acc, balance) => {
+          const asset = updatedAssets.find((a) => a.symbol === balance.symbol);
+          if (asset && asset.isLiquidity) {
+            return acc.plus(new BigNumber(balance.calculatedBalance));
+          }
+          return acc;
+        }, new BigNumber(0))
+        .toString();
+
+      const totalNonLiquidityBalance = updatedBalances
+        .reduce((acc, balance) => {
+          const asset = updatedAssets.find((a) => a.symbol === balance.symbol);
+          if (asset && !asset.isLiquidity) {
+            return acc.plus(new BigNumber(balance.calculatedBalance));
+          }
+          return acc;
+        }, new BigNumber(0))
+        .toString();
+
       return {
         ...state,
         assets: updatedAssets,
         balances: updatedBalances,
         totalBalance: calculateTotalBalance(updatedBalances),
+        totalLiquidityBalance: totalLiquidityBalance,
+        totalNonLiquidityBalance: totalNonLiquidityBalance,
       };
     case UPDATE_BALANCES: {
       console.log("updated balance", action.payload);
@@ -155,9 +182,9 @@ const assetsReducer = (state = initialState, action) => {
         return {
           ...balance,
           calculatedBalance,
-          assetDecimals: asset.assetDecimals,
-          assetName: asset.assetName,
-          id: asset.id,
+          assetDecimals: asset?.assetDecimals,
+          assetName: asset?.assetName,
+          id: asset?.id,
         };
       });
 
@@ -258,6 +285,11 @@ const assetsReducer = (state = initialState, action) => {
       return {
         ...state,
         storedPrices: action.payload,
+      };
+    case CONVERT_ASSETS:
+      return {
+        ...state,
+        balances: action.payload,
       };
     default:
       return state;

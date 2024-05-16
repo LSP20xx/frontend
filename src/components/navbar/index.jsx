@@ -86,7 +86,11 @@ const Navbar = ({ navigation }) => {
                 assetWithMaxCalculatedBalance.id
               );
               if (selectedAsset === null)
-                dispatch(selectAsset(assetWithMaxCalculatedBalance.id));
+                console.log(
+                  "llega acá assetWithMaxCalculatedBalance",
+                  assetWithMaxCalculatedBalance
+                );
+              dispatch(selectAsset(assetWithMaxCalculatedBalance.id));
 
               navigation.navigate(item.route, {
                 mode: item.text.toLowerCase(),

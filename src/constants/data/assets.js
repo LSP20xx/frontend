@@ -112,6 +112,6 @@ export const ASSETS = [
     assetDecimals: 2,
     priceDecimals: 2,
     isLiquidity: true,
-    spreadValue: 0,
+    spreadValue: 0.99,
   },
 ];

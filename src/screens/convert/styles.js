@@ -11,7 +11,7 @@ export const getStyles = (theme) =>
     buttonContainer: {
       alignItems: "center",
       justifyContent: "center",
-      height: "20%",
+      height: 100,
       marginHorizontal: 16,
     },
     contactsContainer: {
@@ -520,14 +520,14 @@ export const getStyles = (theme) =>
       marginTop: 16,
     },
     firstAssetContainer: {
-      height: "40%",
+      height: 200,
     },
     balanceRow: {
       flexDirection: "row",
       justifyContent: "space-between",
     },
     secondAssetContainer: {
-      height: "40%",
+      height: 200,
     },
     convertTitle: {
       marginLeft: 16,

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 import {
   GestureHandlerRootView,
@@ -27,8 +27,7 @@ const SWIPEABLE_DIMENSIONS = BUTTON_HEIGHT - 2 * BUTTON_PADDING;
 const H_WAVE_RANGE = SWIPEABLE_DIMENSIONS + 2 * BUTTON_PADDING;
 const H_SWIPE_RANGE = BUTTON_WIDTH - 2 * BUTTON_PADDING - SWIPEABLE_DIMENSIONS;
 
-/// context from reanimated created a object and stroes in the ui thread and it does not come back and forth
-const SwipeButton = ({ onToggle }) => {
+const SwipeButton = ({ onToggle, reset }) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
@@ -102,6 +101,12 @@ const SwipeButton = ({ onToggle }) => {
     width: Math.min(H_WAVE_RANGE + sharedValue.value, BUTTON_WIDTH),
     opacity: interpolate(sharedValue.value, InterpolateXInput, [0, 1]),
   }));
+
+  useEffect(() => {
+    if (reset) {
+      sharedValue.value = withSpring(0);
+    }
+  }, [reset, sharedValue]);
 
   return (
     <GestureHandlerRootView style={styles.containerStyle}>

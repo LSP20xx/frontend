@@ -1,5 +1,12 @@
-import React, { useEffect } from "react";
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  Image,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Header } from "../../components";
 import Navbar from "../../components/navbar";
@@ -9,6 +16,7 @@ import {
   getAssetsLittleLineCharts,
   getStoredPrices,
   selectAsset,
+  selectCalculatedAsset,
 } from "../../store/actions";
 import LittleLineChart from "../../components/little-line-chart";
 import webSocketService from "../../services/websocketService";
@@ -18,10 +26,21 @@ import { useTheme } from "../../context/ThemeContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const Assets = ({ navigation }) => {
-  const { assets, assetsLittleLineCharts, storedPrices, totalBalance } =
-    useSelector((state) => state.assets);
+  const {
+    assets,
+    selectedAsset,
+    selectedCalculatedAsset,
+    assetsLittleLineCharts,
+    storedPrices,
+    totalBalance,
+    totalLiquidityBalance,
+    totalNonLiquidityBalance,
+    balances,
+    assetWithMaxCalculatedBalance,
+  } = useSelector((state) => state.assets);
   const { theme } = useTheme();
   const styles = getStyles(theme);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -41,10 +60,40 @@ const Assets = ({ navigation }) => {
   };
 
   useEffect(() => {
-    dispatch(getStoredPrices());
-    dispatch(getAssetsLittleLineCharts());
-  }, []);
+    const loadData = async () => {
+      await Promise.all([
+        dispatch(getStoredPrices()),
+        dispatch(getAssetsLittleLineCharts()),
+        webSocketService.requestBalanceUpdate(),
+      ]);
+      setIsDataLoaded(true);
+    };
+    loadData();
+  }, [dispatch]);
+  useEffect(() => {
+    if (selectedCalculatedAsset?.symbol === selectedAsset?.symbol) {
+      let newAsset;
+      switch (selectedCalculatedAsset?.symbol) {
+        case "USD":
+          newAsset = "USDC";
+          break;
+        default:
+          newAsset = "USD";
+          break;
+      }
+      dispatch(selectCalculatedAsset(newAsset));
+    }
+  }, [selectedCalculatedAsset, selectedAsset, dispatch]);
 
+  if (!isDataLoaded) {
+    return (
+      <ActivityIndicator
+        size={"large"}
+        color={COLORS.primaryLight}
+        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+      />
+    );
+  }
   return (
     <SafeAreaView style={styles.container}>
       <Header navigation={navigation} showBackButton={false} isHome={true} />
@@ -52,9 +101,7 @@ const Assets = ({ navigation }) => {
       <View style={styles.balanceDetails}>
         <Text style={styles.fiatSymbol}>$</Text>
         <Text style={styles.fiatConvertedAmount}>
-          {totalBalance
-            ? new BigNumber(totalBalance).plus(200).toFixed(2)
-            : "0.00"}
+          {totalBalance ? new BigNumber(totalBalance).toFixed(2) : "0.00"}
         </Text>
         <Text style={styles.fiatTicker}> USD</Text>
       </View>
@@ -72,7 +119,12 @@ const Assets = ({ navigation }) => {
             </View>
 
             <View style={styles.rightContainer}>
-              <Text style={styles.amountStyle}>$200.00</Text>
+              <Text style={styles.amountStyle}>
+                $
+                {totalLiquidityBalance
+                  ? new BigNumber(totalLiquidityBalance).toFixed(2)
+                  : "0.00"}
+              </Text>
               <Text style={styles.percentageStyle}>4.00% Interés</Text>
             </View>
           </View>
@@ -88,8 +140,7 @@ const Assets = ({ navigation }) => {
 
             <View style={styles.rightContainer}>
               <Text style={styles.amountStyle}>
-                $
-                {totalBalance ? new BigNumber(totalBalance).toFixed(2) : "0.00"}
+                ${totalNonLiquidityBalance ? totalNonLiquidityBalance : "0.00"}
               </Text>
             </View>
           </View>

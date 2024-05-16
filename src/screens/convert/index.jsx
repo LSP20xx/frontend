@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import {
   Animated,
+  Button,
   ScrollView,
   Text,
   TextInput,
@@ -41,9 +42,13 @@ import PressableSwapIcons from "../../components/pressable-swap-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Navbar from "../../components/navbar";
 import { ReactNativeModal as RNModal } from "react-native-modal";
-import { selectAsset, selectCalculatedAsset } from "../../store/actions";
-
-BigNumber.config({ DECIMAL_PLACES: 18 });
+import {
+  convert,
+  selectAsset,
+  selectCalculatedAsset,
+} from "../../store/actions";
+import { AnimatedNumber } from "../../animations";
+import webSocketService from "../../services/websocketService";
 
 const initialState = {
   toAddress: { value: "", error: "", touched: false, hasError: true },
@@ -62,7 +67,6 @@ const symbolImages = {
 };
 
 const Convert = ({ route, navigation }) => {
-  const { toAddress } = route.params;
   const dispatch = useDispatch();
   const {
     assets,
@@ -73,61 +77,36 @@ const Convert = ({ route, navigation }) => {
     tokensBalances,
   } = useSelector((state) => state.assets);
 
+  const { userId } = useSelector((state) => state.auth);
+
   const symbolsWithId = assets.reduce((acc, asset) => {
-    acc[asset.symbol] = asset.id;
+    acc[asset?.symbol] = asset?.id;
     return acc;
   }, {});
 
   const [activeAssetType, setActiveAssetType] = useState("sell");
 
-  useEffect(() => {
-    console.log("selected", assets);
-  }, [assets]);
-
-  // const assetsWithBalances = assets.map((asset) => {
-
-  //   const balanceData = balances.find((bal) => bal.symbol === asset.symbol);
-  //   return {
-  //     ...asset,
-  //     balance: balanceData ? balanceData.balance : "0",
-  //     calculatedBalance: balanceData ? balanceData.calculatedBalance : "0",
-  //   };
-  // });
-
-  // const fromAddress = useSelector((state) =>
-  //   getAssetAddress(state, selectedAsset.symbol)
-  // );
-
   const balance = useSelector((state) =>
-    getAssetBalance(state, selectedAsset ? selectedAsset.symbol : null)
+    getAssetBalance(state, selectedAsset?.symbol)
   );
 
   const calculatedAssetBalance = useSelector((state) =>
-    getAssetBalance(
-      state,
-      selectedCalculatedAsset ? selectedCalculatedAsset.symbol : null
-    )
+    getAssetBalance(state, selectedCalculatedAsset?.symbol)
   );
 
-  const calculatedBalance = useSelector((state) =>
-    getCalculatedBalance(
-      state,
-      selectedCalculatedAsset ? selectedCalculatedAsset.symbol : null
-    )
-  );
-  const spreadFiatValue = useSelector((state) =>
-    getSpreadFiatValue(state, selectedAsset.symbol)
+  const spreadFiatValue = useSelector(
+    (state) => getSpreadFiatValue(state, selectedAsset?.symbol) || "0"
   );
 
-  const calculatedAssetSpreadFiatValue = useSelector((state) =>
-    getSpreadFiatValue(state, selectedCalculatedAsset.symbol)
+  const calculatedAssetSpreadFiatValue = useSelector(
+    (state) => getSpreadFiatValue(state, selectedCalculatedAsset?.symbol) || "0"
   );
 
   const assetFiatValue = useSelector((state) =>
-    getAssetFiatValue(state, selectedAsset.symbol)
+    getAssetFiatValue(state, selectedAsset?.symbol)
   );
   const calculatedAssetFiatValue = useSelector((state) =>
-    getAssetFiatValue(state, selectedCalculatedAsset.symbol)
+    getAssetFiatValue(state, selectedCalculatedAsset?.symbol)
   );
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -136,128 +115,60 @@ const Convert = ({ route, navigation }) => {
     setIsModalVisible(!isModalVisible);
   };
 
-  const fiatSymbol = "USD";
-  const calculatedBalanceSymbol = "USD";
+  const calculateAmount = (inputAmount, rate) => {
+    return new BigNumber(inputAmount).multipliedBy(rate).toFixed(2);
+  };
+
   const [amount, setAmount] = useState("");
-  const [blockchainId, setBlockchainId] = useState("");
-  const [blockchainName, setBlockchainName] = useState("");
   const [calculatedAmount, setCalculatedAmount] = useState("");
   const [fontSize, setFontSize] = useState(52);
   const [margin, setMargin] = useState({ top: 16, left: 8 });
-  const [isValidAddress, setIsValidAddress] = useState(true);
   const [onMaxPress, setOnMaxPress] = useState(false);
-  const [withdrawFee, setWithdrawFee] = useState(0);
-  const [calculatedWithdrawFees, setCalculatedWithdrawFees] = useState([]);
   const [isFiatPrimary, setIsAmountPrimary] = useState(true);
   const [errorMessages, setErrorMessages] = useState([]);
   const assetAmountInputRef = useRef(null);
   const rotateValueHolder = useRef(new Animated.Value(0)).current;
-  const { blockchains } = useSelector((state) => state.blockchains);
-  const [selectedBlockchain, setSelectedBlockchain] = useState();
-  const [blockchainsWithFees, setBlockchainsWithFees] = useState([]);
-  // const { blockchains } = useSelector((state) => state.blockchains);
-  const supportedBlockchains = blockchains.filter(
-    (blockchain) => blockchain.tokenSymbol === selectedAsset.symbol
-  );
-  const [isAddingFavorite, setIsAddingFavorite] = useState(false);
-  const addressInputRef = useRef(null);
-  const nameInputRef = useRef(null);
+
+  const [resetSwipeButton, setResetSwipeButton] = useState(false);
+
   const { theme } = useTheme();
 
   const styles = getStyles(theme);
 
-  // useEffect(() => {
-  //   const blockchainsWithCalculatedFees = blockchains
-  //     .filter((blockchain) => blockchain.tokenSymbol === selectedAsset.symbol)
-  //     .map((blockchain) => ({
-  //       ...blockchain,
-  //       calculatedWithdrawFee: new BigNumber(blockchain.withdrawFee)
-  //         .times(assetFiatValue)
-  //         .toFixed(2),
-  //     }));
+  const handleSendPress = () => {
+    let result;
+    if (isFiatPrimary && onMaxPress) {
+      result = new BigNumber(balance).toFixed(selectedAsset.assetDecimals);
+    } else if (isFiatPrimary && !onMaxPress) {
+      result = new BigNumber(calculatedAmount).toFixed(
+        selectedAsset.assetDecimals
+      );
+    } else if (!isFiatPrimary && onMaxPress) {
+      result = new BigNumber(balance).toFixed(selectedAsset.assetDecimals);
+    } else if (!isFiatPrimary && !onMaxPress) {
+      result = new BigNumber(amount).toFixed(selectedAsset.assetDecimals);
+    }
+    if (!errorMessages[0]) {
+      console.log("ERROR**************************");
+    }
+  };
 
-  //   setBlockchainsWithFees(blockchainsWithCalculatedFees);
-  // }, [blockchains, selectedAsset, assetFiatValue]);
+  const validateFields = useCallback(() => {
+    let error = "";
 
-  // const handleSendPress = () => {
-  //   let result;
-  //   if (isFiatPrimary && onMaxPress) {
-  //     result = new BigNumber(balance).toFixed(selectedAsset.assetDecimals);
-  //   } else if (isFiatPrimary && !onMaxPress) {
-  //     result = new BigNumber(calculatedAmount).toFixed(
-  //       selectedAsset.assetDecimals
-  //     );
-  //   } else if (!isFiatPrimary && onMaxPress) {
-  //     result = new BigNumber(balance).toFixed(selectedAsset.assetDecimals);
-  //   } else if (!isFiatPrimary && !onMaxPress) {
-  //     result = new BigNumber(amount).toFixed(selectedAsset.assetDecimals);
-  //   }
-  //   if (!errorMessages[0]) {
-  //     navigation.navigate("Verification", {
-  //       toAddress,
-  //       fromAddress,
-  //       // amount: Result,
-  //       amount: 0,
-  //       coin: selectedAsset.symbol,
-  //       selectedBlockchain,
-  //       verificationType: "send",
-  //       blockchainId,
-  //     });
-  //   }
-  // };
+    let amountBN;
+    if (isFiatPrimary) {
+      amountBN = new BigNumber(calculatedAmount);
+    } else {
+      amountBN = new BigNumber(amount || 0);
+    }
+    const balanceBN = new BigNumber(balance || 0);
 
-  // const validateFields = useCallback(() => {
-  //   let error = "";
-  //   /*  if (
-  //     /*  (!selectedBlockchain) {
-  //     error = "Por favor, selecciona una red.";
-  //   } else if  toAddress.trim() === ""
-  //   ) {
-  //     error = "Por favor, ingresa la dirección de envío.";
-  //   } else if (!isValidAddress) {
-  //     error = "La dirección es inválida.";
-  //   } */ if (amount.trim() === "") {
-  //     error = "El monto no puede estar vacío.";
-  //   } else {
-  //     let amountBN;
-  //     if (isFiatPrimary) {
-  //       amountBN = new BigNumber(calculatedAmount);
-  //     } else {
-  //       amountBN = new BigNumber(amount || 0);
-  //     }
-  //     const balanceBN = new BigNumber(balance || 0);
-  //     const withdrawFeeBN = new BigNumber(withdrawFee || 0);
-  //     const totalDeduction = amountBN.plus(withdrawFeeBN);
-  //     if (!totalDeduction.isLessThanOrEqualTo(balanceBN)) {
-  //       error =
-  //         "El monto más la comisión de retiro excede el saldo disponible.";
-  //     }
-  //     console.log("amount", amountBN.toString());
-  //     console.log("balance", balanceBN.toString());
-  //     console.log("withdrawFee", withdrawFeeBN.toString());
-  //     console.log("totalDeduction", totalDeduction.toString());
-  //     console.log(
-  //       "isLessThanOrEqualTo",
-  //       totalDeduction.isLessThanOrEqualTo(balanceBN)
-  //     );
-  //   }
-  //   setErrorMessages([error]);
-  //   return error === "";
-  // }, [
-  //   selectedBlockchain,
-  //   toAddress,
-  //   isValidAddress,
-  //   amount,
-  //   withdrawFee,
-  //   balance,
-  // ]);
-
-  // const handleAddressChange = (address) => {
-  //   const trimmedAddress = address.trim();
-  //   setToAddress(trimmedAddress);
-  //   const isValid = validateAddress(trimmedAddress, selectedAsset.symbol, true);
-  //   setIsValidAddress(isValid);
-  // };
+    console.log("amount", amountBN.toString());
+    console.log("balance", balanceBN.toString());
+    setErrorMessages([error]);
+    return error === "";
+  }, [amount, balance]);
 
   const handleAmountChange = useCallback(
     (text) => {
@@ -311,16 +222,24 @@ const Convert = ({ route, navigation }) => {
       const amountBN = new BigNumber(amount || 0);
       const calculatedValue = !isFiatPrimary
         ? amountBN.times(assetFiatValue).toFixed(2)
-        : amountBN.div(assetFiatValue).toFixed(selectedAsset.assetDecimals);
+        : amountBN.div(assetFiatValue).toFixed(selectedAsset?.assetDecimals);
       setCalculatedAmount(calculatedValue);
     }
-  }, [amount, isFiatPrimary, assetFiatValue, selectedAsset.assetDecimals]);
+  }, [amount, isFiatPrimary, assetFiatValue, selectedAsset?.assetDecimals]);
+
+  useEffect(() => {
+    if (amount && assetFiatValue) {
+      const newCalculatedAmount = calculateAmount(amount, assetFiatValue);
+      setCalculatedAmount(newCalculatedAmount);
+    }
+  }, [amount, assetFiatValue]);
+
   const handleSwapValues = () => {
     const currentCalculatedAssetId =
-      symbolsWithId[selectedCalculatedAsset.symbol];
+      symbolsWithId[selectedCalculatedAsset?.symbol];
 
     dispatch(selectAsset(currentCalculatedAssetId));
-    dispatch(selectCalculatedAsset(selectedAsset.symbol));
+    dispatch(selectCalculatedAsset(selectedAsset?.symbol));
   };
 
   // useEffect(() => {
@@ -370,6 +289,16 @@ const Convert = ({ route, navigation }) => {
   //   }
   // }, [isAddingFavorite, isValidAddress]);
 
+  // const [animateToNumber, setAnimateToNumber] = React.useState(7979.12);
+
+  // const increase = () => {
+  //   setAnimateToNumber(animateToNumber + 123456789);
+  // };
+
+  const validNumber = (value) => {
+    const number = new BigNumber(value);
+    return number.isFinite() && !number.isNaN();
+  };
   return (
     <SafeAreaView style={styles.container}>
       <Header navigation={navigation} showBackButton={true} />
@@ -379,6 +308,12 @@ const Convert = ({ route, navigation }) => {
       <View style={styles.subtitleContainer}>
         <Text style={styles.sectionSubtitle}>Seleccioná las dos monedas</Text>
       </View>
+      {/* <AnimatedNumber
+        includeComma={true}
+        animateToNumber={animateToNumber}
+        fontStyle={{ fontSize: 50, fontWeight: "bold" }}
+      />
+      <Button title="increase" onPress={increase} /> */}
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.convertContainer}>
           <View style={styles.firstAssetContainer}>
@@ -397,13 +332,17 @@ const Convert = ({ route, navigation }) => {
                         flexDirection: "row",
                       }}
                     >
-                      <Text style={styles.amount}>
-                        {new BigNumber(balance).toFixed(
-                          selectedAsset.assetDecimals
-                        )}
-                      </Text>
+                      {validNumber(balance) && (
+                        <AnimatedNumber
+                          animateToNumber={new BigNumber(balance).toFixed(
+                            selectedAsset?.assetDecimals
+                          )}
+                          fontStyle={styles.amount}
+                          includeComma={true}
+                        />
+                      )}
                       <Text style={styles.symbol}>
-                        {selectedAsset.symbol.toUpperCase()}
+                        {selectedAsset?.symbol.toUpperCase()}
                       </Text>
                     </View>
                     <View
@@ -440,10 +379,10 @@ const Convert = ({ route, navigation }) => {
               onPress={() => toggleModal("sell")}
             >
               <Image
-                source={symbolImages[selectedAsset.symbol.toLowerCase()]}
+                source={symbolImages[selectedAsset?.symbol.toLowerCase()]}
                 style={styles.selectedAssetImage}
               />
-              <Text style={styles.assetName}>{selectedAsset.symbol}</Text>
+              <Text style={styles.assetName}>{selectedAsset?.symbol}</Text>
               <Ionicons
                 name="chevron-down"
                 size={24}
@@ -453,9 +392,12 @@ const Convert = ({ route, navigation }) => {
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.textInput}
-                value={new BigNumber(balance).toFixed(
-                  selectedAsset.assetDecimals
-                )}
+                // value={new BigNumber(balance).toFixed(
+                //   selectedAsset?.assetDecimals
+                // )}
+                onChangeText={handleAmountChange}
+                keyboardType="decimal-pad"
+                value={amount}
               ></TextInput>
             </View>
           </View>
@@ -489,13 +431,17 @@ const Convert = ({ route, navigation }) => {
                         flexDirection: "row",
                       }}
                     >
-                      <Text style={styles.amount}>
-                        {new BigNumber(calculatedAssetBalance).toFixed(
-                          selectedCalculatedAsset.assetDecimals
-                        )}
-                      </Text>
+                      {validNumber(balance) && (
+                        <AnimatedNumber
+                          animateToNumber={new BigNumber(
+                            calculatedAssetBalance
+                          ).toFixed(selectedCalculatedAsset?.assetDecimals)}
+                          fontStyle={styles.amount}
+                          includeComma={true}
+                        />
+                      )}
                       <Text style={styles.symbol}>
-                        {selectedCalculatedAsset.symbol.toUpperCase()}
+                        {selectedCalculatedAsset?.symbol.toUpperCase()}
                       </Text>
                     </View>
                     <View
@@ -533,12 +479,12 @@ const Convert = ({ route, navigation }) => {
             >
               <Image
                 source={
-                  symbolImages[selectedCalculatedAsset.symbol.toLowerCase()]
+                  symbolImages[selectedCalculatedAsset?.symbol.toLowerCase()]
                 }
                 style={styles.selectedAssetImage}
               />
               <Text style={styles.assetName}>
-                {selectedCalculatedAsset.symbol}
+                {selectedCalculatedAsset?.symbol}
               </Text>
               <Ionicons
                 name="chevron-down"
@@ -549,10 +495,14 @@ const Convert = ({ route, navigation }) => {
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.textInput}
-                value={new BigNumber(balance)
-                  .multipliedBy(spreadFiatValue)
-                  .dividedBy(calculatedAssetFiatValue)
-                  .toFixed(selectedCalculatedAsset.assetDecimals)}
+                value={
+                  amount
+                    ? new BigNumber(amount)
+                        .multipliedBy(spreadFiatValue)
+                        .dividedBy(calculatedAssetFiatValue)
+                        .toFixed(selectedCalculatedAsset?.assetDecimals)
+                    : ""
+                }
                 editable={false}
               ></TextInput>
             </View>
@@ -560,7 +510,29 @@ const Convert = ({ route, navigation }) => {
         </View>
         <View style={styles.buttonContainer}>
           <SwipeButton
-            onToggle={(isToggled) => console.log("Toggled:", isToggled)}
+            onToggle={(isToggled) => {
+              if (isToggled) {
+                dispatch(
+                  convert(
+                    userId,
+                    selectedAsset?.symbol,
+                    selectedCalculatedAsset?.symbol,
+                    amount,
+                    calculatedAmount
+                  )
+                )
+                  .then(() => {
+                    webSocketService.requestBalanceUpdate(userId);
+                  })
+                  .finally(() => {
+                    setResetSwipeButton(true);
+                  })
+                  .catch((error) => {
+                    console.error("Error during conversion:", error);
+                  });
+              }
+            }}
+            reset={resetSwipeButton}
           />
         </View>
       </ScrollView>
@@ -581,19 +553,19 @@ const Convert = ({ route, navigation }) => {
                 .toNumber()
             )
             .map((fiatWallet) => {
-              if (fiatWallet.currencySymbol === selectedAsset.symbol) {
+              if (fiatWallet.currencySymbol === selectedAsset?.symbol) {
                 return null;
               }
 
               return (
                 <TouchableOpacity
                   style={styles.modalContent}
-                  key={fiatWallet.id}
+                  key={fiatWallet?.id}
                   onPress={() => {
                     if (activeAssetType === "sell") {
-                      dispatch(selectAsset(symbolsWithId[fiatWallet.symbol]));
+                      dispatch(selectAsset(symbolsWithId[fiatWallet?.symbol]));
                     } else {
-                      dispatch(selectCalculatedAsset(fiatWallet.symbol));
+                      dispatch(selectCalculatedAsset(fiatWallet?.symbol));
                     }
                     toggleModal();
                   }}
@@ -625,28 +597,28 @@ const Convert = ({ route, navigation }) => {
                 key={balance.id}
                 onPress={() => {
                   if (activeAssetType === "sell") {
-                    dispatch(selectAsset(symbolsWithId[balance.symbol]));
+                    dispatch(selectAsset(symbolsWithId[balance?.symbol]));
                   } else {
-                    dispatch(selectCalculatedAsset(balance.symbol));
+                    dispatch(selectCalculatedAsset(balance?.symbol));
                   }
                   toggleModal();
                 }}
               >
                 <View style={{ flexDirection: "row", gap: 8 }}>
                   <Image
-                    source={symbolImages[balance.symbol.toLowerCase()]}
+                    source={symbolImages[balance?.symbol.toLowerCase()]}
                     style={styles.selectedAssetImage}
                   />
                   <Text style={[styles.assetName, { marginTop: 2 }]}>
-                    {balance.symbol}
+                    {balance?.symbol}
                   </Text>
                 </View>
                 <View style={{ flexDirection: "row", gap: 8 }}>
                   <Text style={[styles.assetBalance, { marginTop: 2 }]}>
                     {new BigNumber(balance.balance).toFixed(
-                      balance.assetDecimals
+                      balance?.assetDecimals
                     )}{" "}
-                    {balance.symbol}
+                    {balance?.symbol}
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -659,7 +631,7 @@ const Convert = ({ route, navigation }) => {
                 .toNumber()
             )
             .map((balance) => {
-              if (balance.symbol === selectedAsset.symbol) {
+              if (balance?.symbol === selectedAsset?.symbol) {
                 return null;
               }
 
@@ -669,28 +641,28 @@ const Convert = ({ route, navigation }) => {
                   key={balance.id}
                   onPress={() => {
                     if (activeAssetType === "sell") {
-                      dispatch(selectAsset(symbolsWithId[balance.symbol]));
+                      dispatch(selectAsset(symbolsWithId[balance?.symbol]));
                     } else {
-                      dispatch(selectCalculatedAsset(balance.symbol));
+                      dispatch(selectCalculatedAsset(balance?.symbol));
                     }
                     toggleModal();
                   }}
                 >
                   <View style={{ flexDirection: "row", gap: 8 }}>
                     <Image
-                      source={symbolImages[balance.symbol.toLowerCase()]}
+                      source={symbolImages[balance?.symbol.toLowerCase()]}
                       style={styles.selectedAssetImage}
                     />
                     <Text style={[styles.assetName, { marginTop: 2 }]}>
-                      {balance.symbol}
+                      {balance?.symbol}
                     </Text>
                   </View>
                   <View style={{ flexDirection: "row", gap: 8 }}>
                     <Text style={[styles.assetBalance, { marginTop: 2 }]}>
                       {new BigNumber(balance.balance).toFixed(
-                        balance.assetDecimals
+                        balance?.assetDecimals
                       )}{" "}
-                      {balance.symbol}
+                      {balance?.symbol}
                     </Text>
                   </View>
                 </TouchableOpacity>

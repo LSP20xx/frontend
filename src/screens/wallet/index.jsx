@@ -23,6 +23,8 @@ const Wallet = ({ navigation }) => {
     assetsLittleLineCharts,
     storedPrices,
     totalBalance,
+    totalLiquidityBalance,
+    totalNonLiquidityBalance,
     balances,
   } = useSelector((state) => state.assets);
   const { theme } = useTheme();
@@ -33,10 +35,6 @@ const Wallet = ({ navigation }) => {
   const usdBalance = balances.find((balance) => balance.symbol === "USD");
   const usdcBalance = balances.find((balance) => balance.symbol === "USDC");
   const usdtBalance = balances.find((balance) => balance.symbol === "USDT");
-
-  const cashBalance = new BigNumber(usdBalance.balance)
-    .plus(usdcBalance.balance)
-    .plus(usdtBalance.balance);
 
   const symbolImages = {
     btc: require("../../../assets/crypto-logos/btc.png"),
@@ -78,7 +76,7 @@ const Wallet = ({ navigation }) => {
               <Text style={styles.titleStyle}>Cash</Text>
               <View style={styles.liquidityBalanceAndFiatSymbolContainer}>
                 <Text style={styles.liquidityBalance}>
-                  ${cashBalance.toFixed(2)}
+                  ${new BigNumber(totalLiquidityBalance).toFixed(2)}
                 </Text>
                 <Text style={styles.liquidityFiatSymbol}> USD</Text>
               </View>
@@ -152,9 +150,7 @@ const Wallet = ({ navigation }) => {
               <View style={styles.liquidityBalanceAndFiatSymbolContainer}>
                 <Text style={styles.liquidityBalance}>
                   $
-                  {totalBalance
-                    ? new BigNumber(totalBalance).toFixed(2)
-                    : "0.00"}
+                  {totalNonLiquidityBalance ? totalNonLiquidityBalance : "0.00"}
                 </Text>
                 <Text style={styles.liquidityFiatSymbol}> USD</Text>
               </View>
@@ -181,13 +177,10 @@ const Wallet = ({ navigation }) => {
                 <Text
                   style={[
                     styles.liquidityBalance,
-                    { marginLeft: 116, marginTop: 8 },
+                    { marginLeft: 118, marginTop: 8 },
                   ]}
                 >
-                  $
-                  {totalBalance
-                    ? new BigNumber(totalBalance).toFixed(2)
-                    : "0.00"}{" "}
+                  $0.00
                 </Text>
               </View>
               <View style={styles.leftContainer}>

@@ -5,7 +5,7 @@ self.addEventListener("message", (e) => {
       self.interval = setInterval(() => {
         webSocketService.requestBalanceUpdate(userId);
         postMessage("Requested balance update for userId: " + userId);
-      }, 3000);
+      }, 2000);
       break;
     case "stop":
       clearInterval(self.interval);

@@ -5,6 +5,7 @@ import {
   LINEAR_CHART_URL,
   GET_TRANSACTIONS_URL,
   STORED_PRICES_URL,
+  CONVERT_URL,
 } from "../../constants";
 
 const {
@@ -21,6 +22,7 @@ const {
   GET_LINEAR_CHART_FAILURE,
   GET_STORED_PRICES,
   GET_TRANSACTIONS,
+  CONVERT_ASSETS,
 } = assetsTypes;
 
 export const selectAsset = (id) => {
@@ -152,6 +154,34 @@ export const getTransactions = (userId) => {
         type: GET_TRANSACTIONS,
         payload: result,
       });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const convert = (userId, fromSymbol, toSymbol, fromAmount, toAmount) => {
+  return async (dispatch) => {
+    try {
+      console.log(`${CONVERT_URL}/${userId}`);
+      const response = await fetch(`${CONVERT_URL}/${userId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fromSymbol,
+          toSymbol,
+          fromAmount,
+          toAmount,
+        }),
+      });
+      const result = await response.json();
+      dispatch({
+        type: CONVERT_ASSETS,
+        payload: result,
+      });
+      return Promise.resolve(result);
     } catch (error) {
       console.log(error);
     }

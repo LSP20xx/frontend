@@ -27,8 +27,9 @@ export const getSpreadFiatValue = (state, assetSymbol) => {
   const asset = state.assets.assets.find(
     (asset) => asset.symbol === assetSymbol
   );
-  console.log(`${assetSymbol}****`);
-  return asset.spreadValue;
+  if (asset.symbol === "USD") console.log("getSpreadFiatValue****", asset);
+  console.log(`${assetSymbol}`);
+  return asset?.spreadValue;
 };
 
 export const getAssetAddress = (state, assetSymbol) => {
@@ -60,7 +61,7 @@ export const getAssetFiatValue = (state, assetSymbol) => {
     (asset) => asset.symbol === assetSymbol
   );
   console.log(`${assetSymbol}****`);
-  return asset.fiatValue;
+  return asset?.fiatValue;
 };
 
 export const getERC20TokensBalances = (state, assetSymbol) => {
