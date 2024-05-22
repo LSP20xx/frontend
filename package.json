@@ -5,7 +5,10 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.17.11",
@@ -15,6 +18,7 @@
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/native-stack": "^6.9.12",
     "@reduxjs/toolkit": "^1.9.5",
+    "@types/react": "~18.0.27",
     "axios": "^1.5.1",
     "bignumber.js": "^9.1.2",
     "bitcoin-address-validation": "^2.2.3",
@@ -34,6 +38,7 @@
     "lightweight-charts": "^4.1.3",
     "lodash.isequal": "^4.5.0",
     "react": "18.2.0",
+    "react-dom": "18.2.0",
     "react-native": "0.71.14",
     "react-native-animatable": "^1.4.0",
     "react-native-animated-numbers": "^0.6.2",
@@ -65,7 +70,23 @@
     "@babel/plugin-proposal-private-methods": "^7.18.6",
     "@babel/plugin-transform-class-properties": "^7.24.1",
     "@babel/plugin-transform-private-methods": "^7.24.1",
-    "@babel/plugin-transform-private-property-in-object": "^7.24.1"
+    "@babel/plugin-transform-private-property-in-object": "^7.24.1",
+    "@babel/preset-typescript": "^7.24.1",
+    "@types/react": "^18.2.0",
+    "@types/react-native": "^0.73.0",
+    "@typescript-eslint/eslint-plugin": "^7.9.0",
+    "@typescript-eslint/parser": "^7.9.0",
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "eslint-plugin-react": "^7.34.1",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-native": "^4.1.0",
+    "typescript": "^4.9.4"
   },
   "private": true
 }

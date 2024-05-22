@@ -1,0 +1,101 @@
+import { StyleSheet } from 'react-native';
+import { COLORS } from '../../constants';
+
+export const styles = StyleSheet.create({
+  assetAmount: {
+    color: COLORS.black,
+    fontSize: 36,
+    fontWeight: 'bold',
+    marginBottom: 6,
+    marginTop: 50,
+    textAlign: 'center',
+  },
+  button: {
+    alignItems: 'center',
+    backgroundColor: COLORS.primaryLight,
+    borderRadius: 5,
+    marginTop: 122,
+    padding: 10,
+    width: '80%',
+  },
+  buttonText: {
+    color: COLORS.black,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  container: {
+    alignItems: 'center',
+    backgroundColor: COLORS.white,
+    flex: 1,
+    paddingTop: 20,
+  },
+  convertedAssetAmount: {
+    color: COLORS.black,
+    fontSize: 12,
+    textAlign: 'center',
+  },
+  input: {
+    alignItems: 'center',
+    backgroundColor: COLORS.white,
+    border: 1,
+    borderColor: COLORS.greySecondary,
+    borderRadius: 5,
+    borderWidth: 1,
+    color: COLORS.black,
+    flexDirection: 'row',
+    height: 40,
+    justifyContent: 'flex-start',
+    marginTop: 10,
+    paddingHorizontal: 15,
+    paddingVertical: 5,
+    width: '80%',
+  },
+  label: {
+    color: COLORS.black,
+    fontSize: 16,
+    marginBottom: 14,
+    marginHorizontal: 20,
+    marginTop: 16,
+    textAlign: 'left',
+  },
+  labelContainer: {
+    width: '90%',
+  },
+  recentTransfersContainer: {
+    backgroundColor: COLORS.greyDark,
+    height: 300,
+    width: '90%',
+  },
+  recentTransfersTitle: {
+    backgroundColor: COLORS.greyDark,
+    color: COLORS.black,
+    fontSize: 16,
+    fontWeight: 'light',
+    marginHorizontal: 20,
+    marginVertical: 16,
+    textAlign: 'left',
+  },
+  rowContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 4,
+    width: '90%',
+  },
+  separator: {
+    backgroundColor: COLORS.grey,
+    height: 1,
+    marginBottom: 8,
+    marginTop: 26,
+    width: '80%',
+  },
+  text: {
+    color: COLORS.greyLight,
+    fontSize: 14,
+    marginHorizontal: 20,
+    textAlign: 'left',
+  },
+  textContainer: {
+    width: '90%',
+  },
+});

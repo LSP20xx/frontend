@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <title>TradingView Chart</title>
@@ -36,14 +36,14 @@
 
       const { width, height } = setChartDimensions();
       const chart = LightweightCharts.createChart(
-        document.getElementById("chart"),
-        { width, height }
+        document.getElementById('chart'),
+        { width, height },
       );
       const candleSeries = chart.addCandlestickSeries();
 
       const ohlcData = [
         {
-          time: "2021-04-01",
+          time: '2021-04-01',
           open: 146.0,
           high: 146.32,
           low: 145.63,

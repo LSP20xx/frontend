@@ -1,13 +1,13 @@
-module.exports = function (api) {
+module.exports = function babelConfig(api) {
   api.cache(true);
   return {
-    presets: ["babel-preset-expo"],
+    presets: ['babel-preset-expo', '@babel/preset-typescript'],
     plugins: [
-      ["@babel/plugin-proposal-private-methods", { loose: true }],
-      ["@babel/plugin-transform-class-properties", { loose: true }],
-      ["@babel/plugin-transform-private-property-in-object", { loose: true }],
-      ["@babel/plugin-transform-private-methods", { loose: true }],
-      ["react-native-reanimated/plugin"],
+      ['@babel/plugin-proposal-private-methods', { loose: true }],
+      ['@babel/plugin-transform-class-properties', { loose: true }],
+      ['@babel/plugin-transform-private-property-in-object', { loose: true }],
+      ['@babel/plugin-transform-private-methods', { loose: true }],
+      ['react-native-reanimated/plugin'],
     ],
   };
 };

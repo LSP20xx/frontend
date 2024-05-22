@@ -11,9 +11,7 @@
       "resizeMode": "cover",
       "backgroundColor": "#f5f5f5"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.charlypk22.billete"
