@@ -154,7 +154,7 @@ function Navigation() {
 
   return (
     <NavigationContainer>
-      {/* {userId ? (
+      {userId ? (
         termsAndConditionsAccepted ? (
           <TabsNavigator />
         ) : (
@@ -162,8 +162,7 @@ function Navigation() {
         )
       ) : (
         <AuthNavigator />
-      )} */}
-      {userId ? <TabsNavigator /> : <AuthNavigator />}
+      )}
     </NavigationContainer>
   );
 }

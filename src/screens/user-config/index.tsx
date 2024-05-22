@@ -27,7 +27,11 @@ function UserConfig({ navigation, showBackButton }) {
       disabled: true,
       screen: 'UserMyInformation',
       rightComponent: verified ? null : (
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('KYCStep1');
+          }}
+        >
           <Text style={styles.verifyButton}>Verificar</Text>
         </TouchableOpacity>
       ),

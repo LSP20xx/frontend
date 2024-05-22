@@ -4,6 +4,7 @@ import {
   AUTH_CHECK_DATA,
   VERIFY_SMS_URL,
   VERIFY_EMAIL_URL,
+  ACCEPT_TERMS_AND_CONDITIONS_URL,
 } from '../../constants';
 import { authTypes } from '../types';
 import { withdrawFromEvmWallet } from './transactions.action';
@@ -18,6 +19,8 @@ const {
   SIGN_UP_REQUEST,
   SIGN_UP_SUCCESS,
   SIGN_UP_FAILURE,
+  ACCEPT_TERMS_AND_CONDITIONS,
+  REJECT_TERMS_AND_CONDITIONS,
   CLEAR_STATE,
   CLEAR_ERROR,
   VERIFY_SMS_CODE,
@@ -449,6 +452,34 @@ export const verifyEmailCode = (email, code, tempId, isLogin) => {
       console.error(error);
       dispatch({ type: VERIFY_EMAIL_CODE_FAILURE });
     }
+  };
+};
+
+export const acceptTermsAndConditions = (userId) => {
+  return async (dispatch) => {
+    try {
+      const response = await fetch(ACCEPT_TERMS_AND_CONDITIONS_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to accept terms and conditions');
+      }
+
+      dispatch({ type: ACCEPT_TERMS_AND_CONDITIONS });
+    } catch (error) {
+      console.error('Error accepting terms and conditions:', error);
+    }
+  };
+};
+
+export const rejectTermsAndConditions = () => {
+  return (dispatch) => {
+    dispatch({ type: REJECT_TERMS_AND_CONDITIONS });
   };
 };
 

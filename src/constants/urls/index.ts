@@ -8,6 +8,7 @@ export const SEND_SMS_URL = `http://172.28.160.1:8000/api/verification/send-sms-
 export const SEND_EMAIL_URL = `http://172.28.160.1:8000/api/verification/send-email-code`;
 export const VERIFY_SMS_URL = `http://172.28.160.1:8000/api/verification/verify-sms-code`;
 export const VERIFY_EMAIL_URL = `http://172.28.160.1:8000/api/verification/verify-email-code`;
+export const ACCEPT_TERMS_AND_CONDITIONS_URL = `http://172.28.160.1:8000/api/auth/accept-terms-and-conditions`;
 export const LITTLE_LINE_CHARTS_URL = `http://172.28.160.1:8000/api/tokens/little-line-charts`;
 export const CANDLESTICK_CHART_URL = `http://172.28.160.1:8000/api/tokens/candlestick-chart`;
 export const LINEAR_CHART_URL = `http://172.28.160.1:8000/api/tokens/linear-chart`;

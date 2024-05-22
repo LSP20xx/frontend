@@ -7,6 +7,8 @@ const {
   SIGN_IN_REQUEST,
   SIGN_IN_SUCCESS,
   SIGN_IN_FAILURE,
+  ACCEPT_TERMS_AND_CONDITIONS,
+  REJECT_TERMS_AND_CONDITIONS,
   VERIFICATION_TOKEN_REQUEST,
   VERIFICATION_TOKEN_SUCCESS,
   VERIFICATION_TOKEN_FAILURE,
@@ -125,6 +127,20 @@ const authReducer = (state = initialState, action) => {
         error: action.error,
         hasError: true,
       };
+
+    case ACCEPT_TERMS_AND_CONDITIONS:
+      return {
+        ...state,
+        termsAndConditionsAccepted: true,
+      };
+
+    case REJECT_TERMS_AND_CONDITIONS:
+      return {
+        ...state,
+        termsAndConditionsAccepted: false,
+        userId: null,
+      };
+
     case CLEAR_ERROR:
       return {
         ...state,
