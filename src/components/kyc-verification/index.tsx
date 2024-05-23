@@ -1,27 +1,43 @@
-import React, { useState } from 'react';
-import { View, Button, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState, useReducer } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  KeyboardAvoidingView,
+} from 'react-native';
 
-import PersonalInformationForm from './PersonalInformationForm';
-import IDVerificationCamera from './IDVerificationCamera.jsx';
-import VideoSelfieCapture from './VideoSelfieCapture';
+import { COLORS } from '../../constants';
+import PersonalInformationForm from './PersonalInformationForm.js';
+import IDVerificationCamera from './IDVerificationCamera.js';
+import VideoSelfieCapture from './VideoSelfieCapture.js';
 import ReviewScreen from './ReviewScreen';
-import { COLORS } from '../../constants/index.js';
+import formReducer, {
+  initialState,
+  UPDATE_FORM,
+} from '../../store/reducers/form.reducer';
 
 const styles = StyleSheet.create({
+  buttonContainer: {
+    alignItems: 'center',
+    borderColor: '#E5E5E5',
+    borderWidth: 1,
+    justifyContent: 'center',
+    padding: 10,
+    width: '100%',
+    position: 'absolute',
+    bottom: 0,
+  },
   button: {
     alignItems: 'center',
-    backgroundColor: COLORS.primaryMedium,
-    borderRadius: 8,
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-  },
-  buttonContainer: {
-    paddingBottom: 20,
-    paddingHorizontal: 10,
+    backgroundColor: '#F48421',
+    borderRadius: 5,
+    padding: 10,
+    width: '80%',
   },
   buttonText: {
-    color: COLORS.black,
+    color: COLORS.white,
     fontFamily: 'Uto-Medium',
     fontSize: 16,
   },
@@ -29,12 +45,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    flex: 1,
+    flexGrow: 1,
+    paddingHorizontal: 8,
+    paddingBottom: 80, // Ensure there's space for the button container
   },
 });
 
 function KYCVerification() {
   const [currentStep, setCurrentStep] = useState(1);
+  const [formState, dispatchFormState] = useReducer(formReducer, initialState);
+  const [isFormValid, setIsFormValid] = useState(false);
 
   const goToNextStep = () => {
     if (currentStep < 4) {
@@ -48,6 +68,10 @@ function KYCVerification() {
     }
   };
 
+  const handleFormValidChange = (isValid) => {
+    setIsFormValid(isValid);
+  };
+
   const renderStepContent = () => {
     switch (currentStep) {
       case 1:
@@ -55,6 +79,9 @@ function KYCVerification() {
           <PersonalInformationForm
             onNext={goToNextStep}
             currentStep={currentStep}
+            onFormValidChange={handleFormValidChange}
+            formState={formState}
+            dispatchFormState={dispatchFormState}
           />
         );
       case 2:
@@ -79,36 +106,33 @@ function KYCVerification() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.content}>{renderStepContent()}</View>
-      {/* <View style={styles.buttonContainer}>
+      <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+        <ScrollView contentContainerStyle={styles.content}>
+          {renderStepContent()}
+        </ScrollView>
+      </KeyboardAvoidingView>
+
+      <View style={styles.buttonContainer}>
         {currentStep > 1 && (
-          <TouchableOpacity
-            // disabled={!formState.isFormValid}
-            onPress={goToPreviousStep}
-            style={[styles.button]}
-          >
-            <Text style={styles.buttonText}>Anterior</Text>
+          <TouchableOpacity onPress={goToPreviousStep} style={styles.button}>
+            <Text style={styles.buttonText}>ANTERIOR</Text>
           </TouchableOpacity>
         )}
         {currentStep < 4 && (
           <TouchableOpacity
-            // disabled={!formState.isFormValid}
             onPress={goToNextStep}
-            style={[styles.button]}
+            style={styles.button}
+            disabled={currentStep === 1 && !isFormValid}
           >
-            <Text style={styles.buttonText}>Siguiente</Text>
+            <Text style={styles.buttonText}>SIGUIENTE</Text>
           </TouchableOpacity>
         )}
         {currentStep === 4 && (
-          <TouchableOpacity
-            // disabled={!formState.isFormValid}
-            onPress={goToNextStep}
-            style={[styles.button]}
-          >
-            <Text style={styles.buttonText}>Finalizar</Text>
+          <TouchableOpacity onPress={goToNextStep} style={styles.button}>
+            <Text style={styles.buttonText}>FINALIZAR</Text>
           </TouchableOpacity>
         )}
-      </View> */}
+      </View>
     </View>
   );
 }

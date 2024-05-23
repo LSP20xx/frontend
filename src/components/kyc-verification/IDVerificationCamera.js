@@ -1,33 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import { View, Image, Text, Alert } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  Alert,
+  Image,
+} from 'react-native';
+import { useTheme } from '../../context/ThemeContext';
 import {
   requestCameraPermissionsAsync,
   launchCameraAsync,
 } from 'expo-image-picker';
 import { readAsStringAsync, EncodingType } from 'expo-file-system';
-import { Ionicons } from '@expo/vector-icons';
-import { styles } from './styles';
+import { useDispatch, useSelector } from 'react-redux';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
-function Profile({ navigation }) {
-  const { user } = useSelector((state) => state.user);
+function IDVerificationCamera({ onCapture }) {
+  const [camera, setCamera] = useState(null);
+
+  const { theme } = useTheme();
+  const styles = getStyles(theme);
+
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
   const [pickedUrl, setPicked] = useState(null);
   const date = new Date(user.datetimeSignUp);
   const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 
-  useEffect(() => {
-    const saveUserImage = async () => {
-      if (pickedUrl) {
-        const base64Image = await readAsStringAsync(pickedUrl, {
-          encoding: EncodingType.Base64,
-        });
-        // dispatch(setUserImage(user.userId, base64Image));
-      }
-    };
-
-    saveUserImage();
-  }, [pickedUrl]);
+  const takePicture = async () => {
+    if (camera) {
+      const options = { quality: 0.5, base64: true };
+      const data = await camera.takePictureAsync(options);
+      onCapture(data.uri);
+    }
+  };
 
   const verifyPermissions = async () => {
     const { status } = await requestCameraPermissionsAsync();
@@ -57,6 +64,19 @@ function Profile({ navigation }) {
 
     setPicked(imageUri);
   };
+
+  useEffect(() => {
+    const saveUserImage = async () => {
+      if (pickedUrl) {
+        const base64Image = await readAsStringAsync(pickedUrl, {
+          encoding: EncodingType.Base64,
+        });
+        //dispatch(setUserImage(user.userId, base64Image));
+      }
+    };
+
+    saveUserImage();
+  }, [pickedUrl]);
 
   return (
     <View style={styles.container}>
@@ -95,4 +115,31 @@ function Profile({ navigation }) {
   );
 }
 
-export default Profile;
+const getStyles = (theme) =>
+  StyleSheet.create({
+    capture: {
+      alignSelf: 'center',
+      backgroundColor: '#fff',
+      borderRadius: 5,
+      flex: 0,
+      margin: 20,
+      padding: 15,
+      paddingHorizontal: 20,
+    },
+    captureText: {
+      color: 'black',
+      fontSize: 14,
+    },
+    container: {
+      backgroundColor: theme.background,
+      flex: 1,
+      flexDirection: 'column',
+    },
+    preview: {
+      alignItems: 'center',
+      flex: 1,
+      justifyContent: 'flex-end',
+    },
+  });
+
+export default IDVerificationCamera;

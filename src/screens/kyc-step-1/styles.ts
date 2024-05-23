@@ -15,7 +15,6 @@ export const getStyles = (theme) =>
       alignItems: 'center',
       backgroundColor: theme.background,
       flex: 1,
-      paddingTop: 20,
       position: 'relative',
     },
     listContainer: {

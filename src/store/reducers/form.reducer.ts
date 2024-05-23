@@ -1,18 +1,18 @@
-import { UPDATE_FORM } from '../../utils/forms';
+export const UPDATE_FORM = 'UPDATE_FORM';
 
-interface FormField {
+export interface FormField {
   value: string;
   hasError: boolean;
   error: string;
   touched: boolean;
 }
 
-interface FormState {
+export interface FormState {
   [key: string]: FormField | boolean;
   isFormValid: boolean;
 }
 
-interface Action {
+export interface Action {
   type: string;
   data: {
     name: string;
@@ -23,6 +23,13 @@ interface Action {
     isFormValid: boolean;
   };
 }
+
+export const initialState: FormState = {
+  firstName: { value: '', hasError: false, error: '', touched: false },
+  lastName: { value: '', hasError: false, error: '', touched: false },
+  dateOfBirth: { value: '', hasError: false, error: '', touched: false },
+  isFormValid: false,
+};
 
 const formReducer = (state: FormState, action: Action): FormState => {
   switch (action.type) {

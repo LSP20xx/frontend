@@ -1,9 +1,13 @@
 // Security.jsx
 import React from 'react';
-import { View, Text, SafeAreaView } from 'react-native';
+import { View, Text } from 'react-native';
 import { getStyles } from './styles';
 import { Header } from '../../components';
 import { useTheme } from '../../context/ThemeContext';
+import PersonalInformationForm from '@/components/kyc-verification/PersonalInformationForm';
+import KYCVerification from '../../components/kyc-verification/index';
+import { ScrollView } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 function KYCStep1({ navigation, showBackButton }) {
   const { theme } = useTheme();
@@ -14,15 +18,12 @@ function KYCStep1({ navigation, showBackButton }) {
         navigation={navigation}
         showBackButton={showBackButton !== undefined ? showBackButton : true}
       />
+
       <View style={styles.sectionContainer}>
         <View style={styles.titleContainer}>
           <Text style={styles.sectionTitle}>Verificación KYC</Text>
         </View>
-      </View>
-      <View style={styles.subtitleContainer}>
-        <Text style={styles.sectionSubtitle}>
-          Paso 1/4: Información personal
-        </Text>
+        <KYCVerification />
       </View>
     </SafeAreaView>
   );

@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import { processKrakenData } from '../workers/kraken';
 import { updateAssetsPrices, updateBalances } from '../store/actions';
 
-const socketUrl = 'http://172.28.160.1:8000';
+const socketUrl = 'http://172.31.64.1:8000';
 
 class WebSocketService {
   constructor() {
