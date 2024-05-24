@@ -56,11 +56,12 @@ function Input({
           />
         </View>
       </Label>
-      {hasError && touched ? (
-        <View style={styles.errorContainer}>
+      <View style={styles.errorContainer}>
+        {hasError && touched ? (
           <Text style={styles.errorMessage}>{error}</Text>
-        </View>
-      ) : null}
+        ) : null}
+      </View>
+
       {children}
     </View>
   );

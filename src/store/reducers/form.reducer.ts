@@ -25,8 +25,7 @@ export interface Action {
 }
 
 export const initialState: FormState = {
-  firstName: { value: '', hasError: false, error: '', touched: false },
-  lastName: { value: '', hasError: false, error: '', touched: false },
+  completeName: { value: '', hasError: false, error: '', touched: false },
   dateOfBirth: { value: '', hasError: false, error: '', touched: false },
   isFormValid: false,
 };

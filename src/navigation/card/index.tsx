@@ -7,10 +7,11 @@ import MyInformation from '../../screens/user-my-information';
 import LocalCurrency from '../../screens/user-local-currency';
 import Notifications from '../../screens/user-notifications';
 import Security from '../../screens/user-security';
-import KYCStep1 from '../../screens/kyc-step-1';
+import KYCStep1 from '../../screens/kyc-step';
 import KYCStep2 from '../../screens/kyc-step-2';
 import KYCStep3 from '../../screens/kyc-step-3';
 import KYCStep4 from '../../screens/kyc-step-4';
+import KYCScreen from '../../screens/kyc-step';
 
 const Stack = createNativeStackNavigator();
 
@@ -31,10 +32,7 @@ function CardNavigator() {
       <Stack.Screen name="UserNotifications" component={Notifications} />
       <Stack.Screen name="UserSecurity" component={Security} />
       <Stack.Screen name="UserLanguage" component={Language} />
-      <Stack.Screen name="KYCStep1" component={KYCStep1} />
-      <Stack.Screen name="KYCStep2" component={KYCStep2} />
-      <Stack.Screen name="KYCStep3" component={KYCStep3} />
-      <Stack.Screen name="KYCStep4" component={KYCStep4} />
+      <Stack.Screen name="KYCScreen" component={KYCScreen} />
     </Stack.Navigator>
   );
 }

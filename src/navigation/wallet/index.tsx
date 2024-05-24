@@ -21,7 +21,7 @@ import LocalCurrency from '../../screens/user-local-currency';
 import Notifications from '../../screens/user-notifications';
 import Security from '../../screens/user-security';
 import Language from '../../screens/user-language';
-import KYCStep1 from '../../screens/kyc-step-1';
+import KYCStep1 from '../../screens/kyc-step';
 import KYCStep2 from '../../screens/kyc-step-2';
 import KYCStep3 from '../../screens/kyc-step-3';
 import KYCStep4 from '../../screens/kyc-step-4';

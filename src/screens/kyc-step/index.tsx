@@ -9,7 +9,7 @@ import KYCVerification from '../../components/kyc-verification/index';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-function KYCStep1({ navigation, showBackButton }) {
+function KYCScreen({ navigation, showBackButton }) {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   return (
@@ -29,4 +29,4 @@ function KYCStep1({ navigation, showBackButton }) {
   );
 }
 
-export default KYCStep1;
+export default KYCScreen;

@@ -9,7 +9,7 @@ export const getStyles = (theme) =>
     },
     errorContainer: {
       flex: 1,
-      marginTop: 10,
+      height: 24,
     },
     errorMessage: {
       color: COLORS.error,

@@ -9,7 +9,7 @@ import {
 import { useTheme } from '../../context/ThemeContext';
 import { getStyles } from './styles';
 
-function DateInput({ value, onChangeText, hasError, error, touched }) {
+function DateInput({ value, onChangeText, hasError, error, touched, onBlur }) {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const [isEditing, setIsEditing] = useState(false);
@@ -18,29 +18,43 @@ function DateInput({ value, onChangeText, hasError, error, touched }) {
   const monthRef = useRef(null);
   const yearRef = useRef(null);
 
-  const handleBlur = () => {
-    if (!day && !month && !year) {
-      setIsEditing(false);
+  const handleBlur = (part) => {
+    let newValue = value.split('/');
+    if (part === 'day' && newValue[0]) {
+      if (newValue[0].length === 1) {
+        newValue[0] = '0' + newValue[0];
+      }
+      if (newValue[0] === '00') {
+        newValue[0] = '01';
+      }
+    } else if (part === 'month' && newValue[1]) {
+      if (newValue[1].length === 1) {
+        newValue[1] = '0' + newValue[1];
+      }
+      if (newValue[1] === '00') {
+        newValue[1] = '01';
+      }
     }
+    onChangeText(newValue.join('/'));
+    onBlur && onBlur(part);
   };
-
-  const splitValue = value.split('/');
-  const day = splitValue[0] || '';
-  const month = splitValue[1] || '';
-  const year = splitValue[2] || '';
 
   const handleTextChange = (text, part) => {
     const filteredText = text.replace(/[^0-9]/g, '');
+    let newValue = value.split('/');
 
-    const newValue = value.split('/');
     switch (part) {
       case 'day':
         newValue[0] = filteredText;
-        if (filteredText.length === 2) monthRef.current.focus();
+        if (filteredText.length === 2) {
+          monthRef.current.focus();
+        }
         break;
       case 'month':
         newValue[1] = filteredText;
-        if (filteredText.length === 2) yearRef.current.focus();
+        if (filteredText.length === 2) {
+          yearRef.current.focus();
+        }
         break;
       case 'year':
         newValue[2] = filteredText;
@@ -53,16 +67,14 @@ function DateInput({ value, onChangeText, hasError, error, touched }) {
     setIsEditing(true);
   };
 
+  const splitValue = value.split('/');
+  const day = splitValue[0] || '';
+  const month = splitValue[1] || '';
+  const year = splitValue[2] || '';
+
   if (!isEditing && !day && !month && !year) {
     return (
-      <TouchableOpacity
-        onPress={handleFocus}
-        onBlur={() => {
-          handleBlur();
-          console.log('onBlur');
-        }}
-        style={styles.dateInputContainer}
-      >
+      <TouchableOpacity onPress={handleFocus} style={styles.dateInputContainer}>
         <Text style={styles.datePlaceholder}>Fecha de nacimiento</Text>
       </TouchableOpacity>
     );
@@ -75,18 +87,15 @@ function DateInput({ value, onChangeText, hasError, error, touched }) {
           ref={dayRef}
           style={styles.dateInput}
           onChangeText={(text) => handleTextChange(text, 'day')}
-          onLayout={() => {
-            dayRef.current.focus();
-          }}
           value={day}
           maxLength={2}
           placeholder="DD"
           placeholderTextColor={theme.placeholder}
           keyboardType="numeric"
           onFocus={handleFocus}
-          onBlur={handleBlur}
+          onBlur={() => handleBlur('day')}
         />
-        <Text style={styles.separator}>{'-  '}</Text>
+        <Text style={styles.separator}>{'-'}</Text>
         <TextInput
           ref={monthRef}
           style={styles.dateInput}
@@ -97,9 +106,9 @@ function DateInput({ value, onChangeText, hasError, error, touched }) {
           placeholderTextColor={theme.placeholder}
           keyboardType="numeric"
           onFocus={handleFocus}
-          onBlur={handleBlur}
+          onBlur={() => handleBlur('month')}
         />
-        <Text style={styles.separator}>{'- '}</Text>
+        <Text style={styles.separator}>{'-'}</Text>
         <TextInput
           ref={yearRef}
           style={styles.dateInput}
@@ -110,7 +119,7 @@ function DateInput({ value, onChangeText, hasError, error, touched }) {
           placeholderTextColor={theme.placeholder}
           keyboardType="numeric"
           onFocus={handleFocus}
-          onBlur={handleBlur}
+          onBlur={() => handleBlur('year')}
         />
       </View>
       {hasError && touched ? (
@@ -123,3 +132,33 @@ function DateInput({ value, onChangeText, hasError, error, touched }) {
 }
 
 export default DateInput;
+
+const styles = StyleSheet.create({
+  dateInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  dateInput: {
+    flex: 1,
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    marginHorizontal: 5,
+  },
+  separator: {
+    fontSize: 18,
+    color: 'black',
+  },
+  errorContainer: {
+    marginTop: 5,
+  },
+  errorMessage: {
+    color: 'red',
+    fontSize: 12,
+  },
+  datePlaceholder: {
+    color: 'gray',
+    fontSize: 16,
+  },
+});
