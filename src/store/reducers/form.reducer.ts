@@ -1,52 +1,30 @@
 export const UPDATE_FORM = 'UPDATE_FORM';
+export const LOAD_FORM_STATE = 'LOAD_FORM_STATE';
 
-export interface FormField {
-  value: string;
-  hasError: boolean;
-  error: string;
-  touched: boolean;
-}
-
-export interface FormState {
-  [key: string]: FormField | boolean;
-  isFormValid: boolean;
-}
-
-export interface Action {
-  type: string;
-  data: {
-    name: string;
-    value: string;
-    hasError: boolean;
-    error: string;
-    touched: boolean;
-    isFormValid: boolean;
-  };
-}
-
-export const initialState: FormState = {
+export const initialState = {
   completeName: { value: '', hasError: false, error: '', touched: false },
   dateOfBirth: { value: '', hasError: false, error: '', touched: false },
   isFormValid: false,
 };
 
-const formReducer = (state: FormState, action: Action): FormState => {
+const formReducer = (state, action) => {
   switch (action.type) {
-    case UPDATE_FORM: {
-      const { name, value, hasError, error, touched, isFormValid } =
-        action.data;
+    case UPDATE_FORM:
       return {
         ...state,
-        [name]: {
-          ...(state[name] as FormField),
-          value,
-          hasError,
-          error,
-          touched,
+        [action.data.name]: {
+          value: action.data.value,
+          hasError: action.data.hasError,
+          error: action.data.error,
+          touched: action.data.touched,
         },
-        isFormValid,
+        isFormValid: action.data.isFormValid,
       };
-    }
+    case LOAD_FORM_STATE:
+      return {
+        ...state,
+        ...action.data,
+      };
     default:
       return state;
   }

@@ -5,14 +5,16 @@ import {
   Platform,
   View,
   StyleSheet,
-  Text,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '../../context/ThemeContext';
 import { COLORS } from '../../constants';
 import Input from '../input';
 import DateInput from '../date-input';
-import { UPDATE_FORM, initialState } from '../../store/reducers/form.reducer';
+import formReducer, {
+  UPDATE_FORM,
+  initialState,
+} from '../../store/reducers/form.reducer';
 
 const styles = StyleSheet.create({
   button: {
@@ -30,7 +32,7 @@ const styles = StyleSheet.create({
   },
   buttonDisabled: {
     alignItems: 'center',
-    backgroundColor: 'rgba(255155, 80, 0.3)',
+    backgroundColor: 'rgba(255, 155, 80, 0.3)',
     borderRadius: 8,
     justifyContent: 'center',
     paddingHorizontal: 20,
@@ -73,27 +75,6 @@ const validateDate = (date) => {
     return { isValid: true };
   } else {
     return { isValid: false, error: 'Debe ser mayor de 18 años' };
-  }
-};
-
-const formReducer = (state, action) => {
-  switch (action.type) {
-    case UPDATE_FORM:
-      const { name, value, hasError, error, touched, isFormValid } =
-        action.data;
-      return {
-        ...state,
-        [name]: {
-          ...state[name],
-          value: value !== undefined ? value : state[name].value,
-          hasError,
-          error,
-          touched,
-        },
-        isFormValid,
-      };
-    default:
-      return state;
   }
 };
 
@@ -141,7 +122,7 @@ function PersonalInformationForm({ onFormValidChange }) {
       type: UPDATE_FORM,
       data: {
         name: 'isFormValid',
-        value: '',
+        value: isValid,
         hasError: false,
         error: '',
         touched: false,
