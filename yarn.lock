@@ -2113,6 +2113,11 @@
   "resolved" "https://registry.npmjs.org/@socket.io/component-emitter/-/component-emitter-3.1.2.tgz"
   "version" "3.1.2"
 
+"@sumsub/react-native-mobilesdk-module@^1.31.3":
+  "integrity" "sha512-tJTjTeUeiQUL+k9IgShZMnWjPnX3TzJBhYGBVMAbHgaRgx3RFsNp1/5eDHQm2YKl2gDDOS34Pe6L+B/CEJ73TA=="
+  "resolved" "https://registry.npmjs.org/@sumsub/react-native-mobilesdk-module/-/react-native-mobilesdk-module-1.31.3.tgz"
+  "version" "1.31.3"
+
 "@svgr/babel-plugin-add-jsx-attribute@8.0.0":
   "integrity" "sha512-b9MIk7yhdS1pMCZM8VeNfUlSKVRhsHZNMl5O9SfaX0l0t5wjdgu4IDzGB8bpnGBBOjGST3rRFVsaaEtI4W6f7g=="
   "resolved" "https://registry.npmjs.org/@svgr/babel-plugin-add-jsx-attribute/-/babel-plugin-add-jsx-attribute-8.0.0.tgz"
@@ -7881,7 +7886,7 @@
     "escape-string-regexp" "2.0.0"
     "invariant" "2.2.4"
 
-"react-native@*", "react-native@^0.0.0-0 || 0.60 - 0.71 || 1000.0.0", "react-native@>= 0.64.3", "react-native@>=0.57", "react-native@>=0.59", "react-native@>=0.59.0", "react-native@>=0.60.0", "react-native@>=0.65.0", "react-native@0.71.14":
+"react-native@*", "react-native@^0.0.0-0 || 0.60 - 0.71 || 1000.0.0", "react-native@>= 0.64.3", "react-native@>=0.57", "react-native@>=0.59", "react-native@>=0.59.0", "react-native@>=0.60.0", "react-native@>=0.60.0-rc.0 <1.0.x", "react-native@>=0.65.0", "react-native@0.71.14":
   "integrity" "sha512-7uhzas8aKpU2EARhlONt7yiclh+7PXEOJk469ewpQyId8Owq5WNtZvQm/z3k4mHUriMeQ37vgSGkOInSKcCazw=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.71.14.tgz"
   "version" "0.71.14"

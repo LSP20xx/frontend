@@ -18,6 +18,7 @@
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/native-stack": "^6.9.12",
     "@reduxjs/toolkit": "^1.9.5",
+    "@sumsub/react-native-mobilesdk-module": "^1.31.3",
     "@types/react": "~18.0.27",
     "axios": "^1.5.1",
     "bignumber.js": "^9.1.2",

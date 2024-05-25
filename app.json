@@ -14,14 +14,24 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.charlypk22.billete"
+      "bundleIdentifier": "com.charlypk22.billete",
+      "infoPlist": {
+        "NSCameraUsageDescription": "We need access to your camera for identity verification.",
+        "NSPhotoLibraryUsageDescription": "We need access to your photo library for identity verification.",
+        "NSMicrophoneUsageDescription": "We need access to your microphone for video identification."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#f5f5f5"
       },
-      "package": "com.charlypk22.billete"
+      "package": "com.charlypk22.billete",
+      "permissions": [
+        "CAMERA",
+        "WRITE_EXTERNAL_STORAGE",
+        "READ_EXTERNAL_STORAGE"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
