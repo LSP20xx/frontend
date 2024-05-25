@@ -15,16 +15,42 @@ import ReviewScreen from './ReviewScreen';
 import formReducer, { initialState } from '../../store/reducers/form.reducer';
 import { useSelector } from 'react-redux';
 import { useTheme } from '../../context/ThemeContext';
-const submitFormData = async (formState, userId) => {
+import AsyncStorage from '@react-native-async-storage/async-storage';
+const loadFormState = async () => {
   try {
+    const savedFormState = await AsyncStorage.getItem('formState');
+    return savedFormState ? JSON.parse(savedFormState) : null;
+  } catch (error) {
+    console.error('Failed to load form state', error);
+    return null;
+  }
+};
+
+const formatDateToBackend = (date) => {
+  const [day, month, year] = date.split('/');
+  return `${day}-${month}-${year}`;
+};
+const submitFormData = async (userId) => {
+  try {
+    const formState = await loadFormState();
+
+    if (!formState) {
+      throw new Error('No form state found in storage');
+    }
+
+    // Formatea la fecha de nacimiento al formato esperado por el backend
+    const formattedDateOfBirth = formatDateToBackend(
+      formState.dateOfBirth.value,
+    );
+
     // Verifica y muestra los valores del formState
     console.log('Complete Name:', formState.completeName.value);
-    console.log('Date of Birth:', formState.dateOfBirth.value);
+    console.log('Date of Birth:', formattedDateOfBirth);
 
     const payload = {
       userId: userId,
       completeName: formState.completeName.value,
-      dateOfBirth: formState.dateOfBirth.value,
+      dateOfBirth: formattedDateOfBirth,
     };
 
     console.log('Payload to be sent:', JSON.stringify(payload));
@@ -114,7 +140,7 @@ function KYCVerification() {
   const goToNextStep = async () => {
     if (currentStep === 1) {
       if (isFormValid) {
-        const isSubmissionSuccessful = await submitFormData(formState, userId);
+        const isSubmissionSuccessful = await submitFormData(userId);
         if (!isSubmissionSuccessful) {
           return; // No avanzar si el envío no fue exitoso
         }

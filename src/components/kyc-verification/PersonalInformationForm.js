@@ -134,6 +134,7 @@ function PersonalInformationForm({ onFormValidChange }) {
   }, [completeName, dateOfBirth, onFormValidChange, dispatchFormState]);
 
   useEffect(() => {
+    console.log('formState', formState);
     saveFormState(formState);
   }, [formState]);
 
