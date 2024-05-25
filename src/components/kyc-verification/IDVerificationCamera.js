@@ -8,75 +8,35 @@ import {
   Image,
 } from 'react-native';
 import { useTheme } from '../../context/ThemeContext';
-import {
-  requestCameraPermissionsAsync,
-  launchCameraAsync,
-} from 'expo-image-picker';
-import { readAsStringAsync, EncodingType } from 'expo-file-system';
-import { useDispatch, useSelector } from 'react-redux';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import axios from 'axios';
 
 function IDVerificationCamera({ onCapture }) {
-  const [camera, setCamera] = useState(null);
-
+  const [pickedUrl, setPicked] = useState(null);
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
-  const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.user);
-  const [pickedUrl, setPicked] = useState(null);
-  const date = new Date(user.datetimeSignUp);
-  const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+  const getSumsubToken = async () => {
+    try {
+      const response = await axios.get('https://your-backend-url/get-sumsub-token');
+      return response.data.token;
+    } catch (error) {
+      Alert.alert('Error', 'No se pudo obtener el token de Sumsub.');
+      return null;
+    }
+  };
 
   const takePicture = async () => {
-    if (camera) {
-      const options = { quality: 0.5, base64: true };
-      const data = await camera.takePictureAsync(options);
-      onCapture(data.uri);
+    const token = await getSumsubToken();
+    if (!token) return;
+
+    try {
+      const result = await SumSubSDK.startCamera({ type: 'id', token });
+      setPicked(result.uri);
+      onCapture(result.uri);
+    } catch (error) {
+      Alert.alert('Error', 'No se pudo tomar la foto.');
     }
   };
-
-  const verifyPermissions = async () => {
-    const { status } = await requestCameraPermissionsAsync();
-    if (status !== 'granted') {
-      Alert.alert(
-        'Permisos insuficientes',
-        'Necesitas dar permisos para usar la cámara',
-        [{ text: 'Ok' }],
-      );
-      return false;
-    }
-    return true;
-  };
-
-  const onHandleTakeImage = async () => {
-    const isCameraPermissionGranted = await verifyPermissions();
-    if (!isCameraPermissionGranted) {
-      return;
-    }
-    const image = await launchCameraAsync({
-      allowsEditing: true,
-      aspect: [16, 9],
-      quality: 0.7,
-    });
-
-    const imageUri = image.assets[0].uri;
-
-    setPicked(imageUri);
-  };
-
-  useEffect(() => {
-    const saveUserImage = async () => {
-      if (pickedUrl) {
-        const base64Image = await readAsStringAsync(pickedUrl, {
-          encoding: EncodingType.Base64,
-        });
-        //dispatch(setUserImage(user.userId, base64Image));
-      }
-    };
-
-    saveUserImage();
-  }, [pickedUrl]);
 
   return (
     <View style={styles.container}>
@@ -95,21 +55,10 @@ function IDVerificationCamera({ onCapture }) {
           />
         )}
         <View style={styles.cameraIconContainer}>
-          <Ionicons
-            name="camera"
-            size={20}
-            style={styles.cameraIcon}
-            onPress={onHandleTakeImage}
-          />
+          <TouchableOpacity onPress={takePicture}>
+            <Text style={styles.cameraIcon}>📷</Text>
+          </TouchableOpacity>
         </View>
-      </View>
-      <View style={styles.headerTextContainer}>
-        <Text style={styles.title}>{user.email}</Text>
-      </View>
-
-      <View style={styles.textContainer}>
-        <Text style={styles.label}>Fecha de registro: </Text>
-        <Text style={styles.value}>{formattedDate}</Text>
       </View>
     </View>
   );
@@ -117,29 +66,29 @@ function IDVerificationCamera({ onCapture }) {
 
 const getStyles = (theme) =>
   StyleSheet.create({
-    capture: {
-      alignSelf: 'center',
-      backgroundColor: '#fff',
-      borderRadius: 5,
-      flex: 0,
-      margin: 20,
-      padding: 15,
-      paddingHorizontal: 20,
-    },
-    captureText: {
-      color: 'black',
-      fontSize: 14,
-    },
     container: {
       backgroundColor: theme.background,
       flex: 1,
       flexDirection: 'column',
     },
-    preview: {
+    profileContainer: {
       alignItems: 'center',
-      flex: 1,
-      justifyContent: 'flex-end',
+      marginVertical: 20,
+    },
+    image: {
+      width: 100,
+      height: 100,
+      borderRadius: 50,
+    },
+    cameraIconContainer: {
+      position: 'absolute',
+      bottom: 0,
+      right: 0,
+    },
+    cameraIcon: {
+      fontSize: 30,
     },
   });
 
 export default IDVerificationCamera;
+
