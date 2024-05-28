@@ -6,6 +6,7 @@ import {
   authReducer,
   userReducer,
   blockchainsReducer,
+  documentsReducer,
   transactionsReducer,
 } from './reducers/index';
 
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
   user: userReducer,
   blockchains: blockchainsReducer,
+  documents: documentsReducer,
   transactions: transactionsReducer,
 });
 

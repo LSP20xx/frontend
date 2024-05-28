@@ -5,3 +5,4 @@ export * from './auth.types';
 export * from './user.types';
 export * from './blockchains.types';
 export * from './transactions.types';
+export * from './documents.types';

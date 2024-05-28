@@ -1,241 +1,194 @@
-import React, { useReducer, useEffect } from 'react';
-import {
-  ScrollView,
-  KeyboardAvoidingView,
-  Platform,
-  View,
-  StyleSheet,
-} from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useTheme } from '../../context/ThemeContext';
-import { COLORS } from '../../constants';
-import Input from '../input';
-import DateInput from '../date-input';
-import formReducer, {
-  UPDATE_FORM,
-  initialState,
-} from '../../store/reducers/form.reducer';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { Camera } from 'expo-camera';
+import * as ImagePicker from 'expo-image-picker';
+import { Ionicons } from '@expo/vector-icons';
+
+const PersonalInformationForm = ({ onDocumentUpload }) => {
+  const [frontImage, setFrontImage] = useState(null);
+  const [backImage, setBackImage] = useState(null);
+  const [hasPermission, setHasPermission] = useState(null);
+  const [cameraType, setCameraType] = useState(Camera.Constants.Type.back);
+  const [cameraRef, setCameraRef] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      setHasPermission(status === 'granted');
+    })();
+  }, []);
+
+  const pickImage = async (setImage, documentType) => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImage(result.uri);
+      onDocumentUpload(result.uri, documentType);
+    }
+  };
+
+  const takePhoto = async (setImage, documentType) => {
+    if (cameraRef) {
+      let photo = await cameraRef.takePictureAsync({
+        quality: 1,
+        base64: true,
+      });
+      setImage(photo.uri);
+      onDocumentUpload(photo.uri, documentType);
+    }
+  };
+
+  if (hasPermission === null) {
+    return <View />;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.imageContainer}>
+        <Text style={styles.imageLabel}>Foto del Frente del ID</Text>
+        {frontImage ? (
+          <Image source={{ uri: frontImage }} style={styles.image} />
+        ) : (
+          <Camera
+            style={styles.camera}
+            type={cameraType}
+            ref={(ref) => {
+              setCameraRef(ref);
+            }}
+          >
+            <View style={styles.cameraContainer} />
+          </Camera>
+        )}
+        <View style={styles.buttonGroup}>
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={() => takePhoto(setFrontImage, 'ID_PHOTO_FRONT')}
+          >
+            <Ionicons name="camera" size={30} color="#000" />
+            <Text style={styles.buttonText}>
+              {frontImage ? 'Otra Foto' : 'Tomar Foto'}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={() => pickImage(setFrontImage, 'ID_PHOTO_FRONT')}
+          >
+            <Ionicons name="images" size={30} color="#000" />
+            <Text style={styles.buttonText}>Seleccionar</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      <View style={styles.imageContainer}>
+        <Text style={styles.imageLabel}>Foto del Dorso del ID</Text>
+        {backImage ? (
+          <Image source={{ uri: backImage }} style={styles.image} />
+        ) : (
+          <Camera
+            style={styles.camera}
+            type={cameraType}
+            ref={(ref) => {
+              setCameraRef(ref);
+            }}
+          >
+            <View style={styles.cameraContainer} />
+          </Camera>
+        )}
+        <View style={styles.buttonGroup}>
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={() => takePhoto(setBackImage, 'ID_PHOTO_BACK')}
+          >
+            <Ionicons name="camera" size={30} color="#000" />
+            <Text style={styles.buttonText}>
+              {backImage ? 'Otra Foto' : 'Tomar Foto'}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={() => pickImage(setBackImage, 'ID_PHOTO_BACK')}
+          >
+            <Ionicons name="images" size={30} color="#000" />
+            <Text style={styles.buttonText}>Seleccionar</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   button: {
-    alignItems: 'center',
-    backgroundColor: COLORS.primaryMedium,
-    borderRadius: 8,
-    justifyContent: 'center',
-    marginTop: '50%',
-    paddingHorizontal: 20,
-    paddingVertical: 15,
+    backgroundColor: '#007bff',
+    borderRadius: 5,
+    margin: 5,
+    padding: 10,
   },
-  buttonContainer: {
-    alignSelf: 'stretch',
-    paddingBottom: Platform.OS === 'ios' ? 20 : 10,
-  },
-  buttonDisabled: {
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 155, 80, 0.3)',
-    borderRadius: 8,
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 15,
+  buttonGroup: {
+    flexDirection: 'row',
   },
   buttonText: {
-    color: COLORS.black,
-    fontFamily: 'Uto-Medium',
-    fontSize: 16,
+    color: '#000',
+    fontFamily: 'Uto-Regular',
+    fontSize: 14,
   },
-  content: {
-    padding: 5,
+  camera: {
+    borderRadius: 10,
+    height: 200,
+    marginBottom: 10,
+    width: '80%',
   },
-  flexContainer: {
+  cameraContainer: {
     flex: 1,
+    justifyContent: 'center',
+  },
+  container: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+  },
+  headerText: {
+    fontSize: 24,
+    marginBottom: 20,
+  },
+  iconButton: {
+    alignItems: 'center',
+    marginHorizontal: 16,
+  },
+  image: {
+    borderRadius: 10,
+    height: 200,
+    marginBottom: 10,
+    width: '80%',
+  },
+  imageContainer: {
+    alignItems: 'center',
+    marginBottom: 20,
+    width: '100%',
+  },
+  imageLabel: {
+    fontFamily: 'Uto-Light',
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  placeholder: {
+    alignItems: 'center',
+    backgroundColor: '#e0e0e0',
+    borderRadius: 10,
+    height: 200,
+    justifyContent: 'center',
+    marginBottom: 10,
+    width: '80%',
   },
 });
-
-const validateCompleteName = (name) => {
-  const regex = /^[a-zA-Z]{2,}\s[a-zA-Z]{2,}(\s[a-zA-Z]{2,})*$/;
-  return regex.test(name);
-};
-
-const validateDate = (date) => {
-  const regex = /^(0?[1-9]|[12][0-9]|3[01])\/(0?[1-9]|1[012])\/(19|20)\d{2}$/;
-  if (!regex.test(date)) return { isValid: false, error: 'Fecha inválida' };
-
-  const [day, month, year] = date.split('/').map(Number);
-  const birthDate = new Date(year, month - 1, day);
-  const today = new Date();
-  const age = today.getFullYear() - birthDate.getFullYear();
-  const monthDifference = today.getMonth() - birthDate.getMonth();
-  const dayDifference = today.getDate() - birthDate.getDate();
-
-  if (
-    age > 18 ||
-    (age === 18 &&
-      (monthDifference > 0 || (monthDifference === 0 && dayDifference >= 0)))
-  ) {
-    return { isValid: true };
-  } else {
-    return { isValid: false, error: 'Debe ser mayor de 18 años' };
-  }
-};
-
-const loadFormState = async (dispatchFormState) => {
-  try {
-    const savedFormState = await AsyncStorage.getItem('formState');
-    if (savedFormState) {
-      dispatchFormState({
-        type: 'LOAD_FORM_STATE',
-        data: JSON.parse(savedFormState),
-      });
-    }
-  } catch (error) {
-    console.error('Failed to load form state', error);
-  }
-};
-
-const saveFormState = async (formState) => {
-  try {
-    await AsyncStorage.setItem('formState', JSON.stringify(formState));
-  } catch (error) {
-    console.error('Failed to save form state', error);
-  }
-};
-
-function PersonalInformationForm({ onFormValidChange }) {
-  const [formState, dispatchFormState] = useReducer(formReducer, initialState);
-
-  const { completeName, dateOfBirth, isFormValid } = formState;
-
-  useEffect(() => {
-    loadFormState(dispatchFormState);
-  }, []);
-
-  useEffect(() => {
-    const isValid =
-      completeName.value &&
-      validateCompleteName(completeName.value) &&
-      !completeName.hasError &&
-      dateOfBirth.value &&
-      validateDate(dateOfBirth.value).isValid &&
-      !dateOfBirth.hasError;
-
-    dispatchFormState({
-      type: UPDATE_FORM,
-      data: {
-        name: 'isFormValid',
-        value: isValid,
-        hasError: false,
-        error: '',
-        touched: false,
-        isFormValid: isValid,
-      },
-    });
-
-    onFormValidChange(isValid);
-  }, [completeName, dateOfBirth, onFormValidChange, dispatchFormState]);
-
-  useEffect(() => {
-    console.log('formState', formState);
-    saveFormState(formState);
-  }, [formState]);
-
-  const handleInputChange = (name, value) => {
-    let hasError = false;
-    let error = '';
-
-    if (name === 'completeName') {
-      hasError = !validateCompleteName(value);
-      error = hasError ? 'Nombre completo inválido' : '';
-    } else if (name === 'dateOfBirth') {
-      const validation = validateDate(value);
-      hasError = !validation.isValid;
-      error = validation.error;
-    }
-
-    dispatchFormState({
-      type: UPDATE_FORM,
-      data: {
-        name,
-        value,
-        hasError,
-        error,
-        touched: false,
-        isFormValid: formState.isFormValid,
-      },
-    });
-  };
-
-  const handleInputBlur = (name) => {
-    if (name === 'completeName') {
-      const hasError = !validateCompleteName(formState.completeName.value);
-      const error = hasError ? 'Nombre completo inválido' : '';
-
-      dispatchFormState({
-        type: UPDATE_FORM,
-        data: {
-          name,
-          value: formState.completeName.value,
-          hasError,
-          error,
-          touched: true,
-          isFormValid: formState.isFormValid,
-        },
-      });
-    } else if (name === 'dateOfBirth') {
-      const validation = validateDate(formState.dateOfBirth.value);
-      const hasError = !validation.isValid;
-      const error = validation.error;
-
-      dispatchFormState({
-        type: UPDATE_FORM,
-        data: {
-          name,
-          value: formState.dateOfBirth.value,
-          hasError,
-          error,
-          touched: true,
-          isFormValid: formState.isFormValid,
-        },
-      });
-    }
-  };
-
-  const { theme } = useTheme();
-
-  return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
-      style={styles.flexContainer}
-    >
-      <ScrollView contentContainerStyle={styles.content}>
-        <View style={styles.inputContainer}>
-          <Input
-            placeholder="Nombre completo"
-            placeholderTextColor={COLORS.darkGray}
-            autoCapitalize="none"
-            autoCorrect={false}
-            onChangeText={(value) => handleInputChange('completeName', value)}
-            onBlur={() => handleInputBlur('completeName')}
-            value={completeName.value}
-            hasError={completeName.hasError && completeName.touched}
-            error={completeName.error}
-            touched={completeName.touched}
-          />
-        </View>
-
-        <View style={styles.inputContainer}>
-          <DateInput
-            value={dateOfBirth.value}
-            onChangeText={(value) => handleInputChange('dateOfBirth', value)}
-            onBlur={() => handleInputBlur('dateOfBirth')}
-            hasError={dateOfBirth.hasError && dateOfBirth.touched}
-            error={dateOfBirth.error}
-            touched={dateOfBirth.touched}
-          />
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
-  );
-}
 
 export default PersonalInformationForm;

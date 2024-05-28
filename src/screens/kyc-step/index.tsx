@@ -4,7 +4,6 @@ import { View, Text } from 'react-native';
 import { getStyles } from './styles';
 import { Header } from '../../components';
 import { useTheme } from '../../context/ThemeContext';
-import PersonalInformationForm from '@/components/kyc-verification/PersonalInformationForm';
 import KYCVerification from '../../components/kyc-verification/index';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';

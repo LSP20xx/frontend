@@ -21,7 +21,6 @@ function toAbsoluteNumber(num) {
   return Math.abs(num);
 }
 function createNumberArrayWithComma(numberString) {
-  console.log('NUMBERSTRING', numberString);
   const [integerPart, decimalPart] = numberString.split('.');
   let integerArr = integerPart.split('');
   const decimalArr = decimalPart ? decimalPart.split('') : [];
@@ -38,7 +37,6 @@ function createNumberArrayWithComma(numberString) {
     integerArr = integerArr.concat('.', decimalArr);
   }
 
-  console.log('RESULT ARRAY', integerArr);
   return integerArr;
 }
 

@@ -152,6 +152,7 @@ export const signInWithEmail = ({ email, tempId }) => {
           email: data.email,
           verified: data.verified,
           verificationMethods: data.verificationMethods,
+          termsAndConditionsAccepted: data.termsAndConditionsAccepted,
         });
       }
     } catch (error) {
@@ -196,6 +197,7 @@ export const signInWithPhoneNumber = ({ phoneNumber, tempId }) => {
         email: data.email,
         verified: data.verified,
         verificationMethods: data.verificationMethods,
+        termsAndConditionsAccepted: data.termsAndConditionsAccepted,
       });
     } catch (error) {
       dispatch({

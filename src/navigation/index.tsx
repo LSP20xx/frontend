@@ -19,6 +19,10 @@ function Navigation() {
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    console.log('termsAndConditionsAccepted', termsAndConditionsAccepted);
+  }, [termsAndConditionsAccepted]);
+
   // const useIntervalEffect = (callback, delay) => {
   //   const savedCallback = useRef();
 

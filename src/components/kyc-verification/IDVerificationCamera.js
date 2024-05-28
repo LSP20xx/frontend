@@ -18,20 +18,16 @@ function IDVerificationCamera({ onCapture }) {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const [sdkInstance, setSdkInstance] = useState(null);
-  const [accessToken, setAccessToken] = useState(null); // Nuevo estado para almacenar el token
+  const [accessToken, setAccessToken] = useState(null);
   const { userId } = useSelector((state) => state.auth);
 
   const getKYCToken = async () => {
     try {
-      console.log('Fetching KYC token for userId:', userId);
       const response = await axios.get(GET_KYC_TOKEN_URL, {
         params: { userId: userId },
       });
-      console.log('Response status:', response.status);
-      console.log('Response data:', response.data);
       return response.data.token;
     } catch (error) {
-      console.error('Error fetching KYC token:', error);
       Alert.alert('Error', 'No se pudo obtener el token de Sumsub.');
       return null;
     }
@@ -39,19 +35,18 @@ function IDVerificationCamera({ onCapture }) {
 
   const launchSNSMobileSDK = async () => {
     if (sdkInstance) {
-      console.log('An instance of the SDK is already running.');
       Alert.alert('Error', 'Una instancia del SDK ya está en uso.');
       return;
     }
 
     const token = await getKYCToken();
     if (!token) return;
-    setAccessToken(token); // Almacena el token en el estado
+    setAccessToken(token);
 
     try {
       let snsMobileSDK = SNSMobileSDK.init(token, async () => {
         const newToken = await getKYCToken();
-        setAccessToken(newToken); // Actualiza el token en el estado
+        setAccessToken(newToken);
         return newToken;
       })
         .withHandlers({
@@ -69,7 +64,7 @@ function IDVerificationCamera({ onCapture }) {
           },
         })
         .withDebug(true)
-        .withLocale('en') // Optional, for cases when you need to override the system locale
+        .withLocale('en')
         .build();
 
       setSdkInstance(snsMobileSDK);
@@ -79,11 +74,11 @@ function IDVerificationCamera({ onCapture }) {
           .launch()
           .then((result) => {
             console.log('SumSub SDK State: ' + JSON.stringify(result));
-            setSdkInstance(null); // Reset SDK instance after use
+            setSdkInstance(null);
           })
           .catch((err) => {
             console.error('SumSub SDK Error: ', err);
-            setSdkInstance(null); // Reset SDK instance on error
+            setSdkInstance(null);
             Alert.alert(
               'Error',
               'Error al lanzar el SDK de Sumsub. Revisa los logs para más detalles.',
@@ -93,23 +88,21 @@ function IDVerificationCamera({ onCapture }) {
         console.error('SumSub SDK initialization failed.');
       }
     } catch (error) {
-      console.error('Error initializing SumSub SDK:', error);
       Alert.alert('Error', 'No se pudo iniciar el SDK de Sumsub.');
     }
   };
 
   const takePicture = async () => {
-    // if (!accessToken) {
-    //   const token = await getKYCToken();
-    //   if (!token) return;
-    //   setAccessToken(token);
-    // }
+    if (!accessToken) {
+      const token = await getKYCToken();
+      if (!token) return;
+      setAccessToken(token);
+    }
 
     try {
-      const result = await SNSMobileSDK.startCamera({
-        type: 'id',
-        token:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjNzEyNzdlZS04NmJiLTRhODctOWQyMi1mMDMxNmRlYzY4Y2QiLCJsZXZlbE5hbWUiOiJiYXNpYy1reWMtbGV2ZWwiLCJpYXQiOjE3MTY2MjY2OTAsImV4cCI6MTcxNjYzMDI5MH0.YUcFKznygswH141CVFVoO1F2bmgMN263QblDhrDyW4M',
+      const result = await SNSMobileSDKModule.startCamera({
+        type: 'selfie',
+        token: accessToken,
       });
       console.log('Camera result:', result);
       setPicked(result.uri);

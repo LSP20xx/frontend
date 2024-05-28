@@ -11,6 +11,7 @@ export const VERIFY_EMAIL_URL = `http://172.28.160.1:8000/api/verification/verif
 export const ACCEPT_TERMS_AND_CONDITIONS_URL = `http://172.28.160.1:8000/api/auth/accept-terms-and-conditions`;
 export const UPDATE_PERSONAL_INFORMATION_URL = `http://172.28.160.1:8000/api/auth/update-personal-information`;
 export const GET_KYC_TOKEN_URL = `http://172.28.160.1:8000/api/auth/get-kyc-token`;
+export const UPLOAD_USER_DOCUMENT_URL = `http://172.28.160.1:8000/api/auth/upload-user-document`;
 export const LITTLE_LINE_CHARTS_URL = `http://172.28.160.1:8000/api/tokens/little-line-charts`;
 export const CANDLESTICK_CHART_URL = `http://172.28.160.1:8000/api/tokens/candlestick-chart`;
 export const LINEAR_CHART_URL = `http://172.28.160.1:8000/api/tokens/linear-chart`;
