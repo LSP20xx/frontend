@@ -1,24 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import { Camera } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '../../context/ThemeContext';
 
 const PersonalInformationForm = ({ onDocumentUpload }) => {
+  const { theme } = useTheme();
   const [frontImage, setFrontImage] = useState(null);
   const [backImage, setBackImage] = useState(null);
-  const [hasPermission, setHasPermission] = useState(null);
-  const [cameraType, setCameraType] = useState(Camera.Constants.Type.back);
-  const [cameraRef, setCameraRef] = useState(null);
+  const [frontUploadMode, setFrontUploadMode] = useState(null);
+  const [backUploadMode, setBackUploadMode] = useState(null);
 
-  useEffect(() => {
-    (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      setHasPermission(status === 'granted');
-    })();
-  }, []);
-
-  const pickImage = async (setImage, documentType) => {
+  const pickImage = async (setImage, setUploadMode, documentType) => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -27,97 +20,130 @@ const PersonalInformationForm = ({ onDocumentUpload }) => {
     });
 
     if (!result.canceled) {
-      setImage(result.uri);
-      onDocumentUpload(result.uri, documentType);
+      setImage(result.assets[0]);
+      setUploadMode('gallery');
+      onDocumentUpload(result.assets[0], documentType);
     }
   };
 
-  const takePhoto = async (setImage, documentType) => {
-    if (cameraRef) {
-      let photo = await cameraRef.takePictureAsync({
-        quality: 1,
-        base64: true,
-      });
-      setImage(photo.uri);
-      onDocumentUpload(photo.uri, documentType);
+  const takePhoto = async (setImage, setUploadMode, documentType) => {
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImage(result.assets[0]);
+      setUploadMode('camera');
+      onDocumentUpload(result.assets[0], documentType);
     }
   };
-
-  if (hasPermission === null) {
-    return <View />;
-  }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
-  }
 
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
         <Text style={styles.imageLabel}>Foto del Frente del ID</Text>
+
         {frontImage ? (
-          <Image source={{ uri: frontImage }} style={styles.image} />
+          <Image source={{ uri: frontImage.uri }} style={styles.image} />
         ) : (
-          <Camera
-            style={styles.camera}
-            type={cameraType}
-            ref={(ref) => {
-              setCameraRef(ref);
-            }}
-          >
-            <View style={styles.cameraContainer} />
-          </Camera>
+          <View style={styles.placeholder}>
+            <Ionicons name="image-outline" size={100} color={theme.disabled} />
+          </View>
         )}
         <View style={styles.buttonGroup}>
           <TouchableOpacity
             style={styles.iconButton}
-            onPress={() => takePhoto(setFrontImage, 'ID_PHOTO_FRONT')}
+            onPress={() =>
+              takePhoto(setFrontImage, setFrontUploadMode, 'ID_PHOTO_FRONT')
+            }
           >
-            <Ionicons name="camera" size={30} color="#000" />
+            <Ionicons
+              name={
+                frontUploadMode === 'camera' && frontImage ? 'reload' : 'camera'
+              }
+              size={30}
+              color="#000"
+            />
             <Text style={styles.buttonText}>
-              {frontImage ? 'Otra Foto' : 'Tomar Foto'}
+              {frontUploadMode === 'camera' && frontImage
+                ? 'Otra Foto'
+                : 'Tomar Foto'}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.iconButton}
-            onPress={() => pickImage(setFrontImage, 'ID_PHOTO_FRONT')}
+            onPress={() =>
+              pickImage(setFrontImage, setFrontUploadMode, 'ID_PHOTO_FRONT')
+            }
           >
-            <Ionicons name="images" size={30} color="#000" />
-            <Text style={styles.buttonText}>Seleccionar</Text>
+            <Ionicons
+              name={
+                frontUploadMode === 'gallery' && frontImage
+                  ? 'reload'
+                  : 'images'
+              }
+              size={30}
+              color="#000"
+            />
+            <Text style={styles.buttonText}>
+              {frontUploadMode === 'gallery' && frontImage
+                ? 'Seleccionar Otra'
+                : 'Seleccionar'}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
 
       <View style={styles.imageContainer}>
         <Text style={styles.imageLabel}>Foto del Dorso del ID</Text>
+
         {backImage ? (
-          <Image source={{ uri: backImage }} style={styles.image} />
+          <Image source={{ uri: backImage.uri }} style={styles.image} />
         ) : (
-          <Camera
-            style={styles.camera}
-            type={cameraType}
-            ref={(ref) => {
-              setCameraRef(ref);
-            }}
-          >
-            <View style={styles.cameraContainer} />
-          </Camera>
+          <View style={styles.placeholder}>
+            <Ionicons name="image-outline" size={100} color={theme.disabled} />
+          </View>
         )}
         <View style={styles.buttonGroup}>
           <TouchableOpacity
             style={styles.iconButton}
-            onPress={() => takePhoto(setBackImage, 'ID_PHOTO_BACK')}
+            onPress={() =>
+              takePhoto(setBackImage, setBackUploadMode, 'ID_PHOTO_BACK')
+            }
           >
-            <Ionicons name="camera" size={30} color="#000" />
+            <Ionicons
+              name={
+                backUploadMode === 'camera' && backImage ? 'reload' : 'camera'
+              }
+              size={30}
+              color="#000"
+            />
             <Text style={styles.buttonText}>
-              {backImage ? 'Otra Foto' : 'Tomar Foto'}
+              {backUploadMode === 'camera' && backImage
+                ? 'Otra Foto'
+                : 'Tomar Foto'}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.iconButton}
-            onPress={() => pickImage(setBackImage, 'ID_PHOTO_BACK')}
+            onPress={() =>
+              pickImage(setBackImage, setBackUploadMode, 'ID_PHOTO_BACK')
+            }
           >
-            <Ionicons name="images" size={30} color="#000" />
-            <Text style={styles.buttonText}>Seleccionar</Text>
+            <Ionicons
+              name={
+                backUploadMode === 'gallery' && backImage ? 'reload' : 'images'
+              }
+              size={30}
+              color="#000"
+            />
+            <Text style={styles.buttonText}>
+              {backUploadMode === 'gallery' && backImage
+                ? 'Seleccionar Otra'
+                : 'Seleccionar'}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -126,29 +152,22 @@ const PersonalInformationForm = ({ onDocumentUpload }) => {
 };
 
 const styles = StyleSheet.create({
-  button: {
-    backgroundColor: '#007bff',
-    borderRadius: 5,
-    margin: 5,
-    padding: 10,
-  },
   buttonGroup: {
     flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 10, // Moved to be above the placeholder
+  },
+  iconButton: {
+    alignItems: 'center',
+    borderRadius: 10,
+    marginHorizontal: 16,
+    padding: 10,
   },
   buttonText: {
     color: '#000',
     fontFamily: 'Uto-Regular',
     fontSize: 14,
-  },
-  camera: {
-    borderRadius: 10,
-    height: 200,
-    marginBottom: 10,
-    width: '80%',
-  },
-  cameraContainer: {
-    flex: 1,
-    justifyContent: 'center',
+    marginTop: 5,
   },
   container: {
     alignItems: 'center',
@@ -156,19 +175,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 20,
   },
-  headerText: {
-    fontSize: 24,
-    marginBottom: 20,
-  },
-  iconButton: {
-    alignItems: 'center',
-    marginHorizontal: 16,
-  },
   image: {
     borderRadius: 10,
     height: 200,
     marginBottom: 10,
-    width: '80%',
+    width: '90%',
   },
   imageContainer: {
     alignItems: 'center',
@@ -176,7 +187,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   imageLabel: {
-    fontFamily: 'Uto-Light',
+    fontFamily: 'Uto-Bold',
     fontSize: 16,
     marginBottom: 10,
   },
@@ -186,8 +197,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     height: 200,
     justifyContent: 'center',
-    marginBottom: 10,
-    width: '80%',
+    width: '90%',
   },
 });
 

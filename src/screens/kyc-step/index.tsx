@@ -22,6 +22,7 @@ function KYCScreen({ navigation, showBackButton }) {
         <View style={styles.titleContainer}>
           <Text style={styles.sectionTitle}>Verificación KYC</Text>
         </View>
+
         <KYCVerification />
       </View>
     </SafeAreaView>

@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -7,19 +7,20 @@ import {
   ScrollView,
   KeyboardAvoidingView,
 } from 'react-native';
-import { COLORS, UPLOAD_USER_DOCUMENT_URL } from '../../constants';
-import PersonalInformationForm from './PersonalInformationForm.js';
-import IDVerificationCamera from './IDVerificationCamera.js';
-import VideoSelfieCapture from './VideoSelfieCapture.js';
-import ReviewScreen from './ReviewScreen';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTheme } from '../../context/ThemeContext';
+import PersonalInformationForm from './PersonalInformationForm';
+import IDVerificationCamera from './IDVerificationCamera';
+import VideoSelfieCapture from './VideoSelfieCapture';
+import ReviewScreen from './ReviewScreen';
+import { COLORS } from '../../constants';
 import { uploadDocument } from '../../store/thunks/documents.thunks';
 
 function KYCVerification() {
   const [currentStep, setCurrentStep] = useState(1);
   const { theme } = useTheme();
   const { userId } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   const styles = StyleSheet.create({
     button: {
@@ -56,9 +57,17 @@ function KYCVerification() {
       paddingBottom: 80,
       paddingHorizontal: 8, // Ensure there's space for the button container
     },
+    sectionSubtitle: {
+      color: theme.text,
+      fontFamily: 'Uto-Regular',
+      fontSize: 16,
+      marginBottom: 20,
+      paddingTop: 10,
+      textAlign: 'left',
+    },
   });
 
-  const goToNextStep = async () => {
+  const goToNextStep = () => {
     setCurrentStep(currentStep + 1);
   };
 
@@ -68,26 +77,37 @@ function KYCVerification() {
     }
   };
 
-  const handleDocumentUpload = (imageUri, documentType) => {
-    uploadDocument(imageUri, documentType, userId);
+  const handleDocumentUpload = (file, documentType) => {
+    dispatch(uploadDocument(file, documentType, userId));
   };
 
   const renderStepContent = () => {
     switch (currentStep) {
       case 1:
         return (
-          <PersonalInformationForm onDocumentUpload={handleDocumentUpload} />
+          <>
+            <Text style={styles.sectionSubtitle}>
+              Sube fotos claras de tu ID
+            </Text>
+            <PersonalInformationForm onDocumentUpload={handleDocumentUpload} />
+          </>
         );
+
       case 2:
         return (
           <IDVerificationCamera
             onNext={goToNextStep}
             currentStep={currentStep}
+            onDocumentUpload={handleDocumentUpload}
           />
         );
       case 3:
         return (
-          <VideoSelfieCapture onNext={goToNextStep} currentStep={currentStep} />
+          <VideoSelfieCapture
+            onNext={goToNextStep}
+            currentStep={currentStep}
+            onDocumentUpload={handleDocumentUpload}
+          />
         );
       case 4:
         return (

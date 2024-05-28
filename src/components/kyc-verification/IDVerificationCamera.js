@@ -13,14 +13,17 @@ import SNSMobileSDK from '@sumsub/react-native-mobilesdk-module';
 import { GET_KYC_TOKEN_URL } from '../../constants';
 import { useSelector } from 'react-redux';
 
-function IDVerificationCamera({ onCapture }) {
+const IDVerificationCamera = ({ onNext, currentStep, onDocumentUpload }) => {
   const [pickedUrl, setPicked] = useState(null);
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const [sdkInstance, setSdkInstance] = useState(null);
   const [accessToken, setAccessToken] = useState(null);
   const { userId } = useSelector((state) => state.auth);
-
+  const captureImage = () => {
+    const documentType = 'ID_PHOTO_FRONT';
+    onDocumentUpload(documentType, userId);
+  };
   const getKYCToken = async () => {
     try {
       const response = await axios.get(GET_KYC_TOKEN_URL, {
@@ -142,7 +145,7 @@ function IDVerificationCamera({ onCapture }) {
       </View>
     </View>
   );
-}
+};
 
 const getStyles = (theme) =>
   StyleSheet.create({
