@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { UPLOAD_USER_DOCUMENT_URL } from '../../constants';
+import { UPDATE_USER_DOCUMENT_URL } from '../../constants';
 import {
   uploadDocumentFailure,
   uploadDocumentRequest,
@@ -17,14 +17,20 @@ export const uploadDocument = (imageUri, documentType, userId) => {
       type: 'image/jpeg',
     });
 
-    try {
-      const response = await axios.post(UPLOAD_USER_DOCUMENT_URL, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        params: { userId, documentType },
-      });
+    console.log('LLEGA A UPLOADDOCUMENT', formData);
 
+    try {
+      const response = await axios.post(
+        `${UPDATE_USER_DOCUMENT_URL}/${userId}/${documentType}`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      );
+
+      console.log('response', response);
       dispatch(uploadDocumentSuccess(response.data));
     } catch (error) {
       dispatch(uploadDocumentFailure(error.message));
